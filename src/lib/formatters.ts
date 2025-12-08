@@ -105,3 +105,10 @@ export function formatRelativeTime(timestamp: string): string {
   return `${diffInYears} ${diffInYears === 1 ? "year" : "years"} ago`;
 }
 
+/**
+ * Format character count: "X / Y characters"
+ */
+export function formatCharacterCount(current: number, max: number): string {
+  return `${current} / ${max} characters`;
+}
+

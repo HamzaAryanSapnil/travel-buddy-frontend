@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Suspense } from "react";
 import { getTravelPlans } from "@/services/travelPlans/getTravelPlans";
 import DashboardTravelPlansFilters from "@/components/modules/TravelPlans/DashboardTravelPlansFilters";

@@ -39,7 +39,15 @@ export const DATE_FORMATS = {
 export const UPLOAD_LIMITS = {
   MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
   MAX_FILES: 10,
-  ALLOWED_IMAGE_TYPES: ["image/jpeg", "image/png", "image/webp"],
+  ALLOWED_IMAGE_TYPES: [
+    "image/jpeg",
+    "image/jpg", // Some systems use image/jpg instead of image/jpeg
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/bmp",
+    "image/svg+xml",
+  ],
   ALLOWED_VIDEO_TYPES: ["video/mp4", "video/webm"],
 } as const;
 
