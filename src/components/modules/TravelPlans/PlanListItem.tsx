@@ -11,8 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import PlanActionsDropdown from "./PlanActionsDropdown";
+import PlanDetailsDialog from "./PlanDetailsDialog";
 
 interface PlanListItemProps {
   plan: TravelPlan;
@@ -91,25 +90,25 @@ const PlanListItem = ({ plan }: PlanListItemProps) => {
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div className="flex-1 min-w-0">
-                  <Link
-                    href={`/dashboard/travel-plans/${plan.id}`}
-                    className="hover:underline"
-                  >
-                    <h3 className="text-xl font-bold line-clamp-2 mb-1">
-                      {plan.title}
-                    </h3>
-                  </Link>
+                  <div className="hover:underline cursor-pointer">
+                    <PlanDetailsDialog
+                      plan={plan}
+                      triggerLabel={plan.title}
+                      triggerClassName="text-xl font-bold line-clamp-2 mb-1 h-auto p-0 hover:no-underline text-left justify-start"
+                    />
+                  </div>
                   {plan.description && (
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                       {plan.description}
                     </p>
                   )}
                 </div>
-                {/* Actions Dropdown */}
+                {/* Actions */}
                 <div className="flex-shrink-0">
-                  <PlanActionsDropdown
-                    planId={plan.id}
-                    planTitle={plan.title}
+                  <PlanDetailsDialog
+                    plan={plan}
+                    triggerLabel="View Details"
+                    triggerClassName="w-full sm:w-auto"
                   />
                 </div>
               </div>

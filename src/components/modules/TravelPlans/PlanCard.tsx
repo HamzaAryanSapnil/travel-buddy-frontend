@@ -1,6 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { formatBudgetRange, formatDateRange } from "@/lib/formatters";
 import { TravelPlan } from "@/types/travelPlan.interface";
 import {
@@ -14,7 +19,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import PlanActionsDropdown from "./PlanActionsDropdown";
+import PlanDetailsDialog from "./PlanDetailsDialog";
 
 interface PlanCardProps {
   plan: TravelPlan;
@@ -94,10 +99,13 @@ const PlanCard = ({
         <div className="absolute top-2 right-2 flex flex-col gap-2 items-end">
           {isDashboard && (
             <div className="flex items-center gap-2">
-              <PlanActionsDropdown planId={plan.id} planTitle={plan.title} />
+              {/* Actions moved to Details Dialog */}
             </div>
           )}
-          <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm">
+          <Badge
+            variant="secondary"
+            className="bg-background/90 backdrop-blur-sm"
+          >
             {travelTypeLabels[plan.travelType] || plan.travelType}
           </Badge>
           <Badge
@@ -105,8 +113,8 @@ const PlanCard = ({
               plan.visibility === "PUBLIC"
                 ? "default"
                 : plan.visibility === "PRIVATE"
-                  ? "destructive"
-                  : "outline"
+                ? "destructive"
+                : "outline"
             }
             className="bg-background/90 backdrop-blur-sm flex items-center gap-1"
           >
@@ -115,7 +123,9 @@ const PlanCard = ({
             {visibilityLabels[plan.visibility] || plan.visibility}
           </Badge>
           {isDashboard && (
-            <Badge className={`${statusColors[status]} bg-background/90 backdrop-blur-sm`}>
+            <Badge
+              className={`${statusColors[status]} bg-background/90 backdrop-blur-sm`}
+            >
               {statusLabels[status]}
             </Badge>
           )}
@@ -163,11 +173,11 @@ const PlanCard = ({
       {/* Card Footer with Actions */}
       <CardFooter className="flex flex-col gap-2 pt-4">
         {isDashboard ? (
-          <Button asChild className="w-full" size="default">
-            <Link href={`/dashboard/travel-plans/${plan.id}`}>
-              View Details
-            </Link>
-          </Button>
+          <PlanDetailsDialog
+            plan={plan}
+            triggerLabel="View Details"
+            triggerClassName="w-full"
+          />
         ) : (
           <>
             <Button asChild className="w-full" size="default">
@@ -194,4 +204,3 @@ const PlanCard = ({
 };
 
 export default PlanCard;
-
