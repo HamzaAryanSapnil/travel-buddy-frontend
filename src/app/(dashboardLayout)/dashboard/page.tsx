@@ -27,48 +27,29 @@ const DashboardSkeleton = () => (
 );
 
 export default async function DashboardPage() {
+  let isAdmin = false;
+  let adminOverview: Awaited<
+    ReturnType<typeof getAdminDashboardOverview>
+  > | null = null;
+  let userOverview: Awaited<ReturnType<typeof getDashboardOverview>> | null =
+    null;
+  let fatalError = false;
+
   try {
     const userInfo = await getUserInfo();
-    const isAdmin = userInfo.role === "ADMIN";
+    isAdmin = userInfo.role === "ADMIN";
 
     if (isAdmin) {
-      const adminOverview = await getAdminDashboardOverview();
-      if (adminOverview.success) {
-        return (
-          <Suspense fallback={<DashboardSkeleton />}>
-            <AdminDashboardOverview overview={adminOverview.data} />
-          </Suspense>
-        );
-      }
+      adminOverview = await getAdminDashboardOverview();
     } else {
-      const userOverview = await getDashboardOverview();
-      if (userOverview.success) {
-        return (
-          <Suspense fallback={<DashboardSkeleton />}>
-            <UserDashboardOverview overview={userOverview.data} />
-          </Suspense>
-        );
-      }
+      userOverview = await getDashboardOverview();
     }
-
-    // Fallback if API calls fail
-    return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome to your Travel Buddy dashboard
-          </p>
-        </div>
-        <Card className="p-6">
-          <p className="text-muted-foreground">
-            Unable to load dashboard data. Please try refreshing the page.
-          </p>
-        </Card>
-      </div>
-    );
   } catch (error) {
     console.error("Dashboard page error:", error);
+    fatalError = true;
+  }
+
+  if (fatalError) {
     return (
       <div className="space-y-6">
         <div>
@@ -79,11 +60,44 @@ export default async function DashboardPage() {
         </div>
         <Card className="p-6">
           <p className="text-destructive">
-            An error occurred while loading the dashboard. Please try again later.
+            An error occurred while loading the dashboard. Please try again
+            later.
           </p>
         </Card>
       </div>
     );
   }
-}
 
+  if (isAdmin && adminOverview?.success) {
+    return (
+      <Suspense fallback={<DashboardSkeleton />}>
+        <AdminDashboardOverview overview={adminOverview.data} />
+      </Suspense>
+    );
+  }
+
+  if (!isAdmin && userOverview?.success) {
+    return (
+      <Suspense fallback={<DashboardSkeleton />}>
+        <UserDashboardOverview overview={userOverview.data} />
+      </Suspense>
+    );
+  }
+
+  // Fallback if API calls fail
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Welcome to your Travel Buddy dashboard
+        </p>
+      </div>
+      <Card className="p-6">
+        <p className="text-muted-foreground">
+          Unable to load dashboard data. Please try refreshing the page.
+        </p>
+      </Card>
+    </div>
+  );
+}

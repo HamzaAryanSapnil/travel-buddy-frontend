@@ -27,9 +27,6 @@ export const createTravelPlan = async (
         : undefined,
       visibility: formData.get("visibility"),
       description: formData.get("description") || undefined,
-      // Note: coverPhoto will be handled separately if file upload is needed
-      // For now, we'll skip it as the API expects a URL string
-      // TODO: Implement file upload to get URL before creating plan
     };
 
     // Remove undefined values
@@ -39,7 +36,7 @@ export const createTravelPlan = async (
       }
     });
 
-    // Validate using Zod schema
+    // Validate using Zod schema (only non-file fields)
     const validationResult = zodValidator(
       payload,
       createTravelPlanValidationSchema
@@ -49,14 +46,25 @@ export const createTravelPlan = async (
       return validationResult;
     }
 
-    const validatedPayload = validationResult.data;
+    const validatedPayload: Record<string, any> = validationResult.data || {};
+
+    // Build outgoing multipart FormData (backend supports files[]; first = cover photo)
+    const outgoing = new FormData();
+    Object.entries(validatedPayload).forEach(([key, value]) => {
+      outgoing.append(key, String(value));
+    });
+
+    const files = formData.getAll("files") as (File | string)[];
+    files.forEach((file) => {
+      if (file instanceof File) {
+        outgoing.append("files", file);
+      }
+    });
 
     // Send request to API
     const res = await serverFetch.post("/travel-plans", {
-      body: JSON.stringify(validatedPayload),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: outgoing,
+      // No explicit Content-Type; fetch will set multipart boundary
     });
 
     const result = await res.json();

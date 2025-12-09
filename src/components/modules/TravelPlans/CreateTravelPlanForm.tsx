@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState, useRef } from "react";
+import { useActionState, useEffect, useState, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { createTravelPlan } from "@/services/travelPlans/createTravelPlan";
 import InputFieldError from "@/components/shared/InputFieldError";
 import DatePicker from "@/components/shared/DatePicker";
-import ImageUpload from "@/components/shared/ImageUpload";
+import MultiImageUpload from "@/components/shared/MultiImageUpload";
 import TravelTypeSelector from "./TravelTypeSelector";
 import VisibilitySelector from "./VisibilitySelector";
 import BudgetInput from "./BudgetInput";
@@ -28,6 +28,7 @@ const CreateTravelPlanForm = () => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, isPending] = useActionState(createTravelPlan, null);
+  const [isTransiting, startTransition] = useTransition();
 
   // Form state
   const [title, setTitle] = useState("");
@@ -41,8 +42,7 @@ const CreateTravelPlanForm = () => {
   const [currency, setCurrency] = useState("USD");
   const [visibility, setVisibility] = useState("PRIVATE");
   const [description, setDescription] = useState("");
-  const [coverPhoto, setCoverPhoto] = useState<File | null>(null);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string>("");
+  const [files, setFiles] = useState<File[]>([]);
 
   // Dialog state
   const [showCancelDialog, setShowCancelDialog] = useState(false);
@@ -56,7 +56,7 @@ const CreateTravelPlanForm = () => {
       startDate ||
       endDate ||
       description ||
-      coverPhoto ||
+      files.length ||
       budgetMin ||
       budgetMax
     );
@@ -77,10 +77,11 @@ const CreateTravelPlanForm = () => {
     if (budgetMax) formData.append("budgetMax", budgetMax.toString());
     formData.append("visibility", visibility);
     if (description) formData.append("description", description);
-    if (coverPhotoUrl) formData.append("coverPhoto", coverPhotoUrl);
-    // Note: File upload to backend will be handled separately if needed
+    files.forEach((file) => formData.append("files", file));
 
-    formAction(formData);
+    startTransition(() => {
+      formAction(formData);
+    });
   };
 
   // Handle success/error
@@ -304,18 +305,14 @@ const CreateTravelPlanForm = () => {
             </Field>
 
             <Field>
-              <ImageUpload
-                value={coverPhoto}
-                onChange={(file) => {
-                  setCoverPhoto(file);
-                  // Note: File upload to get URL will be handled in the service
-                  // For now, we store the file and handle upload in createTravelPlan service
-                  // The API expects coverPhoto as a URL string, so we'll need to upload first
-                }}
-                label="Cover Photo"
+              <MultiImageUpload
+                value={files}
+                onChange={setFiles}
+                label="Cover Photo & Gallery Images"
+                maxFiles={10}
               />
               <FieldDescription>
-                Optional. Upload a cover photo for your travel plan (max 5MB)
+                Optional. Upload up to 10 images (first becomes cover). Max 5MB each.
               </FieldDescription>
               <InputFieldError field="coverPhoto" state={state} />
             </Field>
@@ -332,8 +329,8 @@ const CreateTravelPlanForm = () => {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Creating..." : "Create Plan"}
+          <Button type="submit" disabled={isPending || isTransiting}>
+            {isPending || isTransiting ? "Creating..." : "Create Plan"}
           </Button>
         </div>
       </form>
