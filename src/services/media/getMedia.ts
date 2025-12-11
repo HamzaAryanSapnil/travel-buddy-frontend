@@ -24,7 +24,11 @@ export async function getMedia(
     if (limit) params.set("limit", limit.toString());
 
     const queryString = params.toString();
-    const response = await serverFetch.get(`/media?${queryString}`);
+    const response = await serverFetch.get(`/media?${queryString}`, {
+      next: {
+        tags: [`trip-media-${planId}`],
+      },
+    });
 
     // Handle 401/403 - user not authenticated or no access (graceful degradation)
     if (response.status === 401 || response.status === 403) {

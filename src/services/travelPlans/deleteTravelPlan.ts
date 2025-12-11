@@ -2,6 +2,7 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function deleteTravelPlan(planId: string): Promise<{
@@ -40,6 +41,8 @@ export async function deleteTravelPlan(planId: string): Promise<{
     }
 
     const data = await response.json();
+    // @ts-expect-error - revalidateTag signature mismatch
+    revalidateTag("travel-plans");
     return {
       success: true,
       message: data.message || "Travel plan deleted successfully",

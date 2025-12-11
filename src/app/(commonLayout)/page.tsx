@@ -3,8 +3,7 @@ import KeyFeatures from "@/components/modules/Home/KeyFeatures";
 import HowItWorks from "@/components/modules/Home/HowItWorks";
 import Statistics from "@/components/modules/Home/Statistics";
 
-// Force static rendering - homepage has no server-side dependencies
-export const dynamic = 'force-static';
+// export const dynamic = 'force-static'; // Removed to allow cookie reading in layout
 
 export default function Home() {
   return (

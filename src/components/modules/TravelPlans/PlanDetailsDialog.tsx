@@ -33,7 +33,9 @@ import {
   Users,
   Pencil,
   Trash2,
+  ExternalLink,
 } from "lucide-react";
+import Link from "next/link";
 import EditTravelPlanDialog from "./EditTravelPlanDialog";
 import { deleteTravelPlan } from "@/services/travelPlans/deleteTravelPlan";
 import { useRouter } from "next/navigation";
@@ -114,7 +116,7 @@ const PlanDetailsDialog = ({
         </DialogTrigger>
         <DialogContent className="w-11/12 max-w-7xl max-h-[90vh] overflow-y-auto sm:p-6 p-4 rounded-lg">
           <DialogHeader className="space-y-1">
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div className="flex flex-col  sm:items-start justify-between gap-4">
               <div>
                 <DialogTitle className="text-2xl font-bold">
                   {plan.title}
@@ -124,7 +126,13 @@ const PlanDetailsDialog = ({
                   <span>{plan.destination}</span>
                 </DialogDescription>
               </div>
-              <div className="flex items-center gap-2 self-end sm:self-auto sm:mr-8">
+              <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto sm:mr-12">
+                <Button variant="default" size="sm" asChild>
+                  <Link href={`/dashboard/travel-plans/${plan.id}`}>
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Open Dashboard
+                  </Link>
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"

@@ -39,18 +39,44 @@ export async function proxy(request: NextRequest) {
 
   let userRole: UserRole | null = null;
   if (accessToken) {
-    const verifiedToken: JwtPayload | string = jwt.verify(
-      accessToken,
-      process.env.JWT_SECRET as string
-    );
+    try {
+      // Check if JWT_SECRET is available
+      if (!process.env.JWT_SECRET) {
+        console.error("JWT_SECRET is not set in environment variables");
+        await deleteCookie("accessToken");
+        await deleteCookie("refreshToken");
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
 
-    if (typeof verifiedToken === "string") {
+      const verifiedToken: JwtPayload | string = jwt.verify(
+        accessToken,
+        process.env.JWT_SECRET as string
+      );
+
+      if (typeof verifiedToken === "string") {
+        await deleteCookie("accessToken");
+        await deleteCookie("refreshToken");
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+
+      userRole = verifiedToken.role;
+    } catch (error: any) {
+      // Handle JWT verification errors (invalid signature, expired, etc.)
+      console.error("JWT verification error:", error.message);
+      // Clear invalid tokens and redirect to login
       await deleteCookie("accessToken");
       await deleteCookie("refreshToken");
-      return NextResponse.redirect(new URL("/login", request.url));
+      
+      // If trying to access protected route, redirect to login
+      const routerOwner = getRouteOwner(pathname);
+      if (routerOwner !== null) {
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("redirect", pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+      // For public routes, just continue without token
+      return NextResponse.next();
     }
-
-    userRole = verifiedToken.role;
   }
 
   const routerOwner = getRouteOwner(pathname);

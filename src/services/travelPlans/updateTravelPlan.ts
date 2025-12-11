@@ -3,6 +3,7 @@
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
 import { createTravelPlanValidationSchema } from "@/zod/travelPlan.validation";
+import { revalidateTag } from "next/cache";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const updateTravelPlan = async (
@@ -82,6 +83,9 @@ export const updateTravelPlan = async (
       };
     }
 
+    // @ts-expect-error - revalidateTag signature mismatch
+    revalidateTag("travel-plans");
+
     return {
       success: true,
       message: result.message || "Travel plan updated successfully",
@@ -101,4 +105,3 @@ export const updateTravelPlan = async (
     };
   }
 };
-

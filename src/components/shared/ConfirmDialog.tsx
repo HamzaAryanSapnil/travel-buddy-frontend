@@ -19,6 +19,7 @@ interface ConfirmDialogProps {
   onConfirm: () => void;
   confirmText?: string;
   cancelText?: string;
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 }
 
 const ConfirmDialog = ({
@@ -29,6 +30,7 @@ const ConfirmDialog = ({
   onConfirm,
   confirmText = "Confirm",
   cancelText = "Cancel",
+  variant = "default",
 }: ConfirmDialogProps) => {
   const handleConfirm = () => {
     onConfirm();
@@ -44,7 +46,10 @@ const ConfirmDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm}>
+          <AlertDialogAction 
+            onClick={handleConfirm}
+            className={variant === "destructive" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+          >
             {confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>

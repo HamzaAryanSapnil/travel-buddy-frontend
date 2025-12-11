@@ -4,7 +4,8 @@
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
 import { createTravelPlanValidationSchema } from "@/zod/travelPlan.validation";
-import { redirect } from "next/navigation";
+import { revalidateTag } from "next/cache";
+import { RedirectType, redirect } from "next/navigation";
 
 export const createTravelPlan = async (
   _currentState: any,
@@ -125,9 +126,11 @@ export const createTravelPlan = async (
       };
     }
 
-    // Success - redirect to plan details page
+    // Success - redirect to plan details page (or list since details is a dialog now)
     if (result.success && result.data?.id) {
-      redirect(`/dashboard/travel-plans/${result.data.id}`);
+      // @ts-expect-error - revalidateTag signature mismatch in this environment
+      revalidateTag("travel-plans");
+      redirect("/dashboard/travel-plans", RedirectType.push);
     }
 
     return {
@@ -150,4 +153,3 @@ export const createTravelPlan = async (
     };
   }
 };
-

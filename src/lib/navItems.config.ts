@@ -47,6 +47,12 @@ export const userNavItems: NavSection[] = [
         roles: ["USER"],
       },
       {
+        title: "My Requests",
+        href: "/dashboard/my-requests",
+        icon: "UserPlus", // Or Ticket
+        roles: ["USER"],
+      },
+      {
         title: "AI Planner",
         href: "/dashboard/planner",
         icon: "Sparkles",
@@ -58,12 +64,6 @@ export const userNavItems: NavSection[] = [
     title: "Collaboration",
     items: [
       {
-        title: "Expenses",
-        href: "/dashboard/expenses",
-        icon: "DollarSign",
-        roles: ["USER"],
-      },
-      {
         title: "Meetups",
         href: "/dashboard/meetups",
         icon: "Users",
@@ -73,12 +73,6 @@ export const userNavItems: NavSection[] = [
         title: "Media Gallery",
         href: "/dashboard/media",
         icon: "Image",
-        roles: ["USER"],
-      },
-      {
-        title: "Chat",
-        href: "/dashboard/chat",
-        icon: "MessageSquare",
         roles: ["USER"],
       },
     ],

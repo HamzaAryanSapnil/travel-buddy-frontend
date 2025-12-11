@@ -4,7 +4,6 @@
 import { publicFetch } from "@/lib/public-fetch";
 import { serverFetch } from "@/lib/server-fetch";
 import { getCookie } from "@/services/auth/tokenHandlers";
-import { unstable_cache } from "next/cache";
 
 export interface TravelPlanDetail {
   id: string;
@@ -48,68 +47,70 @@ export interface TravelPlanResponse {
  */
 export async function getTravelPlan(
   planId: string
-): Promise<{ data: TravelPlanDetail | null; error: string | null; statusCode?: number }> {
-  return unstable_cache(
-    async () => {
-      try {
-        const accessToken = await getCookie("accessToken");
-        
-        // Try public fetch first
-        const response = accessToken
-          ? await serverFetch.get(`/travel-plans/${planId}`)
-          : await publicFetch.get(`/travel-plans/${planId}`);
+): Promise<{
+  data: TravelPlanDetail | null;
+  error: string | null;
+  statusCode?: number;
+}> {
+  try {
+    const accessToken = await getCookie("accessToken");
 
-        // Handle specific status codes
-        if (response.status === 401) {
-          return {
-            data: null,
-            error: "Please log in to view this plan",
-            statusCode: 401,
-          };
-        }
+    const fetchOptions = {
+      next: {
+        tags: ["travel-plans", `travel-plan-${planId}`],
+        revalidate: 259200,
+      },
+    };
 
-        if (response.status === 403) {
-          return {
-            data: null,
-            error: "You don't have permission to view this plan",
-            statusCode: 403,
-          };
-        }
+    // Try public fetch first
+    const response = accessToken
+      ? await serverFetch.get(`/travel-plans/${planId}`, fetchOptions)
+      : await publicFetch.get(`/travel-plans/${planId}`, fetchOptions);
 
-        if (response.status === 404) {
-          return {
-            data: null,
-            error: "Travel plan not found",
-            statusCode: 404,
-          };
-        }
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch travel plan");
-        }
-
-        const result: TravelPlanResponse = await response.json();
-        return {
-          data: result.data,
-          error: null,
-        };
-      } catch (error: any) {
-        console.error("Get travel plan error:", error);
-        return {
-          data: null,
-          error:
-            process.env.NODE_ENV === "development"
-              ? error.message
-              : "Failed to fetch travel plan. Please try again.",
-          statusCode: 500,
-        };
-      }
-    },
-    [`travel-plan-${planId}`],
-    {
-      tags: ["travel-plans", `travel-plan-${planId}`], // General and specific tags
-      revalidate: 259200, // Fallback: revalidate every 72 hours (3 days)
+    // Handle specific status codes
+    if (response.status === 401) {
+      return {
+        data: null,
+        error: "Please log in to view this plan",
+        statusCode: 401,
+      };
     }
-  )();
+
+    if (response.status === 403) {
+      return {
+        data: null,
+        error: "You don't have permission to view this plan",
+        statusCode: 403,
+      };
+    }
+
+    if (response.status === 404) {
+      return {
+        data: null,
+        error: "Travel plan not found",
+        statusCode: 404,
+      };
+    }
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch travel plan");
+    }
+
+    const result: TravelPlanResponse = await response.json();
+    return {
+      data: result.data,
+      error: null,
+    };
+  } catch (error: any) {
+    console.error("Get travel plan error:", error);
+    return {
+      data: null,
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to fetch travel plan. Please try again.",
+      statusCode: 500,
+    };
+  }
 }
 

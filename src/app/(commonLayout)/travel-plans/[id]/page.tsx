@@ -14,6 +14,7 @@ import ItineraryDisplay from "@/components/modules/TravelPlans/ItineraryDisplay"
 import { formatBudgetRange, formatDateRange } from "@/lib/formatters";
 import MediaGalleryPreview from "@/components/modules/TravelPlans/MediaGalleryPreview";
 import ReviewsPreview from "@/components/modules/TravelPlans/ReviewsPreview";
+import JoinRequestButton from "@/components/modules/TravelPlans/JoinRequestButton";
 
 interface PlanDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -126,52 +127,80 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
 
         {/* Header Section */}
         <div className="mb-8">
-          <div className="flex flex-wrap gap-3 mb-4">
-            <Badge variant="secondary" className="text-sm">
-              {plan.travelType}
-            </Badge>
-            <Badge
-              variant={
-                plan.visibility === "PUBLIC"
-                  ? "default"
-                  : plan.visibility === "PRIVATE"
-                  ? "destructive"
-                  : "outline"
-              }
-              className="text-sm"
-            >
-              {plan.visibility}
-            </Badge>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            {plan.title}
-          </h1>
-
-          <div className="flex flex-wrap gap-4 text-muted-foreground mb-6">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              <span>{plan.destination}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              <span>{formatDateRange(plan.startDate, plan.endDate)}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5" />
-              <span>{formatBudgetRange(plan.budgetMin, plan.budgetMax)}</span>
-            </div>
-            {plan._count?.tripMembers && (
-              <div className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                <span>{plan._count.tripMembers} members</span>
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+            <div className="flex-1">
+              <div className="flex flex-wrap gap-3 mb-4">
+                <Badge variant="secondary" className="text-sm">
+                  {plan.travelType}
+                </Badge>
+                <Badge
+                  variant={
+                    plan.visibility === "PUBLIC"
+                      ? "default"
+                      : plan.visibility === "PRIVATE"
+                      ? "destructive"
+                      : "outline"
+                  }
+                  className="text-sm"
+                >
+                  {plan.visibility}
+                </Badge>
               </div>
-            )}
+
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+                {plan.title}
+              </h1>
+
+              <div className="flex flex-wrap gap-4 text-muted-foreground mb-6">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  <span>{plan.destination}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  <span>{formatDateRange(plan.startDate, plan.endDate)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="h-5 w-5" />
+                  <span>{formatBudgetRange(plan.budgetMin, plan.budgetMax)}</span>
+                </div>
+                {plan._count?.tripMembers !== undefined && (
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    <span>{plan._count.tripMembers} members</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Join Request Button - Only if authenticated and not owner */}
+            {/* Note: We need to determine if current user is member or owner. 
+                For now we assume basic authenticated state. Real implementation 
+                would require checking against member list or user ID if available in plan data.
+            */}
+            <div className="flex flex-col gap-2 min-w-[200px]">
+               <JoinRequestButton
+                  planId={plan.id}
+                  planTitle={plan.title}
+                  isAuthenticated={!!accessToken}
+                  // These props would come from API in a real scenario
+                  // isMember={false} 
+                  // requestStatus={null} 
+               />
+               
+               {accessToken && (
+                 <Link href={`/dashboard/travel-plans/${id}`} className="w-full">
+                    <Button variant="outline" className="w-full">
+                      View in Dashboard
+                    </Button>
+                 </Link>
+               )}
+            </div>
           </div>
 
           {/* Description */}
           {plan.description && (
-            <Card className="mb-8">
+            <Card className="mb-8 mt-6">
               <CardContent className="pt-6">
                 <h2 className="text-xl font-semibold mb-3">About This Trip</h2>
                 <p className="text-muted-foreground whitespace-pre-wrap">
@@ -209,34 +238,21 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
 
         <Separator className="my-8" />
 
-        {/* Action Buttons */}
+        {/* Action Buttons - Moved logic up to header, kept consistent bottom nav */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center py-8">
-          {accessToken ? (
-            <>
-              <Link href={`/dashboard/travel-plans/${id}`}>
-                <Button size="lg" className="w-full sm:w-auto">
-                  Open in Dashboard
-                </Button>
-              </Link>
-              <Link href="/dashboard/travel-plans/create">
+            <Link href="/travel-plans">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                  Create New Plan
+                  Browse All Plans
                 </Button>
-              </Link>
-            </>
-          ) : (
-            <div className="text-center">
-              <p className="text-lg mb-4 text-muted-foreground">
-                Start planning your own adventure!
-              </p>
+            </Link>
+            {!accessToken && (
               <Link href="/login?redirect=/dashboard/travel-plans/create">
                 <Button size="lg" className="gap-2">
                   <Users className="h-5 w-5" />
                   Create Your Plan
                 </Button>
               </Link>
-            </div>
-          )}
+            )}
         </div>
       </div>
     </main>

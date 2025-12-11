@@ -4,7 +4,6 @@
 import { publicFetch } from "@/lib/public-fetch";
 import { serverFetch } from "@/lib/server-fetch";
 import { getCookie } from "@/services/auth/tokenHandlers";
-import { unstable_cache } from "next/cache";
 
 export interface ItineraryLocation {
   id: string;
@@ -49,56 +48,54 @@ export interface ItineraryResponse {
 export async function getItinerary(
   planId: string
 ): Promise<{ data: ItineraryDay[] | null; error: string | null }> {
-  return unstable_cache(
-    async () => {
-      try {
-        const accessToken = await getCookie("accessToken");
-        
-        // Try public fetch first, authenticated if logged in
-        const response = accessToken
-          ? await serverFetch.get(`/itinerary/${planId}`)
-          : await publicFetch.get(`/itinerary/${planId}`);
+  try {
+    const accessToken = await getCookie("accessToken");
 
-        // Handle 401 - plan is private
-        if (response.status === 401) {
-          return {
-            data: null,
-            error: "Please log in to view this itinerary",
-          };
-        }
+    const fetchOptions = {
+      next: {
+        tags: ["travel-itinerary", `travel-plan-${planId}`],
+        revalidate: 259200,
+      },
+    };
 
-        if (response.status === 404) {
-          return {
-            data: [],
-            error: null,
-          };
-        }
+    // Try public fetch first, authenticated if logged in
+    const response = accessToken
+      ? await serverFetch.get(`/itinerary/${planId}`, fetchOptions)
+      : await publicFetch.get(`/itinerary/${planId}`, fetchOptions);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch itinerary");
-        }
-
-        const result: ItineraryResponse = await response.json();
-        return {
-          data: result.data.days,
-          error: null,
-        };
-      } catch (error: any) {
-        console.error("Get itinerary error:", error);
-        return {
-          data: null,
-          error:
-            process.env.NODE_ENV === "development"
-              ? error.message
-              : "Failed to fetch itinerary. Please try again.",
-        };
-      }
-    },
-    [`travel-itinerary-${planId}`],
-    {
-      tags: ["travel-itinerary", `travel-plan-${planId}`], // Tag for itinerary and plan
-      revalidate: 259200, // Fallback: revalidate every 72 hours (3 days)
+    // Handle 401 - plan is private
+    if (response.status === 401) {
+      return {
+        data: null,
+        error: "Please log in to view this itinerary",
+      };
     }
-  )();
+
+    if (response.status === 404) {
+      return {
+        data: [],
+        error: null,
+      };
+    }
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch itinerary");
+    }
+
+    const result: ItineraryResponse = await response.json();
+    return {
+      data: result.data.days,
+      error: null,
+    };
+  } catch (error: any) {
+    console.error("Get itinerary error:", error);
+    return {
+      data: null,
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to fetch itinerary. Please try again.",
+    };
+  }
 }
 

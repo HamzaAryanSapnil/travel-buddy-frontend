@@ -17,8 +17,8 @@ export interface TravelPlan {
   // Optional fields from API
   totalDays?: number;
   _count?: {
-    itineraryItems: number;
-    tripMembers: number;
+    itineraryItems?: number;
+    tripMembers?: number;
   };
   status?: "UPCOMING" | "ONGOING" | "PAST";
 }
@@ -45,4 +45,3 @@ export interface TravelPlansFilters {
   page?: number;
   limit?: number;
 }
-
