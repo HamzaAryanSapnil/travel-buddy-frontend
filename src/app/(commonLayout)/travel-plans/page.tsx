@@ -81,6 +81,7 @@ export default async function TravelPlansPage({
   // Fetch public plans (no auth required)
   const plansData = await getPublicTravelPlans(filters);
   const error = !plansData.success ? plansData.message : null;
+  console.log("plansData from travel-plans/page.tsx: ", plansData);
 
   // Calculate pagination
   const totalPages = Math.ceil(
