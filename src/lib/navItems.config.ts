@@ -78,14 +78,8 @@ export const userNavItems: NavSection[] = [
     ],
   },
   {
-    title: "Reviews & Payments",
+    title: "Payments",
     items: [
-      {
-        title: "Reviews",
-        href: "/dashboard/reviews",
-        icon: "Star",
-        roles: ["USER"],
-      },
       {
         title: "Subscriptions",
         href: "/dashboard/subscriptions",
