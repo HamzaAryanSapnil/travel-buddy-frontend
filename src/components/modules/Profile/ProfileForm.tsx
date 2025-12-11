@@ -25,10 +25,14 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
   const [state, formAction] = useActionState(updateProfile, null);
 
   // Form state
-  const [fullName, setFullName] = useState(userInfo.fullName || userInfo.name || "");
+  const [fullName, setFullName] = useState(
+    userInfo.fullName || userInfo.name || ""
+  );
   const [bio, setBio] = useState(userInfo.bio || "");
   const [location, setLocation] = useState(userInfo.location || "");
-  const [interests, setInterests] = useState<string[]>(userInfo.interests || []);
+  const [interests, setInterests] = useState<string[]>(
+    userInfo.interests || []
+  );
   const [visitedCountries, setVisitedCountries] = useState<string[]>(
     userInfo.visitedCountries || []
   );
@@ -284,4 +288,3 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
     </form>
   );
 }
-

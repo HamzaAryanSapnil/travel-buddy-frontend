@@ -74,9 +74,7 @@ export default async function NotificationsDropdown() {
 
   if (error) {
     return (
-      <div className="p-4 text-center text-sm text-destructive">
-        {error}
-      </div>
+      <div className="p-4 text-center text-sm text-destructive">{error}</div>
     );
   }
 
