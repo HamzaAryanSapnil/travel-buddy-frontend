@@ -12,12 +12,14 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import PlanDetailsDialog from "./PlanDetailsDialog";
+import TravelPlanActions from "@/components/modules/Admin/TravelPlanActions";
 
 interface PlanListItemProps {
   plan: TravelPlan;
+  isAdminView?: boolean; // If true, show admin actions
 }
 
-const PlanListItem = ({ plan }: PlanListItemProps) => {
+const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
   const visibilityLabels: Record<string, string> = {
     PUBLIC: "Public",
     PRIVATE: "Private",
@@ -104,7 +106,8 @@ const PlanListItem = ({ plan }: PlanListItemProps) => {
                   )}
                 </div>
                 {/* Actions */}
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 flex items-center gap-2">
+                  {isAdminView && <TravelPlanActions plan={plan} />}
                   <PlanDetailsDialog
                     plan={plan}
                     triggerLabel="View Details"

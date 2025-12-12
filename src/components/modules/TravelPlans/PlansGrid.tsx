@@ -11,6 +11,7 @@ interface PlansGridProps {
   error?: string | null;
   isMemberMap?: Record<string, boolean>;
   isDashboard?: boolean;
+  isAdminView?: boolean;
 }
 
 const PlanCardSkeleton = () => (
@@ -38,6 +39,7 @@ const PlansGrid = ({
   error = null,
   isMemberMap = {},
   isDashboard = false,
+  isAdminView = false,
 }: PlansGridProps) => {
   // Loading State
   if (isLoading) {
@@ -84,6 +86,7 @@ const PlansGrid = ({
           plan={plan}
           isMember={isMemberMap[plan.id] || false}
           isDashboard={isDashboard}
+          isAdminView={isAdminView}
         />
       ))}
     </div>

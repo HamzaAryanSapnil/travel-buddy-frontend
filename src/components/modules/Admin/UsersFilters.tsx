@@ -11,101 +11,96 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SearchFilter from "@/components/shared/SearchFilter";
+import SelectFilter from "@/components/shared/SelectFilter";
+import ClearFiltersButton from "@/components/shared/ClearFiltersButton";
 import { X } from "lucide-react";
+
+const STATUS_OPTIONS = [
+  { label: "All Status", value: "all" },
+  { label: "Active", value: "ACTIVE" },
+  { label: "Suspended", value: "SUSPENDED" },
+  { label: "Deleted", value: "DELETED" },
+];
+
+const ROLE_OPTIONS = [
+  { label: "All Roles", value: "all" },
+  { label: "User", value: "USER" },
+  { label: "Admin", value: "ADMIN" },
+];
+
+const VERIFICATION_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Verified", value: "true" },
+  { label: "Unverified", value: "false" },
+];
+
+const SORT_OPTIONS = [
+  { label: "Newest", value: "createdAt-desc" },
+  { label: "Oldest", value: "createdAt-asc" },
+  { label: "Name (A-Z)", value: "name-asc" },
+  { label: "Name (Z-A)", value: "name-desc" },
+];
 
 export default function UsersFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const status = searchParams.get("status") || "all";
-  const role = searchParams.get("role") || "all";
-  const active = searchParams.get("active") || "all";
-
-  const handleFilterChange = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value && value !== "all") {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-    params.set("page", "1"); // Reset to first page
-    startTransition(() => {
-      router.push(`?${params.toString()}`);
-    });
-  };
-
-  const clearFilters = () => {
-    startTransition(() => {
-      router.push("?");
-    });
-  };
-
   const hasActiveFilters =
-    status !== "all" || role !== "all" || active !== "all" || searchParams.get("search");
+    (searchParams.get("status") && searchParams.get("status") !== "all") ||
+    (searchParams.get("role") && searchParams.get("role") !== "all") ||
+    (searchParams.get("isVerified") && searchParams.get("isVerified") !== "all") ||
+    searchParams.get("searchTerm") ||
+    (searchParams.get("sort") && searchParams.get("sort") !== "createdAt-desc");
 
   return (
-    <div className="flex flex-wrap items-center gap-4">
+    <div className="flex flex-col sm:flex-row gap-4">
+      {/* Search */}
       <div className="flex-1 min-w-[200px]">
-        <SearchFilter placeholder="Search users..." paramName="search" />
+        <SearchFilter
+          placeholder="Search users..."
+          paramName="searchTerm"
+        />
       </div>
 
-      <Select
-        value={status}
-        onValueChange={(value) => handleFilterChange("status", value)}
-        disabled={isPending}
-      >
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Status</SelectItem>
-          <SelectItem value="ACTIVE">Active</SelectItem>
-          <SelectItem value="SUSPENDED">Suspended</SelectItem>
-          <SelectItem value="DELETED">Deleted</SelectItem>
-        </SelectContent>
-      </Select>
+      {/* Status */}
+      <SelectFilter
+        paramName="status"
+        placeholder="Status"
+        defaultValue="all"
+        options={STATUS_OPTIONS}
+      />
 
-      <Select
-        value={role}
-        onValueChange={(value) => handleFilterChange("role", value)}
-        disabled={isPending}
-      >
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="Role" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Roles</SelectItem>
-          <SelectItem value="USER">User</SelectItem>
-          <SelectItem value="ADMIN">Admin</SelectItem>
-        </SelectContent>
-      </Select>
+      {/* Role */}
+      <SelectFilter
+        paramName="role"
+        placeholder="Role"
+        defaultValue="all"
+        options={ROLE_OPTIONS}
+      />
 
-      <Select
-        value={active}
-        onValueChange={(value) => handleFilterChange("active", value)}
-        disabled={isPending}
-      >
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="Active" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All</SelectItem>
-          <SelectItem value="true">Active Only</SelectItem>
-          <SelectItem value="false">Inactive Only</SelectItem>
-        </SelectContent>
-      </Select>
+      {/* Verification Status */}
+      <SelectFilter
+        paramName="isVerified"
+        placeholder="Verification"
+        defaultValue="all"
+        options={VERIFICATION_OPTIONS}
+      />
 
+      {/* Sort */}
+      <SelectFilter
+        paramName="sort"
+        placeholder="Sort By"
+        defaultValue="createdAt-desc"
+        options={SORT_OPTIONS}
+      />
+
+      {/* Clear Filters */}
       {hasActiveFilters && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={clearFilters}
-          disabled={isPending}
-        >
-          <X className="h-4 w-4 mr-2" />
-          Clear
-        </Button>
+        <ClearFiltersButton
+          excludeFromCount={["page", "limit", "sort"]}
+          preserveParams={[]}
+        />
       )}
     </div>
   );

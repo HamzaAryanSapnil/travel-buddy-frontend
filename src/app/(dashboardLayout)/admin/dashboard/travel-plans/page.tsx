@@ -1,18 +1,21 @@
-import { getTravelPlans } from "@/services/travelPlans/getTravelPlans";
+import { getAdminTravelPlans } from "@/services/admin/getAdminTravelPlans";
 import AdminTravelPlansView from "@/components/modules/Admin/AdminTravelPlansView";
 import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
-import DashboardTravelPlansFilters from "@/components/modules/TravelPlans/DashboardTravelPlansFilters";
+import AdminTravelPlansFilters from "@/components/modules/Admin/AdminTravelPlansFilters";
 import ViewToggle from "@/components/shared/ViewToggle";
 import Pagination from "@/components/shared/Pagination";
 import { parseSortValue } from "@/lib/formatters";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AdminTravelPlansFilters as AdminTravelPlansFiltersType } from "@/types/admin.interface";
 
 interface AdminTravelPlansPageProps {
   searchParams: Promise<{
     searchTerm?: string;
     travelType?: string;
     visibility?: string;
+    isFeatured?: string;
+    ownerId?: string;
     type?: string;
     sort?: string;
     page?: string;
@@ -34,7 +37,7 @@ export default async function AdminTravelPlansPage({
   const view = (params.view || "grid") as "grid" | "list";
 
   // Build filters object
-  const filters = {
+  const filters: AdminTravelPlansFiltersType = {
     searchTerm: params.searchTerm,
     travelType:
       params.travelType && params.travelType !== "all"
@@ -49,7 +52,9 @@ export default async function AdminTravelPlansPage({
       params.visibility && params.visibility !== "all"
         ? (params.visibility as "PUBLIC" | "PRIVATE" | "UNLISTED")
         : undefined,
-    type: params.type && params.type !== "all" ? (params.type as "future" | "past") : undefined,
+    isFeatured:
+      params.isFeatured === "true" ? true : params.isFeatured === "false" ? false : undefined,
+    ownerId: params.ownerId || undefined,
     sortBy: sort.sortBy as "createdAt" | "startDate" | "budgetMin",
     sortOrder: sort.sortOrder as "asc" | "desc",
     page: params.page ? parseInt(params.page) : 1,
@@ -61,7 +66,7 @@ export default async function AdminTravelPlansPage({
   let error: string | null = null;
 
   try {
-    plansData = await getTravelPlans(filters);
+    plansData = await getAdminTravelPlans(filters);
     if (!plansData.success) {
       error = plansData.message;
     }
@@ -100,7 +105,7 @@ export default async function AdminTravelPlansPage({
 
       {/* Filters */}
       <Suspense fallback={<Skeleton className="h-12 w-full" />}>
-        <DashboardTravelPlansFilters />
+        <AdminTravelPlansFilters />
       </Suspense>
 
       {/* View Toggle */}
@@ -118,6 +123,7 @@ export default async function AdminTravelPlansPage({
           plans={error ? null : plansData?.data || null}
           error={error}
           view={view}
+          isAdminView={true}
         />
       </Suspense>
 

@@ -30,6 +30,7 @@ import MultiImageUpload from "@/components/shared/MultiImageUpload";
 import { formatCharacterCount } from "@/lib/formatters";
 import InputFieldError from "@/components/shared/InputFieldError";
 import { updateTravelPlan } from "@/services/travelPlans/updateTravelPlan";
+import { updateAdminTravelPlan } from "@/services/admin/updateAdminTravelPlan";
 import { TravelPlan } from "@/types/travelPlan.interface";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -39,6 +40,7 @@ interface EditTravelPlanDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdated?: () => void;
+  isAdmin?: boolean;
 }
 
 const EditTravelPlanDialog = ({
@@ -46,13 +48,14 @@ const EditTravelPlanDialog = ({
   open,
   onOpenChange,
   onUpdated,
+  isAdmin = false,
 }: EditTravelPlanDialogProps) => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction, isPending] = useActionState(
-    updateTravelPlan.bind(null, plan.id),
-    null
-  );
+  const updateAction = isAdmin
+    ? updateAdminTravelPlan.bind(null, plan.id)
+    : updateTravelPlan.bind(null, plan.id);
+  const [state, formAction, isPending] = useActionState(updateAction, null);
   const [isTransitioning, startTransition] = useTransition();
 
   const [title, setTitle] = useState(plan.title || "");
@@ -85,11 +88,11 @@ const EditTravelPlanDialog = ({
       toast.success(state.message || "Travel plan updated");
       onOpenChange(false);
       onUpdated?.();
-      router.refresh();
+      // Don't call router.refresh() here - let onUpdated handle it with startTransition
     } else if (state && state.success === false && state.message) {
       toast.error(state.message);
     }
-  }, [onOpenChange, onUpdated, router, state]);
+  }, [onOpenChange, onUpdated, state]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

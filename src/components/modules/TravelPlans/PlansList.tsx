@@ -9,6 +9,7 @@ interface PlansListProps {
   plans: TravelPlan[] | null;
   isLoading?: boolean;
   error?: string | null;
+  isAdminView?: boolean;
 }
 
 const PlanListItemSkeleton = () => (
@@ -47,6 +48,7 @@ const PlansList = ({
   plans,
   isLoading = false,
   error = null,
+  isAdminView = false,
 }: PlansListProps) => {
   // Loading State
   if (isLoading) {
@@ -88,7 +90,7 @@ const PlansList = ({
   return (
     <div className="space-y-4">
       {plans.map((plan) => (
-        <PlanListItem key={plan.id} plan={plan} />
+        <PlanListItem key={plan.id} plan={plan} isAdminView={isAdminView} />
       ))}
     </div>
   );

@@ -20,17 +20,20 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import PlanDetailsDialog from "./PlanDetailsDialog";
+import TravelPlanActions from "@/components/modules/Admin/TravelPlanActions";
 
 interface PlanCardProps {
   plan: TravelPlan;
   isMember?: boolean;
   isDashboard?: boolean; // If true, use dashboard routes and show actions
+  isAdminView?: boolean; // If true, show admin actions
 }
 
 const PlanCard = ({
   plan,
   isMember = false,
   isDashboard = false,
+  isAdminView = false,
 }: PlanCardProps) => {
   const visibilityLabels: Record<string, string> = {
     PUBLIC: "Public",
@@ -97,6 +100,11 @@ const PlanCard = ({
 
         {/* Badges Overlay */}
         <div className="absolute top-2 right-2 flex flex-col gap-2 items-end">
+          {isAdminView && (
+            <div className="flex items-center gap-2">
+              <TravelPlanActions plan={plan} />
+            </div>
+          )}
           {isDashboard && (
             <div className="flex items-center gap-2">
               {/* Actions moved to Details Dialog */}

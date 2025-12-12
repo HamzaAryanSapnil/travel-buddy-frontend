@@ -6,12 +6,14 @@ interface AdminTravelPlansViewProps {
   plans: TravelPlan[] | null;
   error?: string | null;
   view?: "grid" | "list";
+  isAdminView?: boolean;
 }
 
 export default function AdminTravelPlansView({
   plans,
   error,
   view = "grid",
+  isAdminView = true,
 }: AdminTravelPlansViewProps) {
   if (error) {
     return (
@@ -36,6 +38,7 @@ export default function AdminTravelPlansView({
       error={error}
       view={view}
       isDashboard={true}
+      isAdminView={isAdminView}
     />
   );
 }

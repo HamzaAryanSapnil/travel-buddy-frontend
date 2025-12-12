@@ -2,18 +2,16 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { UpdateUserStatusResponse } from "@/types/admin.interface";
+import { VerifyUserResponse } from "@/types/admin.interface";
 import { revalidateTag } from "next/cache";
 
-export async function updateUserStatus(
+export async function verifyUser(
   userId: string,
-  status: "ACTIVE" | "SUSPENDED" | "DELETED",
-  _currentState: any,
-  formData: FormData
-): Promise<UpdateUserStatusResponse> {
+  isVerified: boolean
+): Promise<VerifyUserResponse> {
   try {
-    const response = await serverFetch.patch(`/users/admin/${userId}/status`, {
-      body: JSON.stringify({ status }),
+    const response = await serverFetch.patch(`/users/admin/${userId}/verify`, {
+      body: JSON.stringify({ isVerified }),
       headers: { "Content-Type": "application/json" },
     });
 
@@ -24,7 +22,7 @@ export async function updateUserStatus(
       if (response.status === 401) {
         return {
           success: false,
-          message: "Please log in to update user status",
+          message: "Please log in to verify user",
         };
       }
 
@@ -32,7 +30,7 @@ export async function updateUserStatus(
       if (response.status === 403) {
         return {
           success: false,
-          message: "You don't have permission to update user status",
+          message: "You don't have permission to verify user",
         };
       }
 
@@ -46,7 +44,7 @@ export async function updateUserStatus(
 
       return {
         success: false,
-        message: data.message || "Failed to update user status",
+        message: data.message || "Failed to verify user",
       };
     }
 
@@ -57,7 +55,7 @@ export async function updateUserStatus(
 
     return {
       success: true,
-      message: data.message || "User status updated successfully",
+      message: data.message || "User verification status updated successfully",
       data: data.data,
     };
   } catch (error: any) {
@@ -66,13 +64,14 @@ export async function updateUserStatus(
       throw error;
     }
 
-    console.error("Update user status error:", error);
+    console.error("Verify user error:", error);
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
-          ? error.message || "Failed to update user status"
-          : "Failed to update user status. Please try again.",
+          ? error.message || "Failed to verify user"
+          : "Failed to verify user. Please try again.",
     };
   }
 }
+

@@ -2,18 +2,17 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { UpdateUserStatusResponse } from "@/types/admin.interface";
+import { UpdateUserRoleResponse } from "@/types/admin.interface";
+import { UserRole } from "@/lib/auth-utils";
 import { revalidateTag } from "next/cache";
 
-export async function updateUserStatus(
+export async function updateUserRole(
   userId: string,
-  status: "ACTIVE" | "SUSPENDED" | "DELETED",
-  _currentState: any,
-  formData: FormData
-): Promise<UpdateUserStatusResponse> {
+  role: UserRole
+): Promise<UpdateUserRoleResponse> {
   try {
-    const response = await serverFetch.patch(`/users/admin/${userId}/status`, {
-      body: JSON.stringify({ status }),
+    const response = await serverFetch.patch(`/users/admin/${userId}/role`, {
+      body: JSON.stringify({ role }),
       headers: { "Content-Type": "application/json" },
     });
 
@@ -24,7 +23,7 @@ export async function updateUserStatus(
       if (response.status === 401) {
         return {
           success: false,
-          message: "Please log in to update user status",
+          message: "Please log in to update user role",
         };
       }
 
@@ -32,7 +31,7 @@ export async function updateUserStatus(
       if (response.status === 403) {
         return {
           success: false,
-          message: "You don't have permission to update user status",
+          message: "You don't have permission to update user role",
         };
       }
 
@@ -46,7 +45,7 @@ export async function updateUserStatus(
 
       return {
         success: false,
-        message: data.message || "Failed to update user status",
+        message: data.message || "Failed to update user role",
       };
     }
 
@@ -57,7 +56,7 @@ export async function updateUserStatus(
 
     return {
       success: true,
-      message: data.message || "User status updated successfully",
+      message: data.message || "User role updated successfully",
       data: data.data,
     };
   } catch (error: any) {
@@ -66,13 +65,14 @@ export async function updateUserStatus(
       throw error;
     }
 
-    console.error("Update user status error:", error);
+    console.error("Update user role error:", error);
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
-          ? error.message || "Failed to update user status"
-          : "Failed to update user status. Please try again.",
+          ? error.message || "Failed to update user role"
+          : "Failed to update user role. Please try again.",
     };
   }
 }
+

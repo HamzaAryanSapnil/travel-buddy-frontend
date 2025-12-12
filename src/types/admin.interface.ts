@@ -7,8 +7,10 @@ import { UserRole } from "@/lib/auth-utils";
 export interface AdminUserFilters {
   status?: "ACTIVE" | "SUSPENDED" | "DELETED";
   role?: UserRole;
-  search?: string;
-  active?: boolean;
+  searchTerm?: string; // Changed from search to searchTerm
+  isVerified?: boolean;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
 }
@@ -28,6 +30,23 @@ export interface UpdateUserStatusResponse {
   success: boolean;
   message: string;
   data?: UserInfo;
+}
+
+export interface VerifyUserResponse {
+  success: boolean;
+  message: string;
+  data?: UserInfo;
+}
+
+export interface UpdateUserRoleResponse {
+  success: boolean;
+  message: string;
+  data?: UserInfo;
+}
+
+export interface DeleteUserResponse {
+  success: boolean;
+  message: string;
 }
 
 // Admin Subscription Management Types
@@ -135,5 +154,18 @@ export interface AdminPaymentStatisticsResponse {
   success: boolean;
   message: string;
   data: AdminPaymentStatistics;
+}
+
+// Admin Travel Plans Management Types
+export interface AdminTravelPlansFilters {
+  searchTerm?: string;
+  travelType?: "SOLO" | "COUPLE" | "FAMILY" | "FRIENDS" | "GROUP";
+  visibility?: "PUBLIC" | "PRIVATE" | "UNLISTED";
+  isFeatured?: boolean;
+  ownerId?: string;
+  sortBy?: "createdAt" | "startDate" | "budgetMin";
+  sortOrder?: "asc" | "desc";
+  page?: number;
+  limit?: number;
 }
 

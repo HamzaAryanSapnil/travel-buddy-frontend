@@ -9,9 +9,14 @@ import Link from "next/link";
 interface UsersTableProps {
   users: UserInfo[];
   error?: string | null;
+  currentAdminId: string;
 }
 
-export default function UsersTable({ users, error }: UsersTableProps) {
+export default function UsersTable({
+  users,
+  error,
+  currentAdminId,
+}: UsersTableProps) {
   if (error) {
     return (
       <Card className="p-6 text-center text-destructive">
@@ -97,7 +102,13 @@ export default function UsersTable({ users, error }: UsersTableProps) {
                   </td>
                   <td className="py-3">
                     <div className="flex justify-end">
-                      <UserActions userId={user.id} currentStatus={status} />
+                      <UserActions
+                        userId={user.id}
+                        currentStatus={status}
+                        isVerified={user.isVerified}
+                        currentRole={user.role || "USER"}
+                        currentAdminId={currentAdminId}
+                      />
                     </div>
                   </td>
                 </tr>

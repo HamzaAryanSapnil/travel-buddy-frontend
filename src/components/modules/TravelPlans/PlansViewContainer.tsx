@@ -11,6 +11,7 @@ interface PlansViewContainerProps {
   view: "grid" | "list";
   isMemberMap?: Record<string, boolean>;
   isDashboard?: boolean;
+  isAdminView?: boolean;
 }
 
 const PlansViewContainer = ({
@@ -20,10 +21,11 @@ const PlansViewContainer = ({
   view,
   isMemberMap = {},
   isDashboard = false,
+  isAdminView = false,
 }: PlansViewContainerProps) => {
   if (view === "list") {
     return (
-      <PlansList plans={plans} isLoading={isLoading} error={error} />
+      <PlansList plans={plans} isLoading={isLoading} error={error} isAdminView={isAdminView} />
     );
   }
 
@@ -34,6 +36,7 @@ const PlansViewContainer = ({
       error={error}
       isMemberMap={isMemberMap}
       isDashboard={isDashboard}
+      isAdminView={isAdminView}
     />
   );
 };

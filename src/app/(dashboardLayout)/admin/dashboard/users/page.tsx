@@ -1,18 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllUsers } from "@/services/admin/getAllUsers";
+import { getUserInfo } from "@/services/auth/getUserInfo";
 import UsersTable from "@/components/modules/Admin/UsersTable";
 import UsersFilters from "@/components/modules/Admin/UsersFilters";
 import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
 import Pagination from "@/components/shared/Pagination";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AdminUserFilters } from "@/types/admin.interface";
+import { parseSortValue } from "@/lib/formatters";
 
 interface AdminUsersPageProps {
   searchParams: Promise<{
     status?: string;
     role?: string;
-    active?: string;
-    search?: string;
+    isVerified?: string;
+    searchTerm?: string;
+    sort?: string;
     page?: string;
     limit?: string;
   }>;
@@ -23,8 +27,21 @@ export default async function AdminUsersPage({
 }: AdminUsersPageProps) {
   const params = await searchParams;
 
+  // Get current admin ID
+  let currentAdminId = "";
+  try {
+    const userInfo = await getUserInfo();
+    currentAdminId = userInfo.id || "";
+  } catch (err) {
+    console.error("Failed to get current user info:", err);
+  }
+
+  // Parse sort value
+  const sortValue = params.sort || "createdAt-desc";
+  const sort = parseSortValue(sortValue);
+
   // Build filters object
-  const filters = {
+  const filters: AdminUserFilters = {
     status:
       params.status && params.status !== "all"
         ? (params.status as "ACTIVE" | "SUSPENDED" | "DELETED")
@@ -33,11 +50,15 @@ export default async function AdminUsersPage({
       params.role && params.role !== "all"
         ? (params.role as "USER" | "ADMIN")
         : undefined,
-    active:
-      params.active && params.active !== "all"
-        ? params.active === "true"
+    isVerified:
+      params.isVerified === "true"
+        ? true
+        : params.isVerified === "false"
+        ? false
         : undefined,
-    search: params.search,
+    searchTerm: params.searchTerm,
+    sortBy: sort.sortBy,
+    sortOrder: sort.sortOrder as "asc" | "desc",
     page: params.page ? parseInt(params.page) : 1,
     limit: params.limit ? parseInt(params.limit) : 20,
   };
@@ -91,7 +112,11 @@ export default async function AdminUsersPage({
 
       {/* Users Table */}
       <Suspense fallback={<Skeleton className="h-64 w-full" />}>
-        <UsersTable users={error ? [] : usersData?.data || []} error={error} />
+        <UsersTable
+          users={error ? [] : usersData?.data || []}
+          error={error}
+          currentAdminId={currentAdminId}
+        />
       </Suspense>
 
       {/* Pagination */}
