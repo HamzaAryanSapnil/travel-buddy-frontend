@@ -1,6 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useState, useRef, useTransition } from "react";
+import {
+  useActionState,
+  useEffect,
+  useState,
+  useRef,
+  useTransition,
+} from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -44,8 +50,6 @@ const CreateTravelPlanForm = () => {
   const [visibility, setVisibility] = useState("PRIVATE");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
-  const [galleryImageUrls, setGalleryImageUrls] = useState<string[]>([]);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   // Dialog state
@@ -70,25 +74,26 @@ const CreateTravelPlanForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    let coverPhotoUrl: string | null = null;
+    let galleryImageUrls: string[] = [];
+
     // Upload images to imgBB first if there are files
     if (files.length > 0) {
       setIsUploadingImages(true);
       try {
         const imageUrls = await uploadMultipleToImgBB(files);
-        // First image becomes cover photo, rest are gallery
         if (imageUrls.length > 0) {
-          setCoverPhotoUrl(imageUrls[0]);
+          coverPhotoUrl = imageUrls[0];
           if (imageUrls.length > 1) {
-            setGalleryImageUrls(imageUrls.slice(1));
-          } else {
-            setGalleryImageUrls([]);
+            galleryImageUrls = imageUrls.slice(1);
           }
         }
       } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : "Failed to upload images";
+        const errorMsg =
+          error instanceof Error ? error.message : "Failed to upload images";
         toast.error(errorMsg);
         setIsUploadingImages(false);
-        return; // Don't proceed if upload fails
+        return;
       } finally {
         setIsUploadingImages(false);
       }
@@ -106,7 +111,7 @@ const CreateTravelPlanForm = () => {
     if (budgetMax) formData.append("budgetMax", budgetMax.toString());
     formData.append("visibility", visibility);
     if (description) formData.append("description", description);
-    
+
     // Add image URLs
     if (coverPhotoUrl) {
       formData.append("coverPhoto", coverPhotoUrl);
@@ -186,9 +191,7 @@ const CreateTravelPlanForm = () => {
                 maxLength={200}
                 aria-invalid={!!(state && getInputFieldError("title", state))}
               />
-              <FieldDescription>
-                Between 3 and 200 characters
-              </FieldDescription>
+              <FieldDescription>Between 3 and 200 characters</FieldDescription>
               <InputFieldError field="title" state={state} />
             </Field>
 
@@ -204,7 +207,9 @@ const CreateTravelPlanForm = () => {
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 required
-                aria-invalid={!!(state && getInputFieldError("destination", state))}
+                aria-invalid={
+                  !!(state && getInputFieldError("destination", state))
+                }
               />
               <InputFieldError field="destination" state={state} />
             </Field>
@@ -332,7 +337,9 @@ const CreateTravelPlanForm = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 maxLength={2000}
                 rows={6}
-                aria-invalid={!!(state && getInputFieldError("description", state))}
+                aria-invalid={
+                  !!(state && getInputFieldError("description", state))
+                }
               />
               <FieldDescription>
                 {formatCharacterCount(description.length, 2000)}
@@ -348,7 +355,8 @@ const CreateTravelPlanForm = () => {
                 maxFiles={10}
               />
               <FieldDescription>
-                Optional. Upload up to 10 images (first becomes cover). Max 32MB each.
+                Optional. Upload up to 10 images (first becomes cover). Max 32MB
+                each.
               </FieldDescription>
               <InputFieldError field="coverPhoto" state={state} />
             </Field>
@@ -365,7 +373,10 @@ const CreateTravelPlanForm = () => {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isPending || isTransiting || isUploadingImages}>
+          <Button
+            type="submit"
+            disabled={isPending || isTransiting || isUploadingImages}
+          >
             {isUploadingImages
               ? "Uploading images..."
               : isPending || isTransiting
@@ -401,4 +412,3 @@ function getInputFieldError(
 }
 
 export default CreateTravelPlanForm;
-

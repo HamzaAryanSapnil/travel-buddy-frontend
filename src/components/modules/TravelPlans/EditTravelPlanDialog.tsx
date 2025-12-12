@@ -79,20 +79,13 @@ const EditTravelPlanDialog = ({
   const [visibility, setVisibility] = useState(plan.visibility || "PRIVATE");
   const [description, setDescription] = useState(plan.description || "");
   const [files, setFiles] = useState<File[]>([]);
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
-  const [galleryImageUrls, setGalleryImageUrls] = useState<string[]>([]);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
-
-  // Remove useEffect for state sync to avoid setState during render
-  // Instead, rely on key prop on the component to force re-mount and re-initialization
-  // or use the useEffect above only when strictly necessary (e.g. plan prop changes)
 
   useEffect(() => {
     if (state?.success) {
       toast.success(state.message || "Travel plan updated");
       onOpenChange(false);
       onUpdated?.();
-      // Refresh router to update server-side data
       router.refresh();
     } else if (state && state.success === false && state.message) {
       toast.error(state.message);
@@ -102,25 +95,27 @@ const EditTravelPlanDialog = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Upload images to imgBB first if there are new files
+    let coverPhotoUrl: string | null = plan?.coverPhoto || null;
+    let galleryImageUrls: string[] = plan?.galleryImages || [];
+
+    // Upload new images to imgBB if there are new files
     if (files.length > 0) {
       setIsUploadingImages(true);
       try {
         const imageUrls = await uploadMultipleToImgBB(files);
-        // First image becomes cover photo, rest are gallery
         if (imageUrls.length > 0) {
-          setCoverPhotoUrl(imageUrls[0]);
+          coverPhotoUrl = imageUrls[0];
           if (imageUrls.length > 1) {
-            setGalleryImageUrls(imageUrls.slice(1));
+            galleryImageUrls = imageUrls.slice(1);
           } else {
-            setGalleryImageUrls([]);
+            galleryImageUrls = [];
           }
         }
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : "Failed to upload images";
         toast.error(errorMsg);
         setIsUploadingImages(false);
-        return; // Don't proceed if upload fails
+        return;
       } finally {
         setIsUploadingImages(false);
       }
@@ -140,7 +135,7 @@ const EditTravelPlanDialog = ({
     formData.append("visibility", visibility);
     if (description) formData.append("description", description);
     
-    // Add image URLs if uploaded
+    // Add image URLs
     if (coverPhotoUrl) {
       formData.append("coverPhoto", coverPhotoUrl);
     }

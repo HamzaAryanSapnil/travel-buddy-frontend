@@ -1,15 +1,10 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatBudgetRange, formatDateRange } from "@/lib/formatters";
 import { TravelPlan } from "@/types/travelPlan.interface";
-import {
-  Calendar,
-  DollarSign,
-  Eye,
-  EyeOff,
-  MapPin,
-  Users,
-} from "lucide-react";
+import { Calendar, DollarSign, Eye, EyeOff, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import PlanDetailsDialog from "./PlanDetailsDialog";
 import TravelPlanActions from "@/components/modules/Admin/TravelPlanActions";
@@ -138,7 +133,9 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
                 {/* Budget Range */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <DollarSign className="h-4 w-4 flex-shrink-0" />
-                  <span>{formatBudgetRange(plan?.budgetMin, plan?.budgetMax)}</span>
+                  <span>
+                    {formatBudgetRange(plan?.budgetMin, plan?.budgetMax)}
+                  </span>
                 </div>
 
                 {/* Member Count */}
@@ -160,8 +157,8 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
                     plan?.visibility === "PUBLIC"
                       ? "default"
                       : plan?.visibility === "PRIVATE"
-                        ? "destructive"
-                        : "outline"
+                      ? "destructive"
+                      : "outline"
                   }
                   className="flex items-center gap-1"
                 >
@@ -184,4 +181,3 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
 };
 
 export default PlanListItem;
-

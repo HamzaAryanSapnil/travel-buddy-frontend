@@ -16,10 +16,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "res.cloudinary.com", // Cloudinary (backward compatibility)
-      },
-      {
-        protocol: "https",
         hostname: "**", // Accept all other HTTPS domains
       },
       {

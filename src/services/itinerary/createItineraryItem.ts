@@ -7,10 +7,26 @@ import { createItineraryItemSchema } from "@/zod/itinerary.validation";
 import { revalidateTag } from "next/cache";
 
 // Helper function to convert datetime-local to ISO format
+// datetime-local format: "2025-01-15T09:00" (local time, no timezone)
+// We need to treat it as local time and convert to UTC correctly
 const convertToISO = (datetimeLocal: string | null | undefined) => {
-  if (!datetimeLocal) return undefined;
-  const date = new Date(datetimeLocal);
-  return date.toISOString();
+  if (!datetimeLocal || datetimeLocal.trim() === "") return undefined;
+  
+  try {
+    // datetime-local is already in local timezone
+    // JavaScript's Date constructor will interpret it correctly as local time
+    // and toISOString() will convert it to UTC
+    const date = new Date(datetimeLocal);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return undefined;
+    }
+    
+    return date.toISOString();
+  } catch (error) {
+    return undefined;
+  }
 };
 
 export const createItineraryItem = async (

@@ -72,6 +72,7 @@ export async function uploadMultipleToImgBB(
   try {
     const uploadPromises = files.map((file) => uploadToImgBB(file));
     const urls = await Promise.all(uploadPromises);
+    console.log("Uploaded images to imgBB from uploadMultipleToImgBB: ", urls);
     return urls;
   } catch (error) {
     if (error instanceof Error) {

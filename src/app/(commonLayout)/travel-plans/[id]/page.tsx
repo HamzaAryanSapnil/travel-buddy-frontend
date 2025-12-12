@@ -122,10 +122,6 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
               className="object-cover"
               priority
               unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
-              onError={(e) => {
-                console.error("Image load error:", plan?.coverPhoto);
-                e.currentTarget.style.display = "none";
-              }}
             />
           </div>
         )}
