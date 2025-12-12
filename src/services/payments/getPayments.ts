@@ -68,7 +68,6 @@ export async function getPayments(
     }
 
     const data = await response.json();
-    console.log("Payments history data from getPayments.ts: ", data);
     // Log response in development for debugging
     if (process.env.NODE_ENV === "development") {
       console.log("Get payments response:", {

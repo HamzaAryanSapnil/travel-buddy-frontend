@@ -27,7 +27,10 @@ interface TravelPlansPageProps {
 const PlansGridSkeleton = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {Array.from({ length: 8 }).map((_, index) => (
-      <div key={index} className="overflow-hidden rounded-xl border flex flex-col h-full">
+      <div
+        key={index}
+        className="overflow-hidden rounded-xl border flex flex-col h-full"
+      >
         <Skeleton className="w-full aspect-video" />
         <div className="p-6 space-y-3 flex-1">
           <Skeleton className="h-6 w-3/4" />
@@ -81,7 +84,6 @@ export default async function TravelPlansPage({
   // Fetch public plans (no auth required)
   const plansData = await getPublicTravelPlans(filters);
   const error = !plansData.success ? plansData.message : null;
-  console.log("plansData from travel-plans/page.tsx: ", plansData);
 
   // Calculate pagination
   const totalPages = Math.ceil(
@@ -131,7 +133,10 @@ export default async function TravelPlansPage({
 
         {/* Floating Action Button (logged-in users only) */}
         {accessToken && (
-          <Link href="/dashboard/travel-plans/create" className="fixed bottom-8 right-8 z-50">
+          <Link
+            href="/dashboard/travel-plans/create"
+            className="fixed bottom-8 right-8 z-50"
+          >
             <Button
               size="lg"
               className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
@@ -145,4 +150,3 @@ export default async function TravelPlansPage({
     </main>
   );
 }
-

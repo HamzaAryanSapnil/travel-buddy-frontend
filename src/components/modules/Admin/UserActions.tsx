@@ -82,7 +82,7 @@ export default function UserActions({
       const result = await updateUserRole(userId, pendingRole);
       if (result.success) {
         toast.success(result.message);
-        startTransition(() => router.refresh());
+        router.refresh();
       } else {
         toast.error(result.message || "Failed to update user role");
       }
@@ -143,7 +143,7 @@ export default function UserActions({
 
       if (result.success) {
         toast.success(result.message);
-        startTransition(() => router.refresh());
+        router.refresh();
       } else {
         toast.error(result.message || "Failed to perform action");
       }

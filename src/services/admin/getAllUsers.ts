@@ -58,7 +58,8 @@ export async function getAllUsers(
       throw new Error("Failed to fetch users");
     }
 
-    const data: AdminUsersResponse = await response.json();
+    const data = await response.json();
+    console.log("data from getAllUsers: ", data);
 
     return data;
   } catch (error: any) {
