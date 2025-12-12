@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -11,9 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import SearchFilter from "@/components/shared/SearchFilter";
 import { X } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function PaymentsFilters() {
   const router = useRouter();
@@ -21,8 +21,16 @@ export default function PaymentsFilters() {
   const [isPending, startTransition] = useTransition();
 
   const status = searchParams.get("status") || "all";
-  const subscriptionId = searchParams.get("subscriptionId") || "";
-  const currency = searchParams.get("currency") || "";
+  const [subscriptionId, setSubscriptionId] = useState(
+    searchParams.get("subscriptionId") || ""
+  );
+  const [currency, setCurrency] = useState(
+    searchParams.get("currency") || ""
+  );
+
+  // Debounce subscriptionId and currency inputs
+  const debouncedSubscriptionId = useDebounce(subscriptionId, 500);
+  const debouncedCurrency = useDebounce(currency, 500);
 
   const handleFilterChange = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -37,7 +45,54 @@ export default function PaymentsFilters() {
     });
   };
 
+  // Update URL when debounced values change
+  useEffect(() => {
+    const currentSubscriptionId = searchParams.get("subscriptionId") || "";
+    if (debouncedSubscriptionId !== currentSubscriptionId) {
+      const params = new URLSearchParams(searchParams.toString());
+      if (debouncedSubscriptionId.trim() !== "") {
+        params.set("subscriptionId", debouncedSubscriptionId);
+      } else {
+        params.delete("subscriptionId");
+      }
+      params.set("page", "1");
+      startTransition(() => {
+        router.push(`?${params.toString()}`);
+      });
+    }
+  }, [debouncedSubscriptionId, searchParams, router]);
+
+  useEffect(() => {
+    const currentCurrency = searchParams.get("currency") || "";
+    if (debouncedCurrency !== currentCurrency) {
+      const params = new URLSearchParams(searchParams.toString());
+      if (debouncedCurrency.trim() !== "") {
+        params.set("currency", debouncedCurrency);
+      } else {
+        params.delete("currency");
+      }
+      params.set("page", "1");
+      startTransition(() => {
+        router.push(`?${params.toString()}`);
+      });
+    }
+  }, [debouncedCurrency, searchParams, router]);
+
+  // Sync local state with URL params when they change externally
+  useEffect(() => {
+    const urlSubscriptionId = searchParams.get("subscriptionId") || "";
+    const urlCurrency = searchParams.get("currency") || "";
+    if (urlSubscriptionId !== subscriptionId) {
+      setSubscriptionId(urlSubscriptionId);
+    }
+    if (urlCurrency !== currency) {
+      setCurrency(urlCurrency);
+    }
+  }, [searchParams, subscriptionId, currency]);
+
   const clearFilters = () => {
+    setSubscriptionId("");
+    setCurrency("");
     startTransition(() => {
       router.push("?");
     });
@@ -77,7 +132,7 @@ export default function PaymentsFilters() {
           <Input
             placeholder="Subscription ID"
             value={subscriptionId}
-            onChange={(e) => handleFilterChange("subscriptionId", e.target.value)}
+            onChange={(e) => setSubscriptionId(e.target.value)}
             disabled={isPending}
           />
         </div>
@@ -86,7 +141,7 @@ export default function PaymentsFilters() {
           <Input
             placeholder="Currency (e.g., USD)"
             value={currency}
-            onChange={(e) => handleFilterChange("currency", e.target.value)}
+            onChange={(e) => setCurrency(e.target.value)}
             disabled={isPending}
           />
         </div>

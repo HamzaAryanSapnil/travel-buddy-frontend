@@ -55,8 +55,6 @@ export async function updateUserStatus(
     // @ts-expect-error - revalidateTag signature mismatch
     revalidateTag("user-info");
 
-    console.log("data from updateUserStatus: ", data);
-
     return {
       success: true,
       message: data.message || "User status updated successfully",
@@ -78,4 +76,3 @@ export async function updateUserStatus(
     };
   }
 }
-

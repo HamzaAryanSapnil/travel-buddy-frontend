@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getAdminPayments, getAdminPaymentStatistics } from "@/services/admin/getAdminPayments";
+import {
+  getAdminPayments,
+  getAdminPaymentStatistics,
+} from "@/services/admin/getAdminPayments";
 import PaymentStatistics from "@/components/modules/Admin/PaymentStatistics";
 import AdminPaymentsTable from "@/components/modules/Admin/AdminPaymentsTable";
 import PaymentsFilters from "@/components/modules/Admin/PaymentsFilters";
@@ -61,7 +64,12 @@ export default async function AdminPaymentsPage({
         };
       }
     })(),
-    getAdminPaymentStatistics(),
+    getAdminPaymentStatistics({
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      subscriptionId: filters.subscriptionId,
+      currency: filters.currency,
+    }),
   ]);
 
   const error = paymentsData.success ? null : paymentsData.message;
@@ -115,4 +123,3 @@ export default async function AdminPaymentsPage({
     </div>
   );
 }
-
