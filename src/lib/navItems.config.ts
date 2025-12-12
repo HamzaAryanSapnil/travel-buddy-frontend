@@ -6,6 +6,8 @@ import { getDefaultDashboardRoute, UserRole } from "./auth-utils";
  */
 export const getCommonNavItems = (role: UserRole): NavSection[] => {
   const defaultDashboard = getDefaultDashboardRoute(role);
+  const profileHref =
+    role === "ADMIN" ? "/admin/dashboard/profile" : "/dashboard/profile";
 
   return [
     {
@@ -18,7 +20,7 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
         },
         {
           title: "My Profile",
-          href: "/dashboard/profile",
+          href: profileHref,
           icon: "User",
           roles: ["USER", "ADMIN"],
         },
@@ -163,4 +165,3 @@ export const getNavItemsByRole = (role: UserRole): NavSection[] => {
       return commonNavItems;
   }
 };
-
