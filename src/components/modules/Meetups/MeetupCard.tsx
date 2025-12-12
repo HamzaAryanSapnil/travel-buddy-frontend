@@ -1,4 +1,5 @@
 import { Meetup } from "@/types/meetup.interface";
+import { TravelPlan } from "@/types/travelPlan.interface";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
@@ -10,6 +11,7 @@ interface MeetupCardProps {
   meetup: Meetup;
   currentUserId?: string;
   isEditor?: boolean;
+  plan?: TravelPlan;
 }
 
 const statusColors: Record<
@@ -20,12 +22,14 @@ const statusColors: Record<
   ONGOING: "secondary",
   COMPLETED: "outline",
   CANCELLED: "destructive",
+  PENDING: "secondary",
 };
 
 export default function MeetupCard({
   meetup,
   currentUserId,
   isEditor = false,
+  plan,
 }: MeetupCardProps) {
   const scheduledDate = new Date(meetup.scheduledAt);
   const rsvpCount = meetup.rsvps?.length || 0;
@@ -55,7 +59,7 @@ export default function MeetupCard({
             )}
           </div>
           {isEditor && (
-            <MeetupActions meetup={meetup} planId={meetup.planId} />
+            <MeetupActions meetup={meetup} planId={meetup.planId} plan={plan} />
           )}
         </div>
       </CardHeader>

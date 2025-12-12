@@ -1,4 +1,5 @@
 import { Meetup } from "@/types/meetup.interface";
+import { TravelPlan } from "@/types/travelPlan.interface";
 import MeetupCard from "./MeetupCard";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
@@ -7,12 +8,14 @@ interface MeetupsListProps {
   meetups: Meetup[];
   currentUserId?: string;
   currentUserRole?: string;
+  plan?: TravelPlan;
 }
 
 export default function MeetupsList({
   meetups,
   currentUserId,
   currentUserRole,
+  plan,
 }: MeetupsListProps) {
   const isEditor = ["OWNER", "ADMIN", "EDITOR"].includes(
     currentUserRole || ""
@@ -49,6 +52,7 @@ export default function MeetupsList({
           meetup={meetup}
           currentUserId={currentUserId}
           isEditor={isEditor}
+          plan={plan}
         />
       ))}
     </div>

@@ -55,10 +55,15 @@ export const createMeetupSchema = z
 export const updateMeetupSchema = createMeetupSchema
   .partial()
   .omit({ planId: true })
+  .extend({
+    status: z.enum(["UPCOMING", "ONGOING", "COMPLETED", "CANCELLED", "PENDING"], {
+      message: "Invalid meetup status",
+    }).optional(),
+  })
   .refine(
     (data) => {
-      // If scheduledAt is being updated, check if it's in the future
-      if (data.scheduledAt) {
+      // If scheduledAt is being updated and status is not COMPLETED/CANCELLED, check if it's in the future
+      if (data.scheduledAt && data.status !== "COMPLETED" && data.status !== "CANCELLED") {
         const scheduledDate = new Date(data.scheduledAt);
         const now = new Date();
         return scheduledDate > now;

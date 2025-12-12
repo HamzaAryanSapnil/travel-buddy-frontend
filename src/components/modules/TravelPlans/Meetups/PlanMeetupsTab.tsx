@@ -46,6 +46,7 @@ export default function PlanMeetupsTab({
         meetups={meetups}
         currentUserId={currentUserId}
         currentUserRole={currentUserRole}
+        plan={plan}
       />
     </div>
   );

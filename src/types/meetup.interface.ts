@@ -1,7 +1,7 @@
 import { UserInfo } from "./user.interface";
 import { TravelPlan } from "./travelPlan.interface";
 
-export type MeetupStatus = "UPCOMING" | "ONGOING" | "COMPLETED" | "CANCELLED";
+export type MeetupStatus = "UPCOMING" | "ONGOING" | "COMPLETED" | "CANCELLED" | "PENDING";
 
 export type RSVPStatus = "ACCEPTED" | "DECLINED" | "PENDING" | "MAYBE";
 

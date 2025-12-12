@@ -24,6 +24,7 @@ const statusColors: Record<
   ONGOING: "secondary",
   COMPLETED: "outline",
   CANCELLED: "destructive",
+  PENDING: "secondary",
 };
 
 const rsvpStatusColors: Record<
