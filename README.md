@@ -14,6 +14,7 @@ Travel Buddy is a comprehensive full-stack web application designed to revolutio
 - **Comprehensive Organization**: Manage itineraries, meetups, media galleries, and reviews all in one place
 - **Subscription-Based Model**: Flexible monthly and yearly subscription plans with Stripe integration
 - **Admin Dashboard**: Complete administrative panel for managing users, plans, subscriptions, and payments
+- **Featured Plans**: Homepage highlights curated public plans via `isFeatured` filter
 
 ## 🛠️ Tech Stack
 
@@ -258,7 +259,7 @@ travel-buddy-next-frontend/
 
 ### Travel Plans
 - `GET /api/v1/travel-plans` - Get user's travel plans (with filters)
-- `GET /api/v1/travel-plans/public` - Get public travel plans
+- `GET /api/v1/travel-plans/public` - Get public travel plans (supports `isFeatured=true`)
 - `GET /api/v1/travel-plans/:id` - Get travel plan details
 - `POST /api/v1/travel-plans` - Create travel plan
 - `PATCH /api/v1/travel-plans/:id` - Update travel plan
@@ -327,11 +328,18 @@ travel-buddy-next-frontend/
 - `PATCH /api/v1/users/profile` - Update user profile
 
 ### Admin
-- `GET /api/v1/admin/users` - Get all users
-- `PATCH /api/v1/admin/users/:id/status` - Update user status
-- `GET /api/v1/admin/subscriptions` - Get all subscriptions
-- `GET /api/v1/admin/payments` - Get payment statistics
-- `GET /api/v1/admin/payments/history` - Get all payments
+- `GET /api/v1/users/admin` - Get all users (filters, pagination)
+- `PATCH /api/v1/users/admin/:id/status` - Update user status
+- `PATCH /api/v1/users/admin/:id/verify` - Verify/unverify user
+- `PATCH /api/v1/users/admin/:id/role` - Update user role
+- `DELETE /api/v1/users/admin/:id` - Delete user
+- `GET /api/v1/travel-plans/admin` - Get all travel plans (filters)
+- `PATCH /api/v1/travel-plans/admin/:id` - Update travel plan (admin)
+- `DELETE /api/v1/travel-plans/admin/:id` - Delete travel plan (admin)
+- `GET /api/v1/subscriptions` - Subscription history (admin filters)
+- `GET /api/v1/payments` - Get all payments (admin filters)
+- `GET /api/v1/payments/statistics` - Payment statistics (admin)
+- `GET /api/v1/dashboard/admin/overview` - Admin dashboard overview
 
 ### Dashboard
 - `GET /api/v1/dashboard/overview` - Get user dashboard overview
@@ -439,13 +447,15 @@ bun run start
 - ✅ Real-time notifications
 - ✅ Subscription management
 - ✅ Payment history
+- ✅ Profile management (bio, location, interests, visited countries)
 
 ### Admin Features
-- ✅ User management (view, suspend, activate, delete)
-- ✅ View all travel plans
-- ✅ Subscription management
-- ✅ Payment statistics and analytics
-- ✅ Dashboard with charts and visualizations
+- ✅ User management (view, suspend, activate, verify, change role, delete)
+- ✅ Admin profile page (role/status/verification)
+- ✅ View all travel plans (feature/unfeature, edit, delete)
+- ✅ Subscription history (filters, pagination)
+- ✅ Payment statistics and analytics (filters, debounced search)
+- ✅ Dashboard overview with charts and quick stats
 
 ## 🎨 UI/UX Features
 
