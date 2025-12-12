@@ -15,6 +15,7 @@ export interface TravelPlan {
   createdAt: string;
   updatedAt: string;
   // Optional fields from API
+  isFeatured?: boolean;
   totalDays?: number;
   _count?: {
     itineraryItems?: number;

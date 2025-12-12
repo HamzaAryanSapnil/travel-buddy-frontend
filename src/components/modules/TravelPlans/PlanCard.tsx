@@ -110,6 +110,14 @@ const PlanCard = ({
               {/* Actions moved to Details Dialog */}
             </div>
           )}
+          {plan.isFeatured && (
+            <Badge
+              className="bg-amber-500 text-white shadow-sm backdrop-blur-sm"
+              variant="default"
+            >
+              Featured
+            </Badge>
+          )}
           <Badge
             variant="secondary"
             className="bg-background/90 backdrop-blur-sm"
