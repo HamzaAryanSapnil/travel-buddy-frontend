@@ -25,22 +25,23 @@ export const getUserInfo = async (): Promise<UserInfo> => {
             const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET as string) as JwtPayload;
 
             const userInfo: UserInfo = {
-                id: result.data.id || verifiedToken.userId || "",
-                name: result.data.fullName || result.data.name || verifiedToken.name || "Unknown User",
-                email: result.data.email || verifiedToken.email || "",
-                role: result.data.role || verifiedToken.role || "USER",
-                profileImage: result.data.profileImage,
-                fullName: result.data.fullName,
-                bio: result.data.bio,
-                location: result.data.location,
-                interests: result.data.interests,
-                visitedCountries: result.data.visitedCountries,
-                isVerified: result.data.isVerified,
-                status: result.data.status,
+                id: result?.data?.id || verifiedToken.userId || "",
+                name: result?.data?.fullName || result.data.name || verifiedToken.name || "Unknown User",
+                email: result?.data?.email || verifiedToken.email || "",
+                role: result?.data?.role || verifiedToken.role || "USER",
+                profileImage: result?.data?.profileImage,
+                fullName: result?.data?.fullName,
+                bio: result?.data?.bio,
+                location: result?.data?.location,
+                interests: result?.data?.interests,
+                visitedCountries: result?.data?.visitedCountries,
+                isVerified: result?.data?.isVerified,
+                status: result?.data?.status,
                 createdAt: result.data.createdAt,
                 updatedAt: result.data.updatedAt,
             };
 
+       
             return userInfo;
         }
 

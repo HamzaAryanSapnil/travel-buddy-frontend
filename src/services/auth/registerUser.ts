@@ -18,9 +18,7 @@ export const registerUser = async (
       confirmPassword: formData.get("confirmPassword"),
     };
 
-    if (
-      zodValidator(payload, registerValidationZodSchema).success === false
-    ) {
+    if (zodValidator(payload, registerValidationZodSchema).success === false) {
       return zodValidator(payload, registerValidationZodSchema);
     }
 
@@ -49,7 +47,8 @@ export const registerUser = async (
     if (res.status === 409) {
       return {
         success: false,
-        message: "This email is already registered. Please use a different email or try logging in.",
+        message:
+          "This email is already registered. Please use a different email or try logging in.",
         errors: [
           {
             field: "email",
@@ -89,4 +88,3 @@ export const registerUser = async (
     };
   }
 };
-

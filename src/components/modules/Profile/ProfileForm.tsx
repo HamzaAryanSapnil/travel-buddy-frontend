@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef } from "react";
+import { useActionState, useState, useEffect, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +10,6 @@ import { updateProfile } from "@/services/profile/updateProfile";
 import { UserInfo } from "@/types/user.interface";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import ImageUpload from "@/components/shared/ImageUpload";
 import InputFieldError from "@/components/shared/InputFieldError";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +22,7 @@ interface ProfileFormProps {
 export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
   const router = useRouter();
   const [state, formAction] = useActionState(updateProfile, null);
+  const [, startTransition] = useTransition();
 
   // Form state
   const [fullName, setFullName] = useState(
@@ -36,18 +36,18 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
   const [visitedCountries, setVisitedCountries] = useState<string[]>(
     userInfo.visitedCountries || []
   );
-  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [interestInput, setInterestInput] = useState("");
   const [countryInput, setCountryInput] = useState("");
 
   // Reset form when userInfo changes
   useEffect(() => {
-    setFullName(userInfo.fullName || userInfo.name || "");
-    setBio(userInfo.bio || "");
-    setLocation(userInfo.location || "");
-    setInterests(userInfo.interests || []);
-    setVisitedCountries(userInfo.visitedCountries || []);
-    setProfileImage(null);
+    startTransition(() => {
+      setFullName(userInfo.fullName || userInfo.name || "");
+      setBio(userInfo.bio || "");
+      setLocation(userInfo.location || "");
+      setInterests(userInfo.interests || []);
+      setVisitedCountries(userInfo.visitedCountries || []);
+    });
   }, [userInfo]);
 
   // Handle success/error with useEffect
@@ -92,9 +92,6 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
     }
     formData.append("interests", JSON.stringify(interests));
     formData.append("visitedCountries", JSON.stringify(visitedCountries));
-    if (profileImage) {
-      formData.append("profileImage", profileImage);
-    }
 
     formAction(formData);
   };
@@ -144,18 +141,6 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
           <CardTitle>Profile Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Profile Image */}
-          <div className="space-y-2">
-            <Label htmlFor="profileImage">Profile Image</Label>
-            <ImageUpload
-              value={profileImage}
-              onChange={setProfileImage}
-              label="Profile Image"
-              maxSize={5 * 1024 * 1024} // 5MB
-            />
-            {state && <InputFieldError field="profileImage" state={state} />}
-          </div>
-
           {/* Full Name */}
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name</Label>

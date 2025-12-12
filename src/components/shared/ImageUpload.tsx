@@ -85,14 +85,14 @@ const ImageUpload = ({
     onChange(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
-    }
+    }  
   };
 
   const displayError = error || uploadError;
 
   return (
     <div className="w-full">
-      {label && <FieldLabel>{label}</FieldLabel>}
+      {/* {label && <FieldLabel>{label}</FieldLabel>} */}
       
       {preview ? (
         <div className="relative w-full">

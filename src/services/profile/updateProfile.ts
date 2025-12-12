@@ -20,14 +20,14 @@ export const updateProfile = async (
       bio: formData.get("bio") || undefined,
       location: formData.get("location") || undefined,
       interests: interestsStr
-        ? (typeof interestsStr === "string"
-            ? JSON.parse(interestsStr)
-            : [])
+        ? typeof interestsStr === "string"
+          ? JSON.parse(interestsStr)
+          : []
         : [],
       visitedCountries: visitedCountriesStr
-        ? (typeof visitedCountriesStr === "string"
-            ? JSON.parse(visitedCountriesStr)
-            : [])
+        ? typeof visitedCountriesStr === "string"
+          ? JSON.parse(visitedCountriesStr)
+          : []
         : [],
     };
 
@@ -47,29 +47,38 @@ export const updateProfile = async (
 
     const validatedPayload = validationResult.data;
 
-    // Create FormData for multipart upload (for image)
-    const outgoing = new FormData();
-    if (typeof validatedPayload === "object" && validatedPayload !== null) {
-      Object.entries(validatedPayload).forEach(([key, value]) => {
-        if (key === "interests" || key === "visitedCountries") {
-          // Stringify arrays
-          outgoing.append(key, JSON.stringify(value));
-        } else {
-          outgoing.append(key, String(value));
-        }
-      });
+    if (!validatedPayload || typeof validatedPayload !== "object") {
+      return {
+        success: false,
+        message: "Invalid profile data",
+      };
     }
 
-    // Handle profile image upload
-    const profileImage = formData.get("profileImage");
-    if (profileImage && profileImage instanceof File) {
-      outgoing.append("profileImage", profileImage);
+    // Prepare update data (profile image is handled separately via /users/me/photo)
+    const updateData: any = {};
+
+    if (validatedPayload.fullName) {
+      updateData.fullName = validatedPayload.fullName;
+    }
+    if (validatedPayload.bio !== undefined) {
+      updateData.bio = validatedPayload.bio;
+    }
+    if (validatedPayload.location !== undefined) {
+      updateData.location = validatedPayload.location;
+    }
+    if (validatedPayload.interests) {
+      updateData.interests = validatedPayload.interests;
+    }
+    if (validatedPayload.visitedCountries) {
+      updateData.visitedCountries = validatedPayload.visitedCountries;
     }
 
-    // Send request to API
-    const response = await serverFetch.patch("/auth/profile", {
-      body: outgoing,
-      // No explicit Content-Type; fetch will set multipart boundary
+    // Send request to API with JSON body
+    const response = await serverFetch.patch("/users/me", {
+      body: JSON.stringify(updateData),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -146,4 +155,3 @@ export const updateProfile = async (
     };
   }
 };
-

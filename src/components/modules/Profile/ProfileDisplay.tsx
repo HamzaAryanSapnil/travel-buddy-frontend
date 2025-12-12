@@ -1,15 +1,22 @@
+"use client";
+
+import { useState } from "react";
 import { UserInfo } from "@/types/user.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { User, Mail, MapPin, Calendar, Globe, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { User, Mail, MapPin, Calendar, Globe, Heart, Camera } from "lucide-react";
 import { format } from "date-fns";
+import ProfilePhotoUploadDialog from "./ProfilePhotoUploadDialog";
 
 interface ProfileDisplayProps {
   userInfo: UserInfo;
 }
 
 export default function ProfileDisplay({ userInfo }: ProfileDisplayProps) {
+  const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -23,22 +30,35 @@ export default function ProfileDisplay({ userInfo }: ProfileDisplayProps) {
   const initials = getInitials(displayName);
 
   return (
-    <div className="space-y-6">
-      {/* Profile Header Card */}
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <Avatar className="h-24 w-24">
-              {userInfo.profileImage ? (
-                <AvatarImage
-                  src={userInfo.profileImage}
-                  alt={displayName}
-                />
-              ) : null}
-              <AvatarFallback className="text-2xl">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+    <>
+      <div className="space-y-6">
+        {/* Profile Header Card */}
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="relative">
+                <Avatar className="h-24 w-24">
+                  {userInfo.profileImage ? (
+                    <AvatarImage
+                      src={userInfo.profileImage}
+                      alt={displayName}
+                    />
+                  ) : null}
+                  <AvatarFallback className="text-2xl">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="secondary"
+                  className="absolute bottom-0 right-0 h-8 w-8 rounded-full"
+                  onClick={() => setPhotoDialogOpen(true)}
+                  title="Update profile photo"
+                >
+                  <Camera className="h-4 w-4" />
+                </Button>
+              </div>
             <div className="flex-1">
               <CardTitle className="text-2xl mb-2">{displayName}</CardTitle>
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
@@ -159,7 +179,13 @@ export default function ProfileDisplay({ userInfo }: ProfileDisplayProps) {
           )}
         </CardContent>
       </Card>
-    </div>
+      </div>
+
+      <ProfilePhotoUploadDialog
+        open={photoDialogOpen}
+        onOpenChange={setPhotoDialogOpen}
+      />
+    </>
   );
 }
 
