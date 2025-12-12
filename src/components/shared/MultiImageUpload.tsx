@@ -3,8 +3,9 @@
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
 import { validateImageFile, createImagePreview, revokeImagePreview, formatFileSize } from "@/lib/file-upload";
+import { uploadMultipleToImgBB } from "@/lib/imgbb";
 import { cn } from "@/lib/utils";
 
 interface MultiImageUploadProps {
@@ -15,20 +16,27 @@ interface MultiImageUploadProps {
   accept?: string;
   label?: string;
   error?: string;
+  autoUpload?: boolean; // If true, automatically upload to imgBB when files are selected
+  onUpload?: (urls: string[]) => void; // Callback with imgBB URLs after upload
+  onUploadError?: (error: string) => void; // Callback if upload fails
 }
 
 const MultiImageUpload = ({
   value = [],
   onChange,
   maxFiles = 10,
-  maxSize = 5 * 1024 * 1024,
+  maxSize = 32 * 1024 * 1024, // 32MB default (imgBB free tier)
   accept = "image/jpeg,image/jpg,image/png,image/webp,image/gif,image/bmp,image/svg+xml,image/tiff,image/heic,image/heif,image/x-icon,.jpg,.jpeg,.png,.webp,.gif,.bmp,.svg,.tiff,.heic,.heif,.ico",
   label = "Cover Photo & Gallery Images",
   error,
+  autoUpload = false,
+  onUpload,
+  onUploadError,
 }: MultiImageUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previews, setPreviews] = useState<string[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const cleanupPreviews = () => {
     previews.forEach((url) => revokeImagePreview(url));
@@ -45,12 +53,14 @@ const MultiImageUpload = ({
   );
 
   const handleFiles = useCallback(
-    (fileList: FileList | null) => {
+    async (fileList: FileList | null) => {
       if (!fileList) return;
       const incoming = Array.from(fileList);
       const totalCount = value.length + incoming.length;
       if (totalCount > maxFiles) {
-        setUploadError(`You can upload up to ${maxFiles} images. Currently selected: ${value.length}.`);
+        const errorMsg = `You can upload up to ${maxFiles} images. Currently selected: ${value.length}.`;
+        setUploadError(errorMsg);
+        onUploadError?.(errorMsg);
         return;
       }
 
@@ -58,20 +68,39 @@ const MultiImageUpload = ({
       for (const file of incoming) {
         // size validation
         if (file.size > maxSize) {
-          setUploadError(`"${file.name}" exceeds ${(maxSize / (1024 * 1024)).toFixed(0)}MB limit.`);
+          const errorMsg = `"${file.name}" exceeds ${(maxSize / (1024 * 1024)).toFixed(0)}MB limit.`;
+          setUploadError(errorMsg);
+          onUploadError?.(errorMsg);
           return;
         }
         const validation = validateImageFile(file);
         if (!validation.valid) {
-          setUploadError(validation.error || "Invalid file type.");
+          const errorMsg = validation.error || "Invalid file type.";
+          setUploadError(errorMsg);
+          onUploadError?.(errorMsg);
           return;
         }
         next.push(file);
       }
       setUploadError(null);
       setFilesWithPreview(next);
+
+      // Auto-upload to imgBB if enabled
+      if (autoUpload && onUpload && incoming.length > 0) {
+        setIsUploading(true);
+        try {
+          const imageUrls = await uploadMultipleToImgBB(incoming);
+          onUpload(imageUrls);
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : "Failed to upload images";
+          setUploadError(errorMsg);
+          onUploadError?.(errorMsg);
+        } finally {
+          setIsUploading(false);
+        }
+      }
     },
-    [maxFiles, maxSize, setFilesWithPreview, value]
+    [maxFiles, maxSize, setFilesWithPreview, value, autoUpload, onUpload, onUploadError]
   );
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -128,6 +157,12 @@ const MultiImageUpload = ({
         <p className="mt-3 text-xs text-muted-foreground">
           Up to {maxFiles} images, {formatFileSize(maxSize)} each
         </p>
+        {isUploading && (
+          <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Uploading to imgBB...</span>
+          </div>
+        )}
       </div>
 
       {value.length > 0 && (

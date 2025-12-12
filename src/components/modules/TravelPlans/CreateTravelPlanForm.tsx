@@ -23,6 +23,7 @@ import BudgetInput from "./BudgetInput";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { formatCharacterCount } from "@/lib/formatters";
 import { IInputErrorState } from "@/lib/getInputFieldError";
+import { uploadMultipleToImgBB } from "@/lib/imgbb";
 
 const CreateTravelPlanForm = () => {
   const router = useRouter();
@@ -43,6 +44,9 @@ const CreateTravelPlanForm = () => {
   const [visibility, setVisibility] = useState("PRIVATE");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
+  const [galleryImageUrls, setGalleryImageUrls] = useState<string[]>([]);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   // Dialog state
   const [showCancelDialog, setShowCancelDialog] = useState(false);
@@ -63,9 +67,34 @@ const CreateTravelPlanForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Upload images to imgBB first if there are files
+    if (files.length > 0) {
+      setIsUploadingImages(true);
+      try {
+        const imageUrls = await uploadMultipleToImgBB(files);
+        // First image becomes cover photo, rest are gallery
+        if (imageUrls.length > 0) {
+          setCoverPhotoUrl(imageUrls[0]);
+          if (imageUrls.length > 1) {
+            setGalleryImageUrls(imageUrls.slice(1));
+          } else {
+            setGalleryImageUrls([]);
+          }
+        }
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : "Failed to upload images";
+        toast.error(errorMsg);
+        setIsUploadingImages(false);
+        return; // Don't proceed if upload fails
+      } finally {
+        setIsUploadingImages(false);
+      }
+    }
+
+    // Build FormData with URLs
     const formData = new FormData();
     formData.append("title", title);
     formData.append("destination", destination);
@@ -77,7 +106,14 @@ const CreateTravelPlanForm = () => {
     if (budgetMax) formData.append("budgetMax", budgetMax.toString());
     formData.append("visibility", visibility);
     if (description) formData.append("description", description);
-    files.forEach((file) => formData.append("files", file));
+    
+    // Add image URLs
+    if (coverPhotoUrl) {
+      formData.append("coverPhoto", coverPhotoUrl);
+    }
+    if (galleryImageUrls.length > 0) {
+      formData.append("galleryImages", JSON.stringify(galleryImageUrls));
+    }
 
     startTransition(() => {
       formAction(formData);
@@ -312,7 +348,7 @@ const CreateTravelPlanForm = () => {
                 maxFiles={10}
               />
               <FieldDescription>
-                Optional. Upload up to 10 images (first becomes cover). Max 5MB each.
+                Optional. Upload up to 10 images (first becomes cover). Max 32MB each.
               </FieldDescription>
               <InputFieldError field="coverPhoto" state={state} />
             </Field>
@@ -329,8 +365,12 @@ const CreateTravelPlanForm = () => {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isPending || isTransiting}>
-            {isPending || isTransiting ? "Creating..." : "Create Plan"}
+          <Button type="submit" disabled={isPending || isTransiting || isUploadingImages}>
+            {isUploadingImages
+              ? "Uploading images..."
+              : isPending || isTransiting
+              ? "Creating..."
+              : "Create Plan"}
           </Button>
         </div>
       </form>

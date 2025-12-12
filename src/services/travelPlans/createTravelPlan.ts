@@ -49,23 +49,45 @@ export const createTravelPlan = async (
 
     const validatedPayload: Record<string, any> = validationResult.data || {};
 
-    // Build outgoing multipart FormData (backend supports files[]; first = cover photo)
-    const outgoing = new FormData();
-    Object.entries(validatedPayload).forEach(([key, value]) => {
-      outgoing.append(key, String(value));
-    });
+    // Extract image URLs from FormData (uploaded to imgBB client-side)
+    const coverPhoto = formData.get("coverPhoto")?.toString();
+    const galleryImagesStr = formData.get("galleryImages");
+    let galleryImages: string[] = [];
 
-    const files = formData.getAll("files") as (File | string)[];
-    files.forEach((file) => {
-      if (file instanceof File) {
-        outgoing.append("files", file);
+    if (galleryImagesStr) {
+      if (typeof galleryImagesStr === "string") {
+        try {
+          galleryImages = JSON.parse(galleryImagesStr);
+        } catch {
+          // If not JSON, treat as single URL
+          if (galleryImagesStr) {
+            galleryImages = [galleryImagesStr];
+          }
+        }
       }
-    });
+    }
 
-    // Send request to API
+    // Build JSON payload
+    const jsonPayload: Record<string, any> = {
+      ...validatedPayload,
+    };
+
+    // Add cover photo if provided
+    if (coverPhoto && coverPhoto.trim()) {
+      jsonPayload.coverPhoto = coverPhoto;
+    }
+
+    // Add gallery images if provided
+    if (galleryImages && galleryImages.length > 0) {
+      jsonPayload.galleryImages = galleryImages.filter((url) => url && url.trim());
+    }
+
+    // Send request to API with JSON
     const res = await serverFetch.post("/travel-plans", {
-      body: outgoing,
-      // No explicit Content-Type; fetch will set multipart boundary
+      body: JSON.stringify(jsonPayload),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const result = await res.json();

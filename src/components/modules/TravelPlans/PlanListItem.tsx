@@ -38,9 +38,9 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
   const getStatus = (): "UPCOMING" | "ONGOING" | "PAST" => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const startDate = new Date(plan.startDate);
+    const startDate = new Date(plan?.startDate);
     startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(plan.endDate);
+    const endDate = new Date(plan?.endDate);
     endDate.setHours(0, 0, 0, 0);
 
     if (startDate > today) {
@@ -71,13 +71,18 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
         <div className="flex flex-col md:flex-row gap-4 p-4">
           {/* Image */}
           <div className="relative w-full md:w-48 h-48 md:h-auto md:aspect-square overflow-hidden bg-muted rounded-lg flex-shrink-0">
-            {plan.coverPhoto ? (
+            {plan?.coverPhoto ? (
               <Image
-                src={plan.coverPhoto}
-                alt={plan.title}
+                src={plan?.coverPhoto}
+                alt={plan?.title}
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, 192px"
+                unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
+                onError={(e) => {
+                  console.error("Image load error:", plan?.coverPhoto);
+                  e.currentTarget.style.display = "none";
+                }}
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
@@ -95,13 +100,13 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
                   <div className="hover:underline cursor-pointer">
                     <PlanDetailsDialog
                       plan={plan}
-                      triggerLabel={plan.title}
+                      triggerLabel={plan?.title}
                       triggerClassName="text-xl font-bold line-clamp-2 mb-1 h-auto p-0 hover:no-underline text-left justify-start"
                     />
                   </div>
-                  {plan.description && (
+                  {plan?.description && (
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                      {plan.description}
+                      {plan?.description}
                     </p>
                   )}
                 </div>
@@ -121,26 +126,26 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
                 {/* Destination */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <span className="line-clamp-1">{plan.destination}</span>
+                  <span className="line-clamp-1">{plan?.destination}</span>
                 </div>
 
                 {/* Date Range */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4 flex-shrink-0" />
-                  <span>{formatDateRange(plan.startDate, plan.endDate)}</span>
+                  <span>{formatDateRange(plan?.startDate, plan?.endDate)}</span>
                 </div>
 
                 {/* Budget Range */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <DollarSign className="h-4 w-4 flex-shrink-0" />
-                  <span>{formatBudgetRange(plan.budgetMin, plan.budgetMax)}</span>
+                  <span>{formatBudgetRange(plan?.budgetMin, plan?.budgetMax)}</span>
                 </div>
 
                 {/* Member Count */}
-                {plan._count?.tripMembers !== undefined && (
+                {plan?._count?.tripMembers !== undefined && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Users className="h-4 w-4 flex-shrink-0" />
-                    <span>{plan._count.tripMembers} members</span>
+                    <span>{plan?._count?.tripMembers} members</span>
                   </div>
                 )}
               </div>
@@ -148,23 +153,23 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary">
-                  {travelTypeLabels[plan.travelType] || plan.travelType}
+                  {travelTypeLabels[plan?.travelType] || plan?.travelType}
                 </Badge>
                 <Badge
                   variant={
-                    plan.visibility === "PUBLIC"
+                    plan?.visibility === "PUBLIC"
                       ? "default"
-                      : plan.visibility === "PRIVATE"
+                      : plan?.visibility === "PRIVATE"
                         ? "destructive"
                         : "outline"
                   }
                   className="flex items-center gap-1"
                 >
-                  {plan.visibility === "PRIVATE" && (
+                  {plan?.visibility === "PRIVATE" && (
                     <EyeOff className="h-3 w-3" />
                   )}
-                  {plan.visibility === "PUBLIC" && <Eye className="h-3 w-3" />}
-                  {visibilityLabels[plan.visibility] || plan.visibility}
+                  {plan?.visibility === "PUBLIC" && <Eye className="h-3 w-3" />}
+                  {visibilityLabels[plan?.visibility] || plan?.visibility}
                 </Badge>
                 <Badge className={statusColors[status]}>
                   {statusLabels[status]}

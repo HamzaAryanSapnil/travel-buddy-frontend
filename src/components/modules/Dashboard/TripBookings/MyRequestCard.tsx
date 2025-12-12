@@ -58,12 +58,17 @@ export default function MyRequestCard({ booking }: MyRequestCardProps) {
           <div className="flex flex-col sm:flex-row">
             {/* Image Section */}
             <div className="relative w-full sm:w-48 h-32 sm:h-auto bg-muted">
-              {booking.plan?.coverPhoto ? (
+              {booking?.plan?.coverPhoto ? (
                 <Image
-                  src={booking.plan.coverPhoto}
-                  alt={booking.plan.title || "Travel Plan"}
+                  src={booking?.plan?.coverPhoto}
+                  alt={booking?.plan?.title || "Travel Plan"}
                   fill
                   className="object-cover"
+                  unoptimized={booking?.plan?.coverPhoto?.includes("i.ibb.co")}
+                  onError={(e) => {
+                    console.error("Image load error:", booking?.plan?.coverPhoto);
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full text-muted-foreground">

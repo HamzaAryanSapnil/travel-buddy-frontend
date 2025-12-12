@@ -57,19 +57,19 @@ export default function RequestApprovalCard({
           {/* User Info */}
           <div className="flex items-center gap-4 flex-1">
             <Avatar className="h-12 w-12 border-2 border-background">
-              <AvatarImage src={booking.user?.profileImage} />
+              <AvatarImage src={booking?.user?.profileImage} />
               <AvatarFallback className="bg-primary/10 text-primary">
-                {getInitials(booking.user?.fullName)}
+                {getInitials(booking?.user?.fullName)}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h4 className="font-semibold text-lg">{booking.user?.fullName || "Unknown User"}</h4>
+              <h4 className="font-semibold text-lg">{booking?.user?.fullName || "Unknown User"}</h4>
               <p className="text-sm text-muted-foreground flex items-center gap-1">
                 <User className="h-3 w-3" />
-                {booking.user?.email}
+                {booking?.user?.email}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Requested on {format(new Date(booking.createdAt), "MMM d, yyyy")}
+                Requested on {format(new Date(booking?.createdAt || new Date()), "MMM d, yyyy")}
               </p>
             </div>
           </div>

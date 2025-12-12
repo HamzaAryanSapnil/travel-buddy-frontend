@@ -362,6 +362,10 @@ JWT_SECRET=your-super-secret-jwt-key-here-minimum-32-characters
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
 STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
 
+# imgBB Configuration (for image uploads)
+NEXT_PUBLIC_IMGBB_API_KEY=your_imgbb_api_key_here
+# Get your API key from: https://api.imgbb.com/
+
 # Application Configuration
 NODE_ENV=development
 # or for production:
@@ -374,6 +378,7 @@ NODE_ENV=development
 - `JWT_SECRET`: Secret key for JWT token verification (must be at least 32 characters)
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Stripe publishable key for client-side payments
 - `STRIPE_SECRET_KEY`: Stripe secret key for server-side operations
+- `NEXT_PUBLIC_IMGBB_API_KEY`: imgBB API key for image uploads (get from https://api.imgbb.com/)
 - `NODE_ENV`: Environment mode (development/production)
 
 ## 🚀 Getting Started

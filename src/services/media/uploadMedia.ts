@@ -2,7 +2,6 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { validateImageFile } from "@/lib/file-upload";
 import { revalidateTag } from "next/cache";
 import { MediaItem } from "@/types/media.interface";
 
@@ -12,61 +11,66 @@ export const uploadMedia = async (
   formData: FormData
 ): Promise<any> => {
   try {
-    // Get files from FormData
-    const files = formData.getAll("files") as File[];
+    // Get imageUrls from FormData (uploaded to imgBB client-side)
+    const imageUrlsStr = formData.get("imageUrls");
+    let imageUrls: string[] = [];
 
-    // Validate files
-    if (!files || files.length === 0) {
+    if (imageUrlsStr) {
+      if (typeof imageUrlsStr === "string") {
+        try {
+          imageUrls = JSON.parse(imageUrlsStr);
+        } catch {
+          // If not JSON, treat as single URL
+          imageUrls = [imageUrlsStr];
+        }
+      }
+    }
+
+    // Validate imageUrls
+    if (!imageUrls || imageUrls.length === 0) {
       return {
         success: false,
-        message: "Please select at least one file to upload",
+        message: "Please upload at least one image",
         errors: [
           {
             field: "files",
-            message: "At least one file is required",
+            message: "At least one image is required",
           },
         ],
       };
     }
 
-    // Validate each file
-    const validationErrors: Array<{ field: string; message: string }> = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (!(file instanceof File)) {
-        continue;
-      }
-
-      const validation = validateImageFile(file);
-      if (!validation.valid) {
-        validationErrors.push({
-          field: `files[${i}]`,
-          message: validation.error || "Invalid file",
-        });
-      }
-    }
-
-    if (validationErrors.length > 0) {
+    // Validate URLs are strings
+    const invalidUrls = imageUrls.filter((url) => typeof url !== "string" || !url.trim());
+    if (invalidUrls.length > 0) {
       return {
         success: false,
-        message: "File validation failed",
-        errors: validationErrors,
+        message: "Invalid image URLs provided",
+        errors: [
+          {
+            field: "files",
+            message: "Some image URLs are invalid",
+          },
+        ],
       };
     }
 
-    // Build FormData for API request
-    const outgoing = new FormData();
-    outgoing.append("planId", planId);
-    files.forEach((file) => {
-      if (file instanceof File) {
-        outgoing.append("files", file);
-      }
-    });
+    // Get optional type parameter
+    const type = formData.get("type")?.toString() || "photo";
 
-    // Send request to API
+    // Build JSON payload for API request
+    const payload = {
+      imageUrls: imageUrls,
+      planId: planId,
+      type: type,
+    };
+
+    // Send request to API with JSON
     const response = await serverFetch.post(`/media`, {
-      body: outgoing,
-      // No explicit Content-Type; fetch will set multipart boundary
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -122,6 +126,9 @@ export const uploadMedia = async (
     // Revalidate cache
     // @ts-expect-error - revalidateTag signature mismatch
     revalidateTag(`trip-media-${planId}`);
+    // Also revalidate the travel plan since media is shown on plan detail page
+    // @ts-expect-error - revalidateTag signature mismatch
+    revalidateTag(`travel-plan-${planId}`);
 
     // Ensure message is always a string
     const message =

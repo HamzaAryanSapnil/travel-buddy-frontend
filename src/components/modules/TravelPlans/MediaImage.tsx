@@ -24,6 +24,11 @@ const MediaImage = ({
       className={cn("object-cover", className)}
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       priority={false}
+      unoptimized={safeSrc?.includes("i.ibb.co")}
+      onError={(e) => {
+        console.error("Image load error:", safeSrc);
+        e.currentTarget.style.display = "none";
+      }}
     />
   );
 };

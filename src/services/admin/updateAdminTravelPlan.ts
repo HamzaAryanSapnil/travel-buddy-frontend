@@ -46,23 +46,45 @@ export const updateAdminTravelPlan = async (
 
     const validatedPayload = validationResult.data;
 
-    const outgoing = new FormData();
-    if (typeof validatedPayload === "object" && validatedPayload !== null) {
-      Object.entries(validatedPayload).forEach(([key, value]) => {
-        outgoing.append(key, String(value));
-      });
+    // Extract image URLs from FormData (uploaded to imgBB client-side)
+    const coverPhoto = formData.get("coverPhoto")?.toString();
+    const galleryImagesStr = formData.get("galleryImages");
+    let galleryImages: string[] = [];
+
+    if (galleryImagesStr) {
+      if (typeof galleryImagesStr === "string") {
+        try {
+          galleryImages = JSON.parse(galleryImagesStr);
+        } catch {
+          // If not JSON, treat as single URL
+          if (galleryImagesStr) {
+            galleryImages = [galleryImagesStr];
+          }
+        }
+      }
     }
 
-    const files = formData.getAll("files") as (File | string)[];
-    files.forEach((file) => {
-      if (file instanceof File) {
-        outgoing.append("files", file);
-      }
-    });
+    // Build JSON payload
+    const jsonPayload: Record<string, any> = {};
+    if (typeof validatedPayload === "object" && validatedPayload !== null) {
+      Object.assign(jsonPayload, validatedPayload);
+    }
+
+    // Add cover photo if provided
+    if (coverPhoto && coverPhoto.trim()) {
+      jsonPayload.coverPhoto = coverPhoto;
+    }
+
+    // Add gallery images if provided
+    if (galleryImages && galleryImages.length > 0) {
+      jsonPayload.galleryImages = galleryImages.filter((url) => url && url.trim());
+    }
 
     const res = await serverFetch.patch(`/travel-plans/admin/${planId}`, {
-      body: outgoing,
-      // let fetch set multipart boundary
+      body: JSON.stringify(jsonPayload),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const result = await res.json();
@@ -88,6 +110,8 @@ export const updateAdminTravelPlan = async (
     revalidateTag("admin-travel-plans");
     // @ts-expect-error - revalidateTag signature mismatch
     revalidateTag("travel-plans");
+    // @ts-expect-error - revalidateTag signature mismatch
+    revalidateTag(`travel-plan-${planId}`);
 
     return {
       success: true,

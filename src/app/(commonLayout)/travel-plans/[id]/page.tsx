@@ -113,14 +113,19 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
     <main className="min-h-screen py-8 md:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cover Image */}
-        {plan.coverPhoto && (
+        {plan?.coverPhoto && (
           <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden mb-8">
             <Image
-              src={plan.coverPhoto}
-              alt={plan.title}
+              src={plan?.coverPhoto}
+              alt={plan?.title || "Travel Plan"}
               fill
               className="object-cover"
               priority
+              unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
+              onError={(e) => {
+                console.error("Image load error:", plan?.coverPhoto);
+                e.currentTarget.style.display = "none";
+              }}
             />
           </div>
         )}

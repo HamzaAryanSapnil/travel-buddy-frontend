@@ -155,13 +155,18 @@ const PlanDetailsDialog = ({
 
           <div className="space-y-6">
             <div className="relative w-full aspect-[21/9] overflow-hidden rounded-lg bg-muted shadow-sm">
-              {plan.coverPhoto ? (
+              {plan?.coverPhoto ? (
                 <Image
-                  src={plan.coverPhoto}
-                  alt={plan.title}
+                  src={plan?.coverPhoto}
+                  alt={plan?.title || "Travel Plan"}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
+                  unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
+                  onError={(e) => {
+                    console.error("Image load error:", plan?.coverPhoto);
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-muted-foreground gap-2">

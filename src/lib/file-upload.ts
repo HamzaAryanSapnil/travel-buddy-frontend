@@ -29,12 +29,12 @@ export function validateImageFile(file: File): FileValidationResult {
     }
   }
 
-  // Check file size (5MB max for cover photo)
-  const maxSize = 5 * 1024 * 1024; // 5MB
+  // Check file size (32MB max for imgBB free tier)
+  const maxSize = 32 * 1024 * 1024; // 32MB
   if (file.size > maxSize) {
     return {
       valid: false,
-      error: "File size must be less than 5MB",
+      error: "File size must be less than 32MB",
     };
   }
 

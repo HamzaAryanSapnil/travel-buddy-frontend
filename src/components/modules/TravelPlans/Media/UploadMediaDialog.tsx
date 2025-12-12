@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import MultiImageUpload from "@/components/shared/MultiImageUpload";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { uploadMultipleToImgBB } from "@/lib/imgbb";
 
 interface UploadMediaDialogProps {
   plan: TravelPlan;
@@ -34,6 +35,7 @@ export default function UploadMediaDialog({
   const router = useRouter();
   const [isPending] = useTransition();
   const [files, setFiles] = useState<File[]>([]);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   const [state, formAction] = useActionState(
     uploadMedia.bind(null, plan.id),
@@ -73,7 +75,7 @@ export default function UploadMediaDialog({
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (files.length === 0) {
@@ -81,10 +83,24 @@ export default function UploadMediaDialog({
       return;
     }
 
+    // Upload images to imgBB first
+    setIsUploadingImages(true);
+    let imageUrls: string[] = [];
+    try {
+      imageUrls = await uploadMultipleToImgBB(files);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Failed to upload images";
+      toast.error(errorMsg);
+      setIsUploadingImages(false);
+      return; // Don't proceed if upload fails
+    } finally {
+      setIsUploadingImages(false);
+    }
+
+    // Build FormData with URLs
     const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
+    formData.append("imageUrls", JSON.stringify(imageUrls));
+    formData.append("type", "photo");
 
     formAction(formData);
   };
@@ -103,7 +119,7 @@ export default function UploadMediaDialog({
               value={files}
               onChange={setFiles}
               maxFiles={10}
-              maxSize={5 * 1024 * 1024} // 5MB
+              maxSize={32 * 1024 * 1024} // 32MB
               label="Select Photos"
             />
             {state && <InputFieldError field="files" state={state} />}
@@ -119,8 +135,12 @@ export default function UploadMediaDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending || files.length === 0}>
-              {isPending ? "Uploading..." : "Upload Photos"}
+            <Button type="submit" disabled={isPending || isUploadingImages || files.length === 0}>
+              {isUploadingImages
+                ? "Uploading to imgBB..."
+                : isPending
+                ? "Uploading..."
+                : "Upload Photos"}
             </Button>
           </div>
         </form>

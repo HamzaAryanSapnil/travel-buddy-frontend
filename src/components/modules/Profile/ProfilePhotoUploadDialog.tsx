@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/shared/ImageUpload";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { uploadToImgBB } from "@/lib/imgbb";
 
 interface ProfilePhotoUploadDialogProps {
   open: boolean;
@@ -31,6 +32,7 @@ export default function ProfilePhotoUploadDialog({
   const router = useRouter();
   const [isPending] = useTransition();
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const [state, formAction] = useActionState(updateProfilePhoto, null);
 
@@ -67,7 +69,7 @@ export default function ProfilePhotoUploadDialog({
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!profileImage) {
@@ -75,8 +77,23 @@ export default function ProfilePhotoUploadDialog({
       return;
     }
 
+    // Upload image to imgBB first
+    setIsUploadingImage(true);
+    let imageUrl: string;
+    try {
+      imageUrl = await uploadToImgBB(profileImage);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Failed to upload image";
+      toast.error(errorMsg);
+      setIsUploadingImage(false);
+      return; // Don't proceed if upload fails
+    } finally {
+      setIsUploadingImage(false);
+    }
+
+    // Build FormData with URL
     const formData = new FormData();
-    formData.append("profileImage", profileImage);
+    formData.append("profileImage", imageUrl);
 
     formAction(formData);
   };
@@ -94,7 +111,7 @@ export default function ProfilePhotoUploadDialog({
             <ImageUpload
               value={profileImage}
               onChange={setProfileImage}
-              maxSize={5 * 1024 * 1024} // 5MB
+              maxSize={32 * 1024 * 1024} // 32MB
               label="Profile Photo"
             />
             {state && <InputFieldError field="profileImage" state={state} />}
@@ -110,8 +127,12 @@ export default function ProfilePhotoUploadDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending || !profileImage}>
-              {isPending ? "Uploading..." : "Update Photo"}
+            <Button type="submit" disabled={isPending || isUploadingImage || !profileImage}>
+              {isUploadingImage
+                ? "Uploading to imgBB..."
+                : isPending
+                ? "Uploading..."
+                : "Update Photo"}
             </Button>
           </div>
         </form>

@@ -34,15 +34,15 @@ const UserDropdown = ({ userInfo }: UserDropdownProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-full">
-          {userInfo.profileImage ? (
+          {userInfo?.profileImage ? (
             <img
-              src={userInfo.profileImage}
-              alt={userInfo.name}
+              src={userInfo?.profileImage}
+              alt={userInfo?.name || "User"}
               className="h-full w-full rounded-full object-cover"
             />
           ) : (
             <span className="text-sm font-semibold">
-              {userInfo.name.charAt(0).toUpperCase()}
+              {userInfo?.name?.charAt(0)?.toUpperCase() || "U"}
             </span>
           )}
         </Button>
@@ -50,10 +50,10 @@ const UserDropdown = ({ userInfo }: UserDropdownProps) => {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium">{userInfo.name}</p>
-            <p className="text-xs text-muted-foreground">{userInfo.email}</p>
+            <p className="text-sm font-medium">{userInfo?.name || "User"}</p>
+            <p className="text-xs text-muted-foreground">{userInfo?.email || ""}</p>
             <p className="text-xs text-primary capitalize">
-              {userInfo.role.toLowerCase()}
+              {userInfo?.role?.toLowerCase() || "user"}
             </p>
           </div>
         </DropdownMenuLabel>

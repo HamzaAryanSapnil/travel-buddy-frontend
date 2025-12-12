@@ -94,11 +94,11 @@ export default function ExpenseSummary({
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={member?.user.profileImage || undefined}
+                        src={member?.user?.profileImage || undefined}
                         alt={balance.userName}
                       />
                       <AvatarFallback>
-                        {balance.userName.charAt(0).toUpperCase()}
+                        {balance.userName?.charAt(0)?.toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div>

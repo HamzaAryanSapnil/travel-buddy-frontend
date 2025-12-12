@@ -2,7 +2,10 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { TravelPlansResponse, TravelPlansFilters } from "@/types/travelPlan.interface";
+import {
+  TravelPlansResponse,
+  TravelPlansFilters,
+} from "@/types/travelPlan.interface";
 import { redirect } from "next/navigation";
 
 export async function getTravelPlans(
@@ -34,7 +37,12 @@ export async function getTravelPlans(
 
     const queryString = params.toString();
     const response = await serverFetch.get(
-      `/travel-plans${queryString ? `?${queryString}` : ""}`
+      `/travel-plans${queryString ? `?${queryString}` : ""}`,
+      {
+        next: {
+          tags: ["travel-plans"],
+        },
+      }
     );
 
     // Handle 401 - redirect to login
@@ -122,4 +130,3 @@ export async function getTravelPlans(
     );
   }
 }
-

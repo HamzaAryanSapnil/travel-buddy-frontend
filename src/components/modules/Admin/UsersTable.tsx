@@ -69,8 +69,8 @@ export default function UsersTable({
                   <td className="py-3">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
-                        {user.profileImage ? (
-                          <AvatarImage src={user.profileImage} alt={displayName} />
+                        {user?.profileImage ? (
+                          <AvatarImage src={user?.profileImage} alt={displayName} />
                         ) : null}
                         <AvatarFallback className="text-xs">
                           {initials}

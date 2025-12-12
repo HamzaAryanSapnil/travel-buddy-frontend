@@ -34,6 +34,7 @@ import { updateAdminTravelPlan } from "@/services/admin/updateAdminTravelPlan";
 import { TravelPlan } from "@/types/travelPlan.interface";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { uploadMultipleToImgBB } from "@/lib/imgbb";
 
 interface EditTravelPlanDialogProps {
   plan: TravelPlan;
@@ -78,6 +79,9 @@ const EditTravelPlanDialog = ({
   const [visibility, setVisibility] = useState(plan.visibility || "PRIVATE");
   const [description, setDescription] = useState(plan.description || "");
   const [files, setFiles] = useState<File[]>([]);
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState<string | null>(null);
+  const [galleryImageUrls, setGalleryImageUrls] = useState<string[]>([]);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   // Remove useEffect for state sync to avoid setState during render
   // Instead, rely on key prop on the component to force re-mount and re-initialization
@@ -88,14 +92,40 @@ const EditTravelPlanDialog = ({
       toast.success(state.message || "Travel plan updated");
       onOpenChange(false);
       onUpdated?.();
-      // Don't call router.refresh() here - let onUpdated handle it with startTransition
+      // Refresh router to update server-side data
+      router.refresh();
     } else if (state && state.success === false && state.message) {
       toast.error(state.message);
     }
-  }, [onOpenChange, onUpdated, state]);
+  }, [onOpenChange, onUpdated, state, router]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Upload images to imgBB first if there are new files
+    if (files.length > 0) {
+      setIsUploadingImages(true);
+      try {
+        const imageUrls = await uploadMultipleToImgBB(files);
+        // First image becomes cover photo, rest are gallery
+        if (imageUrls.length > 0) {
+          setCoverPhotoUrl(imageUrls[0]);
+          if (imageUrls.length > 1) {
+            setGalleryImageUrls(imageUrls.slice(1));
+          } else {
+            setGalleryImageUrls([]);
+          }
+        }
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : "Failed to upload images";
+        toast.error(errorMsg);
+        setIsUploadingImages(false);
+        return; // Don't proceed if upload fails
+      } finally {
+        setIsUploadingImages(false);
+      }
+    }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("destination", destination);
@@ -109,7 +139,14 @@ const EditTravelPlanDialog = ({
       formData.append("budgetMax", budgetMax.toString());
     formData.append("visibility", visibility);
     if (description) formData.append("description", description);
-    files.forEach((file) => formData.append("files", file));
+    
+    // Add image URLs if uploaded
+    if (coverPhotoUrl) {
+      formData.append("coverPhoto", coverPhotoUrl);
+    }
+    if (galleryImageUrls.length > 0) {
+      formData.append("galleryImages", JSON.stringify(galleryImageUrls));
+    }
 
     startTransition(() => {
       formAction(formData);
@@ -278,8 +315,12 @@ const EditTravelPlanDialog = ({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending || isTransitioning}>
-              {isPending || isTransitioning ? "Saving..." : "Save changes"}
+            <Button type="submit" disabled={isPending || isTransitioning || isUploadingImages}>
+              {isUploadingImages
+                ? "Uploading images..."
+                : isPending || isTransitioning
+                ? "Saving..."
+                : "Save changes"}
             </Button>
           </div>
         </form>

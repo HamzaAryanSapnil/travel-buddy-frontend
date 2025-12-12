@@ -4,8 +4,9 @@ import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldLabel, FieldDescription } from "@/components/ui/field";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
 import { validateImageFile, createImagePreview, revokeImagePreview, formatFileSize } from "@/lib/file-upload";
+import { uploadToImgBB } from "@/lib/imgbb";
 import { cn } from "@/lib/utils";
 
 interface ImageUploadProps {
@@ -15,29 +16,38 @@ interface ImageUploadProps {
   accept?: string;
   label?: string;
   error?: string;
+  autoUpload?: boolean; // If true, automatically upload to imgBB when file is selected
+  onUpload?: (url: string) => void; // Callback with imgBB URL after upload
+  onUploadError?: (error: string) => void; // Callback if upload fails
 }
 
 const ImageUpload = ({
   value,
   onChange,
-  maxSize = 5 * 1024 * 1024, // 5MB default
+  maxSize = 32 * 1024 * 1024, // 32MB default (imgBB free tier)
   accept = "image/jpeg,image/jpg,image/png,image/webp,image/gif,image/bmp,image/svg+xml,.jpg,.jpeg,.png,.webp,.gif,.bmp,.svg",
   label = "Cover Photo",
   error,
+  autoUpload = false,
+  onUpload,
+  onUploadError,
 }: ImageUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewUrlRef = useRef<string | null>(null);
 
-  const handleFileSelect = useCallback((file: File) => {
+  const handleFileSelect = useCallback(async (file: File) => {
     // Clear previous error
     setUploadError(null);
 
     // Validate file
     const validation = validateImageFile(file);
     if (!validation.valid) {
-      setUploadError(validation.error || "Invalid file");
+      const errorMsg = validation.error || "Invalid file";
+      setUploadError(errorMsg);
+      onUploadError?.(errorMsg);
       return;
     }
 
@@ -49,9 +59,24 @@ const ImageUpload = ({
     previewUrlRef.current = previewUrl;
     setPreview(previewUrl);
 
-    // Update parent
+    // Update parent with file
     onChange(file);
-  }, [onChange]);
+
+    // Auto-upload to imgBB if enabled
+    if (autoUpload && onUpload) {
+      setIsUploading(true);
+      try {
+        const imageUrl = await uploadToImgBB(file);
+        onUpload(imageUrl);
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : "Failed to upload image";
+        setUploadError(errorMsg);
+        onUploadError?.(errorMsg);
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  }, [onChange, autoUpload, onUpload, onUploadError]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -149,8 +174,14 @@ const ImageUpload = ({
             Choose File
           </Button>
           <p className="mt-4 text-xs text-muted-foreground">
-            JPG, JPEG, PNG, WebP, GIF, BMP, SVG up to 5MB
+            JPG, JPEG, PNG, WebP, GIF, BMP, SVG up to 32MB
           </p>
+          {isUploading && (
+            <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Uploading to imgBB...</span>
+            </div>
+          )}
         </div>
       )}
 

@@ -19,13 +19,18 @@ export default function ReviewCard({ review }: ReviewCardProps) {
         {/* Header: Reviewer info */}
         <div className="flex items-start gap-3 mb-4">
           <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted flex items-center justify-center flex-shrink-0">
-            {review.reviewer.avatar ? (
+            {review?.reviewer?.avatar ? (
               <Image
-                src={review.reviewer.avatar}
-                alt={review.reviewer.fullName}
+                src={review?.reviewer?.avatar}
+                alt={review?.reviewer?.fullName || "Reviewer"}
                 fill
                 className="object-cover"
                 sizes="40px"
+                unoptimized={review?.reviewer?.avatar?.includes("i.ibb.co")}
+                onError={(e) => {
+                  console.error("Image load error:", review?.reviewer?.avatar);
+                  e.currentTarget.style.display = "none";
+                }}
               />
             ) : (
               <User className="h-5 w-5 text-muted-foreground" />
@@ -34,9 +39,9 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <p className="font-semibold text-sm sm:text-base">
-                {review.reviewer.fullName}
+                {review?.reviewer?.fullName || "Anonymous"}
               </p>
-              {review.isEdited && (
+              {review?.isEdited && (
                 <Badge variant="secondary" className="text-xs">
                   Edited
                 </Badge>

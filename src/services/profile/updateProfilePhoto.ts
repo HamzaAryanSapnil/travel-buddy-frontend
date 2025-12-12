@@ -2,7 +2,6 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { validateImageFile } from "@/lib/file-upload";
 import { revalidateTag } from "next/cache";
 
 export const updateProfilePhoto = async (
@@ -10,13 +9,13 @@ export const updateProfilePhoto = async (
   formData: FormData
 ): Promise<any> => {
   try {
-    // Get profile image from FormData
-    const profileImage = formData.get("profileImage");
+    // Get profile image URL from FormData (uploaded to imgBB client-side)
+    const profileImage = formData.get("profileImage")?.toString();
 
-    if (!profileImage || !(profileImage instanceof File)) {
+    if (!profileImage || !profileImage.trim()) {
       return {
         success: false,
-        message: "Please select an image to upload",
+        message: "Please upload an image",
         errors: [
           {
             field: "profileImage",
@@ -26,29 +25,33 @@ export const updateProfilePhoto = async (
       };
     }
 
-    // Validate image file
-    const validation = validateImageFile(profileImage);
-    if (!validation.valid) {
+    // Validate URL format (basic check)
+    try {
+      new URL(profileImage);
+    } catch {
       return {
         success: false,
-        message: validation.error || "Invalid image file",
+        message: "Invalid image URL",
         errors: [
           {
             field: "profileImage",
-            message: validation.error || "Invalid image file",
+            message: "Invalid image URL format",
           },
         ],
       };
     }
 
-    // Create FormData for API request
-    const outgoing = new FormData();
-    outgoing.append("profileImage", profileImage);
+    // Build JSON payload for API request
+    const payload = {
+      profileImage: profileImage,
+    };
 
-    // Send request to API
+    // Send request to API with JSON
     const response = await serverFetch.patch("/users/me/profile-image", {
-      body: outgoing,
-      // No explicit Content-Type; fetch will set multipart boundary
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await response.json();
@@ -125,4 +128,3 @@ export const updateProfilePhoto = async (
     };
   }
 };
-

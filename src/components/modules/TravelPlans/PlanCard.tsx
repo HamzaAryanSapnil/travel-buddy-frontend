@@ -86,11 +86,16 @@ const PlanCard = ({
       <div className="relative w-full aspect-video overflow-hidden bg-muted">
         {plan.coverPhoto ? (
           <Image
-            src={plan.coverPhoto}
-            alt={plan.title}
+            src={plan?.coverPhoto}
+            alt={plan?.title}
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-300"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
+            onError={(e) => {
+              console.error("Image load error:", plan?.coverPhoto);
+              e.currentTarget.style.display = "none";
+            }}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
@@ -110,7 +115,7 @@ const PlanCard = ({
               {/* Actions moved to Details Dialog */}
             </div>
           )}
-          {plan.isFeatured && (
+          {plan?.isFeatured && (
             <Badge
               className="bg-amber-500 text-white shadow-sm backdrop-blur-sm"
               variant="default"
@@ -122,21 +127,21 @@ const PlanCard = ({
             variant="secondary"
             className="bg-background/90 backdrop-blur-sm"
           >
-            {travelTypeLabels[plan.travelType] || plan.travelType}
+            {travelTypeLabels[plan?.travelType] || plan?.travelType}
           </Badge>
           <Badge
             variant={
-              plan.visibility === "PUBLIC"
+              plan?.visibility === "PUBLIC"
                 ? "default"
-                : plan.visibility === "PRIVATE"
+                : plan?.visibility === "PRIVATE"
                 ? "destructive"
                 : "outline"
             }
             className="bg-background/90 backdrop-blur-sm flex items-center gap-1"
           >
-            {plan.visibility === "PRIVATE" && <EyeOff className="h-3 w-3" />}
-            {plan.visibility === "PUBLIC" && <Eye className="h-3 w-3" />}
-            {visibilityLabels[plan.visibility] || plan.visibility}
+            {plan?.visibility === "PRIVATE" && <EyeOff className="h-3 w-3" />}
+            {plan?.visibility === "PUBLIC" && <Eye className="h-3 w-3" />}
+            {visibilityLabels[plan?.visibility] || plan?.visibility}
           </Badge>
           {isDashboard && (
             <Badge
@@ -150,10 +155,10 @@ const PlanCard = ({
 
       {/* Card Content */}
       <CardHeader className="flex-1">
-        <h3 className="text-xl font-bold line-clamp-2 mb-2">{plan.title}</h3>
+        <h3 className="text-xl font-bold line-clamp-2 mb-2">{plan?.title}</h3>
         {plan.description && (
           <p className="text-sm text-muted-foreground line-clamp-2">
-            {plan.description}
+            {plan?.description}
           </p>
         )}
       </CardHeader>
@@ -162,26 +167,26 @@ const PlanCard = ({
         {/* Destination */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="h-4 w-4 flex-shrink-0" />
-          <span className="line-clamp-1">{plan.destination}</span>
+          <span className="line-clamp-1">{plan?.destination}</span>
         </div>
 
         {/* Date Range */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4 flex-shrink-0" />
-          <span>{formatDateRange(plan.startDate, plan.endDate)}</span>
+          <span>{formatDateRange(plan?.startDate, plan?.endDate)}</span>
         </div>
 
         {/* Budget Range */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <DollarSign className="h-4 w-4 flex-shrink-0" />
-          <span>{formatBudgetRange(plan.budgetMin, plan.budgetMax)}</span>
+          <span>{formatBudgetRange(plan?.budgetMin, plan?.budgetMax)}</span>
         </div>
 
         {/* Member Count (if available and in dashboard) */}
-        {isDashboard && plan._count?.tripMembers !== undefined && (
+        {isDashboard && plan?._count?.tripMembers !== undefined && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Users className="h-4 w-4 flex-shrink-0" />
-            <span>{plan._count.tripMembers} members</span>
+            <span>{plan?._count?.tripMembers} members</span>
           </div>
         )}
       </CardContent>
@@ -197,7 +202,7 @@ const PlanCard = ({
         ) : (
           <>
             <Button asChild className="w-full" size="default">
-              <Link href={`/travel-plans/${plan.id}`}>View Details</Link>
+              <Link href={`/travel-plans/${plan?.id}`}>View Details</Link>
             </Button>
             {isMember && (
               <Button
@@ -206,7 +211,7 @@ const PlanCard = ({
                 className="w-full"
                 size="default"
               >
-                <Link href={`/dashboard/travel-plans/${plan.id}`}>
+                <Link href={`/dashboard/travel-plans/${plan?.id}`}>
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Open in Dashboard
                 </Link>

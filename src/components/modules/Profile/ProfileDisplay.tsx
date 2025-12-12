@@ -38,9 +38,9 @@ export default function ProfileDisplay({ userInfo }: ProfileDisplayProps) {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="relative">
                 <Avatar className="h-24 w-24">
-                  {userInfo.profileImage ? (
+                  {userInfo?.profileImage ? (
                     <AvatarImage
-                      src={userInfo.profileImage}
+                      src={userInfo?.profileImage}
                       alt={displayName}
                     />
                   ) : null}

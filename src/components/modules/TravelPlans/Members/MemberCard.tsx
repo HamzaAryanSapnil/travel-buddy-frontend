@@ -95,20 +95,20 @@ export default function MemberCard({
         <CardContent className="p-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={member.user?.profileImage} />
-              <AvatarFallback>{getInitials(member.user?.fullName)}</AvatarFallback>
+              <AvatarImage src={member?.user?.profileImage} />
+              <AvatarFallback>{getInitials(member?.user?.fullName)}</AvatarFallback>
             </Avatar>
             <div>
               <div className="flex items-center gap-2">
                 <h4 className="font-semibold text-sm sm:text-base">
-                  {member.user?.fullName || "Unknown User"}
+                  {member?.user?.fullName || "Unknown User"}
                 </h4>
                 {isSelf && (
                   <span className="text-xs text-muted-foreground">(You)</span>
                 )}
               </div>
               <p className="text-xs text-muted-foreground hidden sm:block">
-                {member.user?.email}
+                {member?.user?.email}
               </p>
             </div>
           </div>

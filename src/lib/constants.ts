@@ -37,7 +37,7 @@ export const DATE_FORMATS = {
 
 // File Upload Limits
 export const UPLOAD_LIMITS = {
-  MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+  MAX_FILE_SIZE: 32 * 1024 * 1024, // 32MB (imgBB free tier limit)
   MAX_FILES: 10,
   ALLOWED_IMAGE_TYPES: [
     "image/jpeg",

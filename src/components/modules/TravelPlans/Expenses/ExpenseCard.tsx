@@ -69,11 +69,11 @@ export default function ExpenseCard({
             <div className="flex items-center gap-2">
               <Avatar className="h-6 w-6">
                 <AvatarImage
-                  src={paidByMember?.user.profileImage || undefined}
+                  src={paidByMember?.user?.profileImage || undefined}
                   alt={paidByName}
                 />
                 <AvatarFallback className="text-xs">
-                  {paidByName.charAt(0).toUpperCase()}
+                  {paidByName?.charAt(0)?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
               <span className="text-sm font-medium">{paidByName}</span>

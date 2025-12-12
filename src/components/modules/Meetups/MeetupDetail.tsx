@@ -136,17 +136,17 @@ export default function MeetupDetail({
                 <div className="flex items-center gap-2 mt-1">
                   <Avatar className="h-6 w-6">
                     <AvatarImage
-                      src={meetup.createdByUser.profileImage || undefined}
-                      alt={meetup.createdByUser.fullName || meetup.createdByUser.email}
+                      src={meetup?.createdByUser?.profileImage || undefined}
+                      alt={meetup?.createdByUser?.fullName || meetup?.createdByUser?.email || "User"}
                     />
                     <AvatarFallback className="text-xs">
-                      {(meetup.createdByUser.fullName || meetup.createdByUser.email)
+                      {(meetup?.createdByUser?.fullName || meetup?.createdByUser?.email || "U")
                         .charAt(0)
                         .toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-muted-foreground">
-                    {meetup.createdByUser.fullName || meetup.createdByUser.email}
+                    {meetup?.createdByUser?.fullName || meetup?.createdByUser?.email || "Unknown"}
                   </span>
                 </div>
               </div>
