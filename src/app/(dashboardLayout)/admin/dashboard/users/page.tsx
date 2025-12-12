@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllUsers } from "@/services/admin/getAllUsers";
 import UsersTable from "@/components/modules/Admin/UsersTable";
 import UsersFilters from "@/components/modules/Admin/UsersFilters";
@@ -5,7 +6,6 @@ import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
 import Pagination from "@/components/shared/Pagination";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card } from "@/components/ui/card";
 
 interface AdminUsersPageProps {
   searchParams: Promise<{
@@ -91,10 +91,7 @@ export default async function AdminUsersPage({
 
       {/* Users Table */}
       <Suspense fallback={<Skeleton className="h-64 w-full" />}>
-        <UsersTable
-          users={error ? [] : usersData?.data || []}
-          error={error}
-        />
+        <UsersTable users={error ? [] : usersData?.data || []} error={error} />
       </Suspense>
 
       {/* Pagination */}
@@ -111,4 +108,3 @@ export default async function AdminUsersPage({
     </div>
   );
 }
-

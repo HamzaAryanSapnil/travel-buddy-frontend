@@ -34,8 +34,11 @@ export interface UpdateUserStatusResponse {
 export interface AdminSubscriptionFilters {
   status?: SubscriptionStatus;
   planType?: "MONTHLY" | "YEARLY";
+  searchTerm?: string; // For planName search
   startDate?: string;
   endDate?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
 }
@@ -65,7 +68,11 @@ export interface AdminPaymentFilters {
   startDate?: string;
   endDate?: string;
   userId?: string;
+  subscriptionId?: string;
+  currency?: string;
   search?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
 }
@@ -95,11 +102,29 @@ export interface AdminPaymentsResponse {
 
 export interface AdminPaymentStatistics {
   totalRevenue: number;
-  currency: string;
-  succeededCount: number;
-  pendingCount: number;
-  refundedCount: number;
-  failedCount: number;
+  totalTransactions?: number;
+  currency?: string;
+  succeededCount?: number;
+  pendingCount?: number;
+  refundedCount?: number;
+  failedCount?: number;
+  byStatus?: Array<{
+    status: "SUCCEEDED" | "PENDING" | "REFUNDED" | "FAILED";
+    count: number;
+    totalAmount: number;
+  }>;
+  byCurrency?: Array<{
+    currency: string;
+    count: number;
+    totalAmount: number;
+  }>;
+  byDateRange?: {
+    startDate: string;
+    endDate: string;
+    count: number;
+    totalAmount: number;
+  };
+  recentPayments?: any[];
   revenueByMonth?: Array<{
     month: string;
     revenue: number;

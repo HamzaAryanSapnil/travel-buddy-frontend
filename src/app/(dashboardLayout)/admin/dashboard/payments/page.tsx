@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAdminPayments, getAdminPaymentStatistics } from "@/services/admin/getAdminPayments";
 import PaymentStatistics from "@/components/modules/Admin/PaymentStatistics";
 import AdminPaymentsTable from "@/components/modules/Admin/AdminPaymentsTable";
@@ -13,6 +14,8 @@ interface AdminPaymentsPageProps {
     startDate?: string;
     endDate?: string;
     userId?: string;
+    subscriptionId?: string;
+    currency?: string;
     search?: string;
     page?: string;
     limit?: string;
@@ -33,6 +36,8 @@ export default async function AdminPaymentsPage({
     startDate: params.startDate,
     endDate: params.endDate,
     userId: params.userId,
+    subscriptionId: params.subscriptionId,
+    currency: params.currency,
     search: params.search,
     page: params.page ? parseInt(params.page) : 1,
     limit: params.limit ? parseInt(params.limit) : 20,
@@ -60,7 +65,7 @@ export default async function AdminPaymentsPage({
   ]);
 
   const error = paymentsData.success ? null : paymentsData.message;
-  const statisticsError = statisticsData.error;
+  const statisticsError = statisticsData?.error || null;
 
   // Calculate pagination
   const totalPages = Math.ceil(
@@ -78,7 +83,7 @@ export default async function AdminPaymentsPage({
       {/* Payment Statistics */}
       <Suspense fallback={<Skeleton className="h-32 w-full" />}>
         <PaymentStatistics
-          statistics={statisticsData.data}
+          statistics={statisticsData?.data || null}
           error={statisticsError}
         />
       </Suspense>

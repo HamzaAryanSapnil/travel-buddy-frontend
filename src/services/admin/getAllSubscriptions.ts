@@ -17,14 +17,17 @@ export async function getAllSubscriptions(
 
     if (filters.status) params.set("status", filters.status);
     if (filters.planType) params.set("planType", filters.planType);
+    if (filters.searchTerm) params.set("planName", filters.searchTerm);
     if (filters.startDate) params.set("startDate", filters.startDate);
     if (filters.endDate) params.set("endDate", filters.endDate);
+    if (filters.sortBy) params.set("sortBy", filters.sortBy);
+    if (filters.sortOrder) params.set("sortOrder", filters.sortOrder);
     if (filters.page) params.set("page", filters.page.toString());
     if (filters.limit) params.set("limit", filters.limit.toString());
 
     const queryString = params.toString();
     const response = await serverFetch.get(
-      `/admin/subscriptions${queryString ? `?${queryString}` : ""}`,
+      `/subscriptions${queryString ? `?${queryString}` : ""}`,
       {
         next: { tags: ["admin-subscriptions"] },
       }
@@ -59,6 +62,7 @@ export async function getAllSubscriptions(
     }
 
     const data: AdminSubscriptionsResponse = await response.json();
+    
     return data;
   } catch (error: any) {
     // Re-throw NEXT_REDIRECT errors
@@ -74,4 +78,3 @@ export async function getAllSubscriptions(
     );
   }
 }
-

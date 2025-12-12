@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import SearchFilter from "@/components/shared/SearchFilter";
 import { X } from "lucide-react";
 
 export default function SubscriptionsFilters() {
@@ -39,10 +40,18 @@ export default function SubscriptionsFilters() {
     });
   };
 
-  const hasActiveFilters = status !== "all" || planType !== "all";
+  const hasActiveFilters =
+    status !== "all" || planType !== "all" || searchParams.get("searchTerm");
 
   return (
     <div className="flex flex-wrap items-center gap-4">
+      <div className="flex-1 min-w-[200px]">
+        <SearchFilter
+          placeholder="Search by plan name..."
+          paramName="searchTerm"
+        />
+      </div>
+
       <Select
         value={status}
         onValueChange={(value) => handleFilterChange("status", value)}

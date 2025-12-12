@@ -20,13 +20,17 @@ export async function getAdminPayments(
     if (filters.startDate) params.set("startDate", filters.startDate);
     if (filters.endDate) params.set("endDate", filters.endDate);
     if (filters.userId) params.set("userId", filters.userId);
+    if (filters.subscriptionId) params.set("subscriptionId", filters.subscriptionId);
+    if (filters.currency) params.set("currency", filters.currency);
     if (filters.search) params.set("search", filters.search);
+    if (filters.sortBy) params.set("sortBy", filters.sortBy);
+    if (filters.sortOrder) params.set("sortOrder", filters.sortOrder);
     if (filters.page) params.set("page", filters.page.toString());
     if (filters.limit) params.set("limit", filters.limit.toString());
 
     const queryString = params.toString();
     const response = await serverFetch.get(
-      `/admin/payments/history${queryString ? `?${queryString}` : ""}`,
+      `/payments${queryString ? `?${queryString}` : ""}`,
       {
         next: { tags: ["admin-payments"] },
       }
@@ -61,6 +65,7 @@ export async function getAdminPayments(
     }
 
     const data: AdminPaymentsResponse = await response.json();
+    console.log("data from getAdminPayments: ", data);
     return data;
   } catch (error: any) {
     // Re-throw NEXT_REDIRECT errors
@@ -77,14 +82,29 @@ export async function getAdminPayments(
   }
 }
 
-export async function getAdminPaymentStatistics(): Promise<{
+export async function getAdminPaymentStatistics(filters?: {
+  startDate?: string;
+  endDate?: string;
+  subscriptionId?: string;
+  currency?: string;
+}): Promise<{
   data: AdminPaymentStatisticsResponse["data"] | null;
   error: string | null;
 }> {
   try {
-    const response = await serverFetch.get("/admin/payments/statistics", {
-      next: { tags: ["admin-payment-statistics"] },
-    });
+    const params = new URLSearchParams();
+    if (filters?.startDate) params.set("startDate", filters.startDate);
+    if (filters?.endDate) params.set("endDate", filters.endDate);
+    if (filters?.subscriptionId) params.set("subscriptionId", filters.subscriptionId);
+    if (filters?.currency) params.set("currency", filters.currency);
+
+    const queryString = params.toString();
+    const response = await serverFetch.get(
+      `/payments/statistics${queryString ? `?${queryString}` : ""}`,
+      {
+        next: { tags: ["admin-payment-statistics"] },
+      }
+    );
 
     // Handle 401 - redirect to login
     if (response.status === 401) {
@@ -109,8 +129,8 @@ export async function getAdminPaymentStatistics(): Promise<{
         error: errorData.message || "Failed to fetch payment statistics",
       };
     }
-
     const data: AdminPaymentStatisticsResponse = await response.json();
+    console.log("data from getAdminPaymentStatistics: ", data);
     return { data: data.data || null, error: null };
   } catch (error: any) {
     console.error("Get admin payment statistics error:", error);

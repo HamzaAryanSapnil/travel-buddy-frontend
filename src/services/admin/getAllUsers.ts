@@ -25,7 +25,7 @@ export async function getAllUsers(
 
     const queryString = params.toString();
     const response = await serverFetch.get(
-      `/admin/users${queryString ? `?${queryString}` : ""}`,
+      `/users/admin${queryString ? `?${queryString}` : ""}`,
       {
         next: { tags: ["admin-users"] },
       }
@@ -58,8 +58,9 @@ export async function getAllUsers(
     if (!response.ok) {
       throw new Error("Failed to fetch users");
     }
-
+    
     const data: AdminUsersResponse = await response.json();
+    
     return data;
   } catch (error: any) {
     // Re-throw NEXT_REDIRECT errors

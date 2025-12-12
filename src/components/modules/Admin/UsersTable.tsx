@@ -29,9 +29,11 @@ export default function UsersTable({ users, error }: UsersTableProps) {
   }
 
   const getInitials = (name: string) => {
+    if (!name || name.trim() === "") return "U";
     return name
       .split(" ")
       .map((n) => n[0])
+      .filter(Boolean)
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -81,7 +83,9 @@ export default function UsersTable({ users, error }: UsersTableProps) {
                   </td>
                   <td className="py-3 text-muted-foreground">{user.email}</td>
                   <td className="py-3">
-                    <span className="capitalize">{user.role.toLowerCase()}</span>
+                    <span className="capitalize">
+                      {user.role?.toLowerCase() || "user"}
+                    </span>
                   </td>
                   <td className="py-3">
                     <UserStatusBadge status={status} />

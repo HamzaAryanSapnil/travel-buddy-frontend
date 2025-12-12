@@ -10,6 +10,7 @@ interface AdminSubscriptionsPageProps {
   searchParams: Promise<{
     status?: string;
     planType?: string;
+    searchTerm?: string;
     startDate?: string;
     endDate?: string;
     page?: string;
@@ -37,6 +38,7 @@ export default async function AdminSubscriptionsPage({
       params.planType && params.planType !== "all"
         ? (params.planType as "MONTHLY" | "YEARLY")
         : undefined,
+    searchTerm: params.searchTerm,
     startDate: params.startDate,
     endDate: params.endDate,
     page: params.page ? parseInt(params.page) : 1,
