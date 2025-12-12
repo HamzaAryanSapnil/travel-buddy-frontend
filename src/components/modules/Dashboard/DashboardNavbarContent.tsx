@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { NavSection } from "@/types/dashboard.interface";
 import { UserInfo } from "@/types/user.interface";
+import { Notification } from "@/types/notification.interface";
 import { Menu, Search } from "lucide-react";
 import { useState } from "react";
 import DashboardMobileSidebar from "./DashboardMobileSidebar";
@@ -16,6 +17,7 @@ interface DashboardNavbarContentProps {
   unreadCount: number;
   navItems?: NavSection[];
   dashboardHome?: string;
+  notifications?: Notification[];
 }
 
 const DashboardNavbarContent = ({
@@ -23,6 +25,7 @@ const DashboardNavbarContent = ({
   unreadCount,
   navItems,
   dashboardHome,
+  notifications,
 }: DashboardNavbarContentProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -61,7 +64,7 @@ const DashboardNavbarContent = ({
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
           {/* Notifications */}
-          <NotificationsBell unreadCount={unreadCount} />
+          <NotificationsBell unreadCount={unreadCount} notifications={notifications} />
 
           {/* User Dropdown */}
           <UserDropdown userInfo={userInfo} />

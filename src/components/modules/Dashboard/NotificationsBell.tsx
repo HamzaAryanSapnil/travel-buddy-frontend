@@ -7,16 +7,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Bell } from "lucide-react";
-import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import NotificationsDropdown from "./NotificationsDropdown";
 import Link from "next/link";
 
+import { Notification } from "@/types/notification.interface";
+
 interface NotificationsBellProps {
   unreadCount: number;
+  notifications?: Notification[];
 }
 
-const NotificationsBell = ({ unreadCount }: NotificationsBellProps) => {
+const NotificationsBell = ({ unreadCount, notifications }: NotificationsBellProps) => {
   const hasUnread = unreadCount > 0;
   const displayCount = unreadCount > 99 ? "99+" : unreadCount;
 
@@ -44,16 +45,7 @@ const NotificationsBell = ({ unreadCount }: NotificationsBellProps) => {
             </Link>
           </div>
         </div>
-        <Suspense
-          fallback={
-            <div className="p-4 space-y-2">
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-            </div>
-          }
-        >
-          <NotificationsDropdown />
-        </Suspense>
+        <NotificationsDropdown notifications={notifications} />
       </PopoverContent>
     </Popover>
   );
