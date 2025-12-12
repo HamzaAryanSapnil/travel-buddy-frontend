@@ -34,7 +34,22 @@ export const updateExpense = async (
     const splitsStr = formData.get("splits");
     if (splitsStr && typeof splitsStr === "string") {
       try {
-        payload.splits = JSON.parse(splitsStr);
+        const splits = JSON.parse(splitsStr);
+        // Backend expects 'participants' not 'splits' for CUSTOM split
+        // For CUSTOM split, ensure only userId and amount (no percentage)
+        if (payload.splitType === "CUSTOM" && Array.isArray(splits)) {
+          payload.participants = splits.map((split: any) => ({
+            userId: split.userId,
+            amount: parseFloat(split.amount) || 0,
+            // Explicitly exclude percentage field for CUSTOM split
+          }));
+        } else if (payload.splitType === "EQUAL" && Array.isArray(splits)) {
+          // For EQUAL split, also use participants
+          payload.participants = splits.map((split: any) => ({
+            userId: split.userId,
+            amount: parseFloat(split.amount) || 0,
+          }));
+        }
       } catch {
         return {
           success: false,
@@ -56,7 +71,54 @@ export const updateExpense = async (
       }
     });
 
-    // Validate using Zod
+    // For CUSTOM split, validate participants array and sum
+    if (payload.splitType === "CUSTOM") {
+      if (!payload.participants || !Array.isArray(payload.participants) || payload.participants.length === 0) {
+        return {
+          success: false,
+          message: "For CUSTOM split, participants array is required",
+          errors: [
+            {
+              field: "participants",
+              message: "Participants array is required for CUSTOM split",
+            },
+          ],
+        };
+      }
+
+      // Validate sum equals total amount
+      const totalAmount = parseFloat(payload.amount) || 0;
+      const sum = payload.participants.reduce((acc: number, p: any) => acc + (parseFloat(p.amount) || 0), 0);
+      if (Math.abs(sum - totalAmount) > 0.01) {
+        return {
+          success: false,
+          message: `Sum of participant amounts (${sum}) must equal total amount (${totalAmount})`,
+          errors: [
+            {
+              field: "participants",
+              message: `Sum of participant amounts (${sum}) must equal total amount (${totalAmount})`,
+            },
+          ],
+        };
+      }
+
+      // Ensure no percentage field exists
+      const hasPercentage = payload.participants.some((p: any) => p.percentage !== undefined);
+      if (hasPercentage) {
+        return {
+          success: false,
+          message: "For CUSTOM split, provide amount only. Don't include percentage.",
+          errors: [
+            {
+              field: "participants",
+              message: "For CUSTOM split, provide amount only. Don't include percentage.",
+            },
+          ],
+        };
+      }
+    }
+
+    // Validate using Zod (for other fields)
     const validationResult = zodValidator(payload, updateExpenseSchema);
 
     if (!validationResult.success) {
@@ -64,6 +126,21 @@ export const updateExpense = async (
     }
 
     const validatedPayload = validationResult.data;
+    
+    if (!validatedPayload || typeof validatedPayload !== "object") {
+      return {
+        success: false,
+        message: "Invalid expense data",
+      };
+    }
+    
+    // Ensure participants are properly formatted for backend
+    if (validatedPayload.participants && Array.isArray(validatedPayload.participants)) {
+      (validatedPayload as any).participants = validatedPayload.participants.map((p: any) => ({
+        userId: p.userId,
+        amount: parseFloat(p.amount) || 0,
+      }));
+    }
 
     // Send request to API
     const response = await serverFetch.patch(`/expenses/${expenseId}`, {

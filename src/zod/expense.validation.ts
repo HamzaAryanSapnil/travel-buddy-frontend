@@ -1,9 +1,10 @@
 import { z } from "zod";
 
-const expenseSplitSchema = z.object({
+const expenseParticipantSchema = z.object({
   userId: z.string().uuid({ message: "Invalid user ID" }),
   amount: z.coerce.number().min(0.01, { message: "Amount must be at least 0.01" }),
-});
+  // Explicitly exclude percentage for CUSTOM split validation
+}).strict();
 
 export const createExpenseSchema = z
   .object({
@@ -25,7 +26,7 @@ export const createExpenseSchema = z
     ),
     payerId: z.string().uuid({ message: "Invalid user ID" }),
     splitType: z.enum(["EQUAL", "CUSTOM"], { message: "Invalid split type" }),
-    splits: z.array(expenseSplitSchema).optional(),
+    participants: z.array(expenseParticipantSchema).optional(),
     expenseDate: z
       .string()
       .datetime({ message: "Expense date must be a valid ISO datetime" })
@@ -34,11 +35,11 @@ export const createExpenseSchema = z
   .refine(
     (data) => {
       if (data.splitType === "CUSTOM") {
-        if (!data.splits || data.splits.length === 0) {
+        if (!data.participants || data.participants.length === 0) {
           return false;
         }
-        const totalSplit = data.splits.reduce(
-          (sum, split) => sum + split.amount,
+        const totalSplit = data.participants.reduce(
+          (sum, participant) => sum + participant.amount,
           0
         );
         // Allow small rounding differences (0.01)
@@ -47,8 +48,8 @@ export const createExpenseSchema = z
       return true;
     },
     {
-      message: "Sum of splits must equal total amount",
-      path: ["splits"],
+      message: "Sum of participant amounts must equal total amount",
+      path: ["participants"],
     }
   );
 
