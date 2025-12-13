@@ -96,7 +96,7 @@ const EditTravelPlanDialog = ({
     e.preventDefault();
 
     let coverPhotoUrl: string | null = plan?.coverPhoto || null;
-    let galleryImageUrls: string[] = plan?.galleryImages || [];
+    let galleryImageUrls: string[] = [];
 
     // Upload new images to imgBB if there are new files
     if (files.length > 0) {
