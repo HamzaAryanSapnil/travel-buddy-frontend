@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // cacheComponents: true,
   /* config options here */
   // reactCompiler: true,
   experimental: {
@@ -8,6 +9,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "6mb", // 5MB ছবির জন্য সামান্য হেডরুমসহ
     },
   },
+
   images: {
     remotePatterns: [
       {

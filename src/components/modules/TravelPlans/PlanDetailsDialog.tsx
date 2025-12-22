@@ -40,6 +40,12 @@ import EditTravelPlanDialog from "./EditTravelPlanDialog";
 import { deleteTravelPlan } from "@/services/travelPlans/deleteTravelPlan";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { isPlanCompleted } from "@/utils/planDateHelpers";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface PlanDetailsDialogProps {
   plan: TravelPlan;
@@ -108,6 +114,16 @@ const PlanDetailsDialog = ({
     startTransition(() => router.refresh());
   };
 
+  const isCompleted = isPlanCompleted(plan.startDate, plan.endDate);
+
+  const handleEditClick = () => {
+    if (isCompleted) {
+      toast.error("This Travel already Completed");
+      return;
+    }
+    closeDetailsOpenEdit();
+  };
+
   return (
     <>
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
@@ -133,14 +149,35 @@ const PlanDetailsDialog = ({
                     Open Dashboard
                   </Link>
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={closeDetailsOpenEdit}
-                >
-                  <Pencil className="h-4 w-4 mr-2" />
-                  Edit
-                </Button>
+                {isCompleted ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleEditClick}
+                          disabled={isCompleted}
+                        >
+                          <Pencil className="h-4 w-4 mr-2" />
+                          Edit
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>This Travel already Completed</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleEditClick}
+                  >
+                    <Pencil className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                )}
                 <Button
                   variant="destructive"
                   size="sm"

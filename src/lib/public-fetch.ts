@@ -11,7 +11,7 @@ const publicFetchHelper = async (
 ): Promise<Response> => {
   const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
     ...options,
-    cache: "no-store", // Ensure fresh data for SSR
+    // cache: "force-cache", // Ensure fresh data for SSR
   });
 
   return response;

@@ -27,6 +27,7 @@ import { format } from "date-fns";
 import DateTimeInput from "./DateTimeInput";
 import DaySelector from "./DaySelector";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { isDayPast, getFirstEditableDayIndex } from "@/utils/planDateHelpers";
 
 interface ItineraryItemFormDialogProps {
   plan: TravelPlan;
@@ -49,8 +50,6 @@ export default function ItineraryItemFormDialog({
   const [isPending, startTransition] = useTransition();
 
   // Initialize form state based on mode
-  const initialDayIndex =
-    mode === "edit" && item ? item.dayIndex : defaultDayIndex;
   const initialTitle = mode === "edit" && item ? item.title : "";
   const initialDescription =
     mode === "edit" && item ? item.description || "" : "";
@@ -65,6 +64,22 @@ export default function ItineraryItemFormDialog({
     mode === "edit" && item ? formatDateTime(item.startAt) : "";
   const initialEndAt =
     mode === "edit" && item ? formatDateTime(item.endAt) : "";
+
+  // Calculate correct initial day index (handle past days in create mode)
+  const initialDayIndex =
+    mode === "edit" && item
+      ? item.dayIndex
+      : (() => {
+          const effectiveDayIndex = defaultDayIndex || 1;
+          // If in create mode and day is past, use first editable day
+          if (
+            mode === "create" &&
+            isDayPast(plan.startDate, effectiveDayIndex)
+          ) {
+            return getFirstEditableDayIndex(plan.startDate, plan.endDate);
+          }
+          return effectiveDayIndex;
+        })();
 
   const [selectedDayIndex, setSelectedDayIndex] = useState(initialDayIndex);
   const [title, setTitle] = useState(initialTitle);
@@ -234,7 +249,9 @@ export default function ItineraryItemFormDialog({
       formData.append("endAt", endAtValue);
     }
 
-    formAction(formData);
+    startTransition(() => {
+      formAction(formData);
+    });
   };
 
   return (
@@ -254,6 +271,7 @@ export default function ItineraryItemFormDialog({
             value={selectedDayIndex}
             onChange={setSelectedDayIndex}
             totalDays={totalDays}
+            plan={plan}
             required
             state={state}
             fieldName="dayIndex"

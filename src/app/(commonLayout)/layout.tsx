@@ -1,5 +1,8 @@
-import PublicNavbar from "@/components/shared/PublicNavbar";
 import PublicFooter from "@/components/shared/PublicFooter";
+import PublicNavbar from "@/components/shared/PublicNavbar";
+import { Suspense } from "react";
+
+
 
 export default function CommonLayout({
   children,
@@ -8,10 +11,11 @@ export default function CommonLayout({
 }) {
   return (
     <>
-      <PublicNavbar />
+      <Suspense fallback={null}>
+        <PublicNavbar />
+      </Suspense>
       {children}
       <PublicFooter />
     </>
   );
 }
-

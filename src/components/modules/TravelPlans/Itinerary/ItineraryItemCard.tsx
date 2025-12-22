@@ -4,6 +4,7 @@ import { Clock, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import ItineraryItemActions from "./ItineraryItemActions";
 import { TravelPlan } from "@/types/travelPlan.interface";
+import { isDayPast } from "@/utils/planDateHelpers";
 
 interface ItineraryItemCardProps {
   item: ItineraryItem;
@@ -25,6 +26,10 @@ export default function ItineraryItemCard({
 
   const startTime = formatTime(item.startAt);
   const endTime = formatTime(item.endAt);
+
+  // Only show actions if editor AND day is not past
+  const isDayInPast = isDayPast(plan.startDate, item.dayIndex);
+  const canEditItem = isEditor && !isDayInPast;
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -62,8 +67,8 @@ export default function ItineraryItemCard({
             )}
           </div>
 
-          {/* Actions */}
-          {isEditor && (
+          {/* Actions - only show if editor and day is not past */}
+          {canEditItem && (
             <ItineraryItemActions item={item} plan={plan} planId={planId} />
           )}
         </div>

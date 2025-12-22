@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/select";
 import InputFieldError from "@/components/shared/InputFieldError";
 import { IInputErrorState } from "@/lib/getInputFieldError";
+import { TravelPlan } from "@/types/travelPlan.interface";
+import { isDayPast } from "@/utils/planDateHelpers";
 
 interface DaySelectorProps {
   name: string;
@@ -17,6 +19,8 @@ interface DaySelectorProps {
   value: number;
   onChange: (value: number) => void;
   totalDays: number;
+  plan: TravelPlan;
+  disabledDays?: number[];
   disabled?: boolean;
   required?: boolean;
   error?: string;
@@ -30,6 +34,8 @@ export default function DaySelector({
   value,
   onChange,
   totalDays,
+  plan,
+  disabledDays = [],
   disabled = false,
   required = false,
   error,
@@ -38,6 +44,15 @@ export default function DaySelector({
 }: DaySelectorProps) {
   const handleValueChange = (selectedValue: string) => {
     onChange(Number(selectedValue));
+  };
+
+  const isDayDisabled = (day: number): boolean => {
+    // Check if day is in explicit disabledDays array
+    if (disabledDays.includes(day)) {
+      return true;
+    }
+    // Check if day is past
+    return isDayPast(plan.startDate, day);
   };
 
   return (
@@ -57,11 +72,14 @@ export default function DaySelector({
           <SelectValue placeholder="Select day" />
         </SelectTrigger>
         <SelectContent>
-          {Array.from({ length: totalDays }, (_, i) => i + 1).map((day) => (
-            <SelectItem key={day} value={String(day)}>
-              Day {day}
-            </SelectItem>
-          ))}
+          {Array.from({ length: totalDays }, (_, i) => i + 1).map((day) => {
+            const dayDisabled = isDayDisabled(day);
+            return (
+              <SelectItem key={day} value={String(day)} disabled={dayDisabled}>
+                Day {day}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
       {state && <InputFieldError field={fieldName || name} state={state} />}

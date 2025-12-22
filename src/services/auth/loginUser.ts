@@ -13,6 +13,7 @@ import { parse } from "cookie";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { setCookie } from "./tokenHandlers";
+import { revalidatePath } from "next/cache";
 
 export const loginUser = async (
   _currentState: any,
@@ -102,6 +103,9 @@ export const loginUser = async (
     if (!result.success) {
       throw new Error(result.message || "Login failed");
     }
+
+    revalidatePath("/", "layout"); 
+    revalidatePath("/dashboard");
 
     if (redirectTo && result.data.needPasswordChange) {
       const requestedPath = redirectTo.toString();

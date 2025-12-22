@@ -5,7 +5,7 @@ function PublicFooter() {
   return (
     <footer className="border-t bg-background w-full">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {/* Company Column */}
           <div>
             <h3 className="font-bold mb-2">Company</h3>
@@ -16,7 +16,7 @@ function PublicFooter() {
           </div>
 
           {/* Features Column */}
-          <div>
+          <div className=" lg:justify-self-center">
             <h3 className="font-semibold mb-2">Features</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -55,7 +55,7 @@ function PublicFooter() {
           </div>
 
           {/* Support Column */}
-          <div>
+          <div className="lg:justify-self-center">
             <h3 className="font-semibold mb-2">Support</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -94,7 +94,7 @@ function PublicFooter() {
           </div>
 
           {/* Connect Column */}
-          <div>
+          <div className=" lg:justify-self-end">
             <h3 className="font-semibold mb-2">Connect</h3>
             <div className="flex gap-4 mb-4">
               <a

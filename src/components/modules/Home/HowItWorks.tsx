@@ -1,27 +1,36 @@
+"use client";
+
 import { Plus, UserPlus, Plane } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import AnimatedNumber from "@/components/shared/AnimatedNumber";
 
 const steps = [
   {
-    number: "01",
+    number: 1,
     icon: Plus,
     title: "Create Your Plan",
     description:
       "Sign up and create your travel plan. Set destination, dates, budget, and travel type. Or use our AI planner for instant suggestions.",
+    color: "text-white font-black",
+    bgColor: "bg-blue-600 dark:bg-blue-400",
   },
   {
-    number: "02",
+    number: 2,
     icon: UserPlus,
     title: "Invite & Collaborate",
     description:
       "Invite friends to join your plan. Collaborate on itinerary, share expenses, schedule meetups, and chat in real-time.",
+    color: "text-white font-black",
+    bgColor: "bg-purple-600 dark:bg-purple-400",
   },
   {
-    number: "03",
+    number: 3,
     icon: Plane,
     title: "Travel & Enjoy",
     description:
       "Follow your itinerary, track expenses, share photos, and create memories. Review your trip and plan your next adventure!",
+    color: "text-white font-black",
+    bgColor: "bg-green-600 dark:bg-green-400",
   },
 ];
 
@@ -50,11 +59,15 @@ export default function HowItWorks() {
                   <CardHeader>
                     {/* Step Number */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-4xl font-bold text-muted-foreground/30">
-                        {step.number}
+                      <span className={`text-4xl font-bold text-background-foreground dark:text-foreground`}>
+                        <AnimatedNumber
+                          value={step.number}
+                          prefix="0"
+                          duration={1.5}
+                        />
                       </span>
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-primary" />
+                      <div className={`w-12 h-12 rounded-lg ${step.bgColor}/10 flex items-center justify-center text-white font-black`}>
+                        <Icon className={`w-6 h-6 ${step.color}` } />
                       </div>
                     </div>
                     <CardTitle className="text-xl">{step.title}</CardTitle>
@@ -81,4 +94,3 @@ export default function HowItWorks() {
     </section>
   );
 }
-

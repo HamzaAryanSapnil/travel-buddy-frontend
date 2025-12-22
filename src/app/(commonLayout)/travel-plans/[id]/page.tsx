@@ -95,7 +95,7 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
           <Card className="container mx-auto text-center p-12">
             <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
             <p className="text-muted-foreground mb-6">
-              You don't have permission to view this travel plan
+              You don&apos;t have permission to view this travel plan
             </p>
             <Link href="/travel-plans">
               <Button>Back to All Plans</Button>
@@ -183,6 +183,7 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
                <JoinRequestButton
                   planId={plan.id}
                   planTitle={plan.title}
+                  plan={plan}
                   isAuthenticated={!!accessToken}
                   // These props would come from API in a real scenario
                   // isMember={false} 

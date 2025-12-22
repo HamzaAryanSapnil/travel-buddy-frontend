@@ -53,9 +53,9 @@ const ClearFiltersButton = ({
 
     startTransition(() => {
       if (params.toString()) {
-        router.push(`?${params.toString()}`);
+        router.replace(`?${params.toString()}`);
       } else {
-        router.push(window.location.pathname);
+        router.replace(window.location.pathname);
       }
     });
 

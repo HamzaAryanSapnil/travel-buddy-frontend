@@ -135,6 +135,12 @@ export const adminNavItems: NavSection[] = [
         roles: ["ADMIN"],
       },
       {
+        title: "Manage Travel Plans",
+        href: "/admin/dashboard/travel-plans/manage",
+        icon: "Table",
+        roles: ["ADMIN"],
+      },
+      {
         title: "All Subscriptions",
         href: "/admin/dashboard/subscriptions",
         icon: "CreditCard",

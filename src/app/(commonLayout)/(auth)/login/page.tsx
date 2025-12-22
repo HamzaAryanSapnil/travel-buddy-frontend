@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/card";
 import LoginForm from "@/components/LoginForm";
 
+export const dynamic = "force-dynamic";
+
 const LoginPage = async ({
   searchParams,
 }: {

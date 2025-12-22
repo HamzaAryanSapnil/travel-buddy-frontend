@@ -5,29 +5,7 @@ import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
 import { createItineraryItemSchema } from "@/zod/itinerary.validation";
 import { revalidateTag } from "next/cache";
-
-// Helper function to convert datetime-local to ISO format
-// datetime-local format: "2025-01-15T09:00" (local time, no timezone)
-// We need to treat it as local time and convert to UTC correctly
-const convertToISO = (datetimeLocal: string | null | undefined) => {
-  if (!datetimeLocal || datetimeLocal.trim() === "") return undefined;
-  
-  try {
-    // datetime-local is already in local timezone
-    // JavaScript's Date constructor will interpret it correctly as local time
-    // and toISOString() will convert it to UTC
-    const date = new Date(datetimeLocal);
-    
-    // Check if date is valid
-    if (isNaN(date.getTime())) {
-      return undefined;
-    }
-    
-    return date.toISOString();
-  } catch (error) {
-    return undefined;
-  }
-};
+import { convertToISO, getDateForDayIndex } from "@/utils/itinerary.helpers";
 
 export const createItineraryItem = async (
   planId: string,
@@ -35,13 +13,30 @@ export const createItineraryItem = async (
   formData: FormData
 ): Promise<any> => {
   try {
+    const planResponse = await serverFetch.get(`/travel-plans/${planId}`);
+    if (!planResponse.ok) {
+      return {
+        success: false,
+        message: "Failed to fetch plan details",
+      };
+    }
+
+    const planData = await planResponse.json();
+    const plan = planData.data;
+
+    const dayIndex = Number(formData.get("dayIndex"));
+
+    // Calculate the actual date for this dayIndex
+    const planStartDate = new Date(plan?.startDate);
+    const dayDate = getDateForDayIndex(planStartDate, dayIndex);
+
     const payload: any = {
       planId,
-      dayIndex: formData.get("dayIndex"),
+      dayIndex: dayIndex,
       title: formData.get("title"),
       description: formData.get("description") || undefined,
-      startAt: convertToISO(formData.get("startAt") as string), // Convert to ISO
-      endAt: convertToISO(formData.get("endAt") as string), // Convert to ISO
+      startAt: convertToISO(formData.get("startAt") as string, dayDate), // Pass dayDate
+      endAt: convertToISO(formData.get("endAt") as string, dayDate), // Pass dayDate
       locationId: formData.get("locationId") || undefined,
       order: formData.get("order") || undefined,
     };

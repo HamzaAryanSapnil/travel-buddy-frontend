@@ -1,14 +1,11 @@
 import { Suspense } from "react";
-import { getCookie } from "@/services/auth/tokenHandlers";
 import { getPublicTravelPlans } from "@/services/travelPlans/getPublicTravelPlans";
 import TravelPlansFilters from "@/components/modules/TravelPlans/TravelPlansFilters";
 import PlansGrid from "@/components/modules/TravelPlans/PlansGrid";
 import Pagination from "@/components/shared/Pagination";
 import { parseSortValue } from "@/lib/formatters";
 import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import CreatePlanFAB from "@/components/modules/TravelPlans/CreatePlanFAB";
 
 // ISR: Revalidate every 72 hours (259200 seconds) - tags are primary mechanism
 export const revalidate = 259200;
@@ -51,7 +48,6 @@ export default async function TravelPlansPage({
   searchParams,
 }: TravelPlansPageProps) {
   const params = await searchParams;
-  const accessToken = await getCookie("accessToken");
 
   // Parse sort value
   const sortValue = params.sort || "createdAt-desc";
@@ -131,21 +127,8 @@ export default async function TravelPlansPage({
           </div>
         )}
 
-        {/* Floating Action Button (logged-in users only) */}
-        {accessToken && (
-          <Link
-            href="/dashboard/travel-plans/create"
-            className="fixed bottom-8 right-8 z-50"
-          >
-            <Button
-              size="lg"
-              className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-              title="Create New Plan"
-            >
-              <Plus className="h-6 w-6" />
-            </Button>
-          </Link>
-        )}
+        {/* Floating Action Button (logged-in users only) - Client-side auth check */}
+        <CreatePlanFAB />
       </div>
     </main>
   );

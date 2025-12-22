@@ -100,7 +100,7 @@ const PlanCard = ({
             }}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+          <div className="w-full h-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
             <MapPin className="h-16 w-16 text-primary/30" />
           </div>
         )}
@@ -139,7 +139,7 @@ const PlanCard = ({
                 ? "destructive"
                 : "outline"
             }
-            className="bg-background/90 backdrop-blur-sm flex items-center gap-1"
+            className="bg-background/90 backdrop-blur-sm flex items-center gap-1 text-background-foreground dark:text-foreground"
           >
             {plan?.visibility === "PRIVATE" && <EyeOff className="h-3 w-3" />}
             {plan?.visibility === "PUBLIC" && <Eye className="h-3 w-3" />}
@@ -147,7 +147,7 @@ const PlanCard = ({
           </Badge>
           {isDashboard && (
             <Badge
-              className={`${statusColors[status]} bg-background/90 backdrop-blur-sm`}
+              className={`${statusColors[status]} bg-background/90 backdrop-blur-sm text-background-foreground dark:text-foreground`}
             >
               {statusLabels[status]}
             </Badge>
@@ -168,26 +168,26 @@ const PlanCard = ({
       <CardContent className="space-y-3 flex-1">
         {/* Destination */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4 flex-shrink-0" />
+          <MapPin className="h-4 w-4 shrink-0" />
           <span className="line-clamp-1">{plan?.destination}</span>
         </div>
 
         {/* Date Range */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4 flex-shrink-0" />
+          <Calendar className="h-4 w-4 shrink-0" />
           <span>{formatDateRange(plan?.startDate, plan?.endDate)}</span>
         </div>
 
         {/* Budget Range */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <DollarSign className="h-4 w-4 flex-shrink-0" />
+          <DollarSign className="h-4 w-4 shrink-0" />
           <span>{formatBudgetRange(plan?.budgetMin, plan?.budgetMax)}</span>
         </div>
 
         {/* Member Count (if available and in dashboard) */}
         {isDashboard && plan?._count?.tripMembers !== undefined && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Users className="h-4 w-4 flex-shrink-0" />
+            <Users className="h-4 w-4 shrink-0" />
             <span>{plan?._count?.tripMembers} members</span>
           </div>
         )}

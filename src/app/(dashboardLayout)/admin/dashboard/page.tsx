@@ -1,35 +1,10 @@
 import { Suspense } from "react";
 import { getAdminDashboardOverview } from "@/services/dashboard/getAdminDashboardOverview";
 import AdminDashboardOverview from "@/components/modules/Dashboard/AdminDashboardOverview";
-import { Skeleton } from "@/components/ui/skeleton";
+import AdminDashboardSkeleton from "@/components/modules/Dashboard/AdminDashboardSkeleton";
 import { Card } from "@/components/ui/card";
 
 export const revalidate = 0; // Revalidate on every request for dashboard data
-
-const DashboardSkeleton = () => (
-  <div className="space-y-6">
-    <div>
-      <Skeleton className="h-9 w-48 mb-2" />
-      <Skeleton className="h-5 w-64" />
-    </div>
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <Card key={i} className="p-6">
-          <Skeleton className="h-4 w-24 mb-2" />
-          <Skeleton className="h-8 w-16" />
-        </Card>
-      ))}
-    </div>
-    <div className="grid gap-6 md:grid-cols-2">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="p-6">
-          <Skeleton className="h-6 w-48 mb-4" />
-          <Skeleton className="h-64 w-full" />
-        </Card>
-      ))}
-    </div>
-  </div>
-);
 
 export default async function AdminDashboardPage() {
   let adminOverview: Awaited<
@@ -66,7 +41,7 @@ export default async function AdminDashboardPage() {
   if (adminOverview?.success) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Suspense fallback={<DashboardSkeleton />}>
+        <Suspense fallback={<AdminDashboardSkeleton />}>
           <AdminDashboardOverview overview={adminOverview.data} />
         </Suspense>
       </div>

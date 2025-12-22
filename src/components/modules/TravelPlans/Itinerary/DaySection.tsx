@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import ItineraryItemCard from "./ItineraryItemCard";
 import AddItemButton from "./AddItemButton";
 import { TravelPlan } from "@/types/travelPlan.interface";
+import { isDayPast } from "@/utils/planDateHelpers";
 
 interface DaySectionProps {
   dayIndex: number;
@@ -22,6 +23,10 @@ export default function DaySection({
   planId,
   isEditor,
 }: DaySectionProps) {
+  // Only show AddItemButton if editor AND day is not past
+  const isDayInPast = isDayPast(plan.startDate, dayIndex);
+  const canAddItem = isEditor && !isDayInPast;
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -31,7 +36,7 @@ export default function DaySection({
             {format(dayDate, "EEEE, MMMM d, yyyy")}
           </p>
         </div>
-        {isEditor && <AddItemButton plan={plan} planId={planId} defaultDayIndex={dayIndex} />}
+        {canAddItem && <AddItemButton plan={plan} planId={planId} defaultDayIndex={dayIndex} />}
       </CardHeader>
       <CardContent className="space-y-3">
         {items.length === 0 ? (

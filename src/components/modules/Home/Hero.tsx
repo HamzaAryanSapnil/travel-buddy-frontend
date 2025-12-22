@@ -49,7 +49,7 @@ export default function Hero() {
               asChild
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto px-8 py-6 text-lg bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 dark:bg-black/20 dark:border-white/20 dark:hover:bg-black/30"
+              className="w-full sm:w-auto px-8 py-6 text-lg bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/10 dark:bg-black/20 dark:border-white/20 dark:hover:bg-black/30 hover:font-bold hover:text-primary dark:hover:text-foreground"
             >
               <Link href="/travel-plans">Explore Plans</Link>
             </Button>
@@ -59,4 +59,3 @@ export default function Hero() {
     </section>
   );
 }
-
