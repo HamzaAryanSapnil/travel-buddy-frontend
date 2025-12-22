@@ -1,7 +1,7 @@
 "use client";
 
 import { loginUser } from "@/services/auth/loginUser";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import InputFieldError from "./shared/InputFieldError";
@@ -14,12 +14,38 @@ import Link from "next/link";
 const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message);
     }
   }, [state]);
+
+  const handleUserLogin = () => {
+    const userEmail = process.env.NEXT_PUBLIC_USER_EMAIL || "";
+    const userPassword = process.env.NEXT_PUBLIC_USER_PASS || "";
+    setEmail(userEmail);
+    setPassword(userPassword);
+    // Focus on email input after setting values
+    setTimeout(() => {
+      emailInputRef.current?.focus();
+    }, 0);
+  };
+
+  const handleAdminLogin = () => {
+    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "";
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASS || "";
+    setEmail(adminEmail);
+    setPassword(adminPassword);
+    // Focus on email input after setting values
+    setTimeout(() => {
+      emailInputRef.current?.focus();
+    }, 0);
+  };
 
   return (
     <form action={formAction}>
@@ -30,10 +56,13 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
           <Field>
             <FieldLabel htmlFor="email">Email Address</FieldLabel>
             <Input
+              ref={emailInputRef}
               id="email"
               name="email"
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <InputFieldError field="email" state={state} />
           </Field>
@@ -43,11 +72,14 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <div className="relative">
               <Input
+                ref={passwordInputRef}
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="pr-10"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 type="button"
@@ -85,6 +117,28 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
               {isPending ? "Logging in..." : "Sign In"}
             </Button>
 
+            {/* Demo Login Buttons */}
+            <div className="flex gap-2 mt-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleUserLogin}
+                className="flex-1"
+                disabled={isPending}
+              >
+                User
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleAdminLogin}
+                className="flex-1"
+                disabled={isPending}
+              >
+                Admin
+              </Button>
+            </div>
+
             <FieldDescription className="px-6 text-center">
               Don&apos;t have an account?{" "}
               <Link
@@ -110,4 +164,3 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
 };
 
 export default LoginForm;
-
