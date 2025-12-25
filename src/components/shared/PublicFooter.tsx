@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { developerInfo } from "@/config/developer.config";
+import { projectConfig } from "@/config/project.config";
+import { FaLinkedin, FaGithub, FaWhatsapp } from "react-icons/fa";
 
 function PublicFooter() {
   return (
@@ -8,47 +10,46 @@ function PublicFooter() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {/* Company Column */}
           <div>
-            <h3 className="font-bold mb-2">Company</h3>
+            <h3 className="font-bold mb-2">{projectConfig.projectName}</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Plan your perfect trip with friends and family. Create memories
-              that last a lifetime.
+              {projectConfig.projectTagline}
             </p>
           </div>
 
-          {/* Features Column */}
-          <div className=" lg:justify-self-center">
-            <h3 className="font-semibold mb-2">Features</h3>
+          {/* Links Column */}
+          <div className="lg:justify-self-center">
+            <h3 className="font-semibold mb-2">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  href="/plans"
+                  href="/"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  AI Planner
+                  Home
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/plans"
+                  href="/travel-plans"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Collaboration
+                  Travel Plans
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/plans"
+                  href="/about"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Expenses
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/plans"
+                  href="/contact"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Reviews
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -60,7 +61,7 @@ function PublicFooter() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  href="#"
+                  href="/contact"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Help Center
@@ -68,78 +69,71 @@ function PublicFooter() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/about"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Terms of Service
+                  About
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Connect Column */}
-          <div className=" lg:justify-self-end">
-            <h3 className="font-semibold mb-2">Connect</h3>
-            <div className="flex gap-4 mb-4">
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <FaFacebook className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                aria-label="Twitter"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <FaTwitter className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <FaInstagram className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                aria-label="LinkedIn"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <FaLinkedin className="w-5 h-5" />
-              </a>
+          {/* Developer Info Column */}
+          <div className="lg:justify-self-end">
+            <h3 className="font-semibold mb-2">Developer</h3>
+            <div className="space-y-3 mb-4">
+              <div>
+                <p className="text-sm font-medium mb-1">{developerInfo.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {developerInfo.title}
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <a
+                  href={developerInfo.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="WhatsApp"
+                  className="text-muted-foreground hover:text-[#25D366] transition-colors"
+                >
+                  <FaWhatsapp className="w-5 h-5" />
+                </a>
+                <a
+                  href={developerInfo.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="text-muted-foreground hover:text-[#0077B5] transition-colors"
+                >
+                  <FaLinkedin className="w-5 h-5" />
+                </a>
+                <a
+                  href={developerInfo.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="text-muted-foreground hover:text-[#181717] transition-colors"
+                >
+                  <FaGithub className="w-5 h-5" />
+                </a>
+              </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">Contact Us</h3>
-              <p className="text-sm text-muted-foreground text-wrap">
-                123 Travel Street
-                <br />
-                Adventure City, AC 12345
-                <br />
-                contact@travelbuddy.com
+              <h3 className="font-semibold mb-2">Contact</h3>
+              <p className="text-sm text-muted-foreground">
+                <a
+                  href={`mailto:${developerInfo.email}`}
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  {developerInfo.email}
+                </a>
               </p>
             </div>
           </div>
         </div>
-        <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground text-wrap">
-          © {new Date().getFullYear()} Travel Buddy. All Rights Reserved.
+        <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
+          © {new Date().getFullYear()} {projectConfig.projectName}. All Rights
+          Reserved.
         </div>
       </div>
     </footer>
