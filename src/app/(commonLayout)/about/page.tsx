@@ -1,4 +1,4 @@
-import { projectConfig } from "@/config/project.config";
+
 import { developerInfo } from "@/config/developer.config";
 import AboutUsContent from "@/components/modules/About/AboutUsContent";
 import DeveloperSection from "@/components/modules/About/DeveloperSection";

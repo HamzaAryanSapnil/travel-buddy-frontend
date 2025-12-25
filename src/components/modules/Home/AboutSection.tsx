@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import aboutImage from "@/assets/images/travel-buddy-about.webp";
 
 export default function AboutSection() {
   const { homepageAbout } = projectConfig;
@@ -15,8 +16,8 @@ export default function AboutSection() {
           {/* Image Section */}
           <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-primary/10 animate-in fade-in slide-in-from-left duration-700">
             <Image
-              src="/assets/images/travel-buddy-about.webp"
-              alt={homepageAbout.mainHeading}
+              src={aboutImage}
+              alt={homepageAbout.aboutImage}
               fill
               className="object-cover"
             />
