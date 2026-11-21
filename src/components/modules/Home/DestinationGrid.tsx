@@ -57,13 +57,17 @@ export default async function DestinationGrid() {
         className="pointer-events-none absolute inset-0 z-0"
       >
         <style>{`
-@keyframes plane-drift {
-  0% { transform: translate3d(100vw, 0, 0) scaleX(-1); }
-  100% { transform: translate3d(-4rem, 0, 0) scaleX(-1); }
+@keyframes plane-climb {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
 }
-.plane-drift { animation: plane-drift 28s linear infinite; }
+.plane-drift {
+  offset-path: path("M -32 460 C 180 390, 460 250, 1280 24");
+  offset-rotate: auto 90deg;
+  animation: plane-climb 18s linear infinite;
+}
 @media (prefers-reduced-motion: reduce) {
-  .plane-drift { animation: none; }
+  .plane-drift { animation: none; offset-distance: 35%; }
 }
 `}</style>
         <svg
@@ -115,18 +119,6 @@ export default async function DestinationGrid() {
             strokeWidth="3"
           />
         </svg>
-        <div className="absolute inset-x-0 top-[58%] h-16 overflow-hidden">
-          <svg
-            viewBox="0 0 24 24"
-            className="plane-drift motion-reduce:animate-none absolute top-4 left-0 h-10 w-10 text-primary"
-            aria-hidden="true"
-          >
-            <path
-              fill="currentColor"
-              d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"
-            />
-          </svg>
-        </div>
       </div>
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
@@ -175,6 +167,18 @@ export default async function DestinationGrid() {
             })}
           </div>
         )}
+      </div>
+      <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          className="plane-drift absolute left-0 top-0 h-10 w-10 text-primary drop-shadow-sm"
+          aria-hidden="true"
+        >
+          <path
+            fill="currentColor"
+            d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"
+          />
+        </svg>
       </div>
     </section>
   );
