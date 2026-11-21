@@ -1,4 +1,4 @@
-import { getAdminTravelPlans } from "@/services/admin/getAdminTravelPlans";
+import { getAdminTravelPlans } from "@/lib/actions/admin.action";
 import AdminTravelPlansView from "@/components/modules/Admin/AdminTravelPlansView";
 import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
 import AdminTravelPlansFilters from "@/components/modules/Admin/AdminTravelPlansFilters";
@@ -7,7 +7,6 @@ import Pagination from "@/components/shared/Pagination";
 import { parseSortValue } from "@/lib/formatters";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AdminTravelPlansFilters as AdminTravelPlansFiltersType } from "@/types/admin.interface";
 
 interface AdminTravelPlansPageProps {
   searchParams: Promise<{
@@ -37,7 +36,7 @@ export default async function AdminTravelPlansPage({
   const view = (params.view || "grid") as "grid" | "list";
 
   // Build filters object
-  const filters: AdminTravelPlansFiltersType = {
+  const filters = {
     searchTerm: params.searchTerm,
     travelType:
       params.travelType && params.travelType !== "all"
@@ -70,8 +69,11 @@ export default async function AdminTravelPlansPage({
     if (!plansData.success) {
       error = plansData.message;
     }
-  } catch (err: any) {
-    error = err.message || "Failed to load travel plans";
+  } catch (err: unknown) {
+    error =
+      err instanceof Error && err.message
+        ? err.message
+        : "Failed to load travel plans";
     plansData = {
       success: false,
       message: error,

@@ -9,10 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Expense } from "@/types/expense.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { TripMember } from "@/types/tripMembers.interface";
-import { deleteExpense } from "@/services/expenses/deleteExpense";
+import { deleteExpense } from "@/lib/actions/expense.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";

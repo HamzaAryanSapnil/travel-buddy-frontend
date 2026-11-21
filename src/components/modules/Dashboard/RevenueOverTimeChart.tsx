@@ -10,7 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { RevenueOverTimeData } from "@/types/dashboard.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface RevenueOverTimeChartProps {

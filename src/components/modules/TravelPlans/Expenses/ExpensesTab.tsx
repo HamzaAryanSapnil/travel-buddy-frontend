@@ -1,6 +1,3 @@
-import { Expense } from "@/types/expense.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { TripMember } from "@/types/tripMembers.interface";
 import ExpensesTabActions from "./ExpensesTabActions";
 import ExpenseSummary from "./ExpenseSummary";
 import ExpensesList from "./ExpensesList";

@@ -1,4 +1,3 @@
-import { Payment } from "@/types/payment.interface";
 import { Card } from "@/components/ui/card";
 import { PaymentStatusBadge } from "./StatusBadge";
 import { format } from "date-fns";

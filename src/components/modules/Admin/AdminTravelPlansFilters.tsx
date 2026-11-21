@@ -3,18 +3,10 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import SearchFilter from "@/components/shared/SearchFilter";
 import SelectFilter from "@/components/shared/SelectFilter";
-import ClearFiltersButton from "@/components/shared/ClearFiltersButton";
 import { X } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -48,9 +40,13 @@ export default function AdminTravelPlansFilters() {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const [ownerId, setOwnerId] = useState(
-    searchParams.get("ownerId") || ""
-  );
+  const urlOwnerId = searchParams.get("ownerId") || "";
+  const [ownerId, setOwnerId] = useState(urlOwnerId);
+  const [prevUrlOwnerId, setPrevUrlOwnerId] = useState(urlOwnerId);
+  if (urlOwnerId !== prevUrlOwnerId) {
+    setPrevUrlOwnerId(urlOwnerId);
+    setOwnerId(urlOwnerId);
+  }
   const isFeatured = searchParams.get("isFeatured") === "true";
 
   // Debounce ownerId input
@@ -72,14 +68,6 @@ export default function AdminTravelPlansFilters() {
       });
     }
   }, [debouncedOwnerId, searchParams, router]);
-
-  // Sync local state with URL params when they change externally
-  useEffect(() => {
-    const urlOwnerId = searchParams.get("ownerId") || "";
-    if (urlOwnerId !== ownerId) {
-      setOwnerId(urlOwnerId);
-    }
-  }, [searchParams, ownerId]);
 
   const handleIsFeaturedChange = (checked: boolean) => {
     const params = new URLSearchParams(searchParams.toString());

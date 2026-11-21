@@ -25,16 +25,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { createExpense } from "@/services/expenses/createExpense";
-import { updateExpense } from "@/services/expenses/updateExpense";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { TripMember } from "@/types/tripMembers.interface";
-import { Expense, ExpenseCategory, ExpenseSplitType } from "@/types/expense.interface";
+import { createExpense } from "@/lib/actions/expense.action";
+import { updateExpense } from "@/lib/actions/expense.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import DatePicker from "@/components/shared/DatePicker";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { toInputErrorState } from "@/lib/getInputFieldError";
 import { formatCurrency } from "@/lib/expense-utils";
 
 interface ExpenseFormDialogProps {
@@ -78,6 +76,31 @@ export default function ExpenseFormDialog({
     expense?.splits.map((s) => ({ userId: s.userId, amount: s.amount.toString() })) ||
       members.map((m) => ({ userId: m.userId, amount: "" }))
   );
+  const [closedFormSync, setClosedFormSync] = useState({ open, mode, expense, members });
+  if (closedFormSync.open !== open || closedFormSync.mode !== mode || closedFormSync.expense !== expense || closedFormSync.members !== members) {
+    setClosedFormSync({ open, mode, expense, members });
+    if (!open) {
+      if (mode === "create") {
+        setTitle("");
+        setDescription("");
+        setAmount("");
+        setCategory("OTHER");
+        setPaidBy(members[0]?.userId || "");
+        setSplitType("EQUAL");
+        setExpenseDate(format(new Date(), "yyyy-MM-dd"));
+        setCustomSplits(members.map((m) => ({ userId: m.userId, amount: "" })));
+      } else if (expense) {
+        setTitle(expense.title);
+        setDescription(expense.description || "");
+        setAmount(expense.amount.toString());
+        setCategory(expense.category);
+        setPaidBy(expense.paidBy);
+        setSplitType(expense.splitType);
+        setExpenseDate(expense.expenseDate ? format(new Date(expense.expenseDate), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"));
+        setCustomSplits(expense.splits.map((s) => ({ userId: s.userId, amount: s.amount.toString() })));
+      }
+    }
+  }
 
   // Calculate equal split amounts
   const equalSplitAmount = useMemo(() => {
@@ -85,6 +108,15 @@ export default function ExpenseFormDialog({
     const total = parseFloat(amount);
     return total / members.length;
   }, [amount, members.length]);
+
+  const equalSplitSignature = splitType === "EQUAL" && amount && !isNaN(parseFloat(amount)) ? `${amount}|${members.map((m) => m.userId).join(",")}|${equalSplitAmount}` : "";
+  const [appliedEqualSplit, setAppliedEqualSplit] = useState(equalSplitSignature);
+  if (equalSplitSignature && equalSplitSignature !== appliedEqualSplit) {
+    setAppliedEqualSplit(equalSplitSignature);
+    setCustomSplits(members.map((m) => ({ userId: m.userId, amount: equalSplitAmount.toFixed(2) })));
+  } else if (!equalSplitSignature && appliedEqualSplit) {
+    setAppliedEqualSplit("");
+  }
 
   // Calculate custom splits total
   const customSplitsTotal = useMemo(() => {
@@ -116,40 +148,7 @@ export default function ExpenseFormDialog({
       : updateExpense.bind(null, plan.id, expense!.id),
     null
   );
-
-  // Reset form when dialog opens/closes
-  useEffect(() => {
-    if (!open) {
-      if (mode === "create") {
-        setTitle("");
-        setDescription("");
-        setAmount("");
-        setCategory("OTHER");
-        setPaidBy(members[0]?.userId || "");
-        setSplitType("EQUAL");
-        setExpenseDate(format(new Date(), "yyyy-MM-dd"));
-        setCustomSplits(members.map((m) => ({ userId: m.userId, amount: "" })));
-      } else if (expense) {
-        setTitle(expense.title);
-        setDescription(expense.description || "");
-        setAmount(expense.amount.toString());
-        setCategory(expense.category);
-        setPaidBy(expense.paidBy);
-        setSplitType(expense.splitType);
-        setExpenseDate(
-          expense.expenseDate
-            ? format(new Date(expense.expenseDate), "yyyy-MM-dd")
-            : format(new Date(), "yyyy-MM-dd")
-        );
-        setCustomSplits(
-          expense.splits.map((s) => ({
-            userId: s.userId,
-            amount: s.amount.toString(),
-          }))
-        );
-      }
-    }
-  }, [open, mode, expense, members]);
+  const inputErrorState = toInputErrorState(state);
 
   // Handle success/error with useEffect
   useEffect(() => {
@@ -179,19 +178,6 @@ export default function ExpenseFormDialog({
       toast.error(message);
     }
   }, [state, onOpenChange, router, mode]);
-
-  // Update custom splits when split type changes to EQUAL
-  useEffect(() => {
-    if (splitType === "EQUAL" && amount && !isNaN(parseFloat(amount))) {
-      const splitAmount = equalSplitAmount;
-      setCustomSplits(
-        members.map((m) => ({
-          userId: m.userId,
-          amount: splitAmount.toFixed(2),
-        }))
-      );
-    }
-  }, [splitType, amount, equalSplitAmount, members]);
 
   const handleCustomSplitChange = (userId: string, value: string) => {
     setCustomSplits((prev) =>
@@ -286,7 +272,7 @@ export default function ExpenseFormDialog({
               onChange={(e) => setTitle(e.target.value)}
               required
             />
-            {state && <InputFieldError field="title" state={state} />}
+            {state && <InputFieldError field="title" state={inputErrorState} />}
           </div>
 
           {/* Description */}
@@ -301,7 +287,7 @@ export default function ExpenseFormDialog({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            {state && <InputFieldError field="description" state={state} />}
+            {state && <InputFieldError field="description" state={inputErrorState} />}
           </div>
 
           {/* Amount */}
@@ -320,7 +306,7 @@ export default function ExpenseFormDialog({
               onChange={(e) => setAmount(e.target.value)}
               required
             />
-            {state && <InputFieldError field="amount" state={state} />}
+            {state && <InputFieldError field="amount" state={inputErrorState} />}
           </div>
 
           {/* Category */}
@@ -340,7 +326,7 @@ export default function ExpenseFormDialog({
                 ))}
               </SelectContent>
             </Select>
-            {state && <InputFieldError field="category" state={state} />}
+            {state && <InputFieldError field="category" state={inputErrorState} />}
           </div>
 
           {/* Paid By */}
@@ -360,7 +346,7 @@ export default function ExpenseFormDialog({
                 ))}
               </SelectContent>
             </Select>
-            {state && <InputFieldError field="paidBy" state={state} />}
+            {state && <InputFieldError field="paidBy" state={inputErrorState} />}
           </div>
 
           {/* Split Type */}
@@ -383,7 +369,7 @@ export default function ExpenseFormDialog({
                 </Label>
               </div>
             </RadioGroup>
-            {state && <InputFieldError field="splitType" state={state} />}
+            {state && <InputFieldError field="splitType" state={inputErrorState} />}
           </div>
 
           {/* Custom Splits */}
@@ -426,7 +412,7 @@ export default function ExpenseFormDialog({
                   <p className="text-sm text-destructive">{customSplitsError}</p>
                 )}
               </div>
-              {state && <InputFieldError field="splits" state={state} />}
+              {state && <InputFieldError field="splits" state={inputErrorState} />}
             </div>
           )}
 
@@ -445,7 +431,7 @@ export default function ExpenseFormDialog({
                 })()
               }
             />
-            {state && <InputFieldError field="expenseDate" state={state} />}
+            {state && <InputFieldError field="expenseDate" state={inputErrorState} />}
           </div>
 
           {/* Form Actions */}

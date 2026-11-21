@@ -2,7 +2,7 @@
 import {
   getAdminPayments,
   getAdminPaymentStatistics,
-} from "@/services/admin/getAdminPayments";
+} from "@/lib/actions/admin.action";
 import PaymentStatistics from "@/components/modules/Admin/PaymentStatistics";
 import AdminPaymentsTable from "@/components/modules/Admin/AdminPaymentsTable";
 import PaymentsFilters from "@/components/modules/Admin/PaymentsFilters";

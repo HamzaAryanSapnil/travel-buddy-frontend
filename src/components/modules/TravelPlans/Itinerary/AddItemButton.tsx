@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import ItineraryItemFormDialog from "./ItineraryItemFormDialog";
-import { TravelPlan } from "@/types/travelPlan.interface";
 
 interface AddItemButtonProps {
   plan: TravelPlan;

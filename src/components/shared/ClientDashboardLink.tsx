@@ -1,8 +1,9 @@
 "use client";
 
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { checkAuthStatus } from "@/services/auth/checkAuthStatus";
+import { checkAuthStatus } from "@/lib/actions/auth.action";
 
 export default function DashboardLink() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -44,7 +45,7 @@ export default function DashboardLink() {
 
   return (
     <Link
-      href="/dashboard"
+      href={ROUTES.DASHBOARD}
       className="text-foreground hover:text-primary transition-colors"
     >
       Dashboard

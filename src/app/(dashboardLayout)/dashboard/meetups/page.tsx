@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { getUserInfo } from "@/services/auth/getUserInfo";
-import { getMeetups } from "@/services/meetups/getMeetups";
+import { getUserInfo } from "@/lib/actions/auth.action";
+import { getMeetups } from "@/lib/actions/meetup.action";
 import MeetupsList from "@/components/modules/Meetups/MeetupsList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";

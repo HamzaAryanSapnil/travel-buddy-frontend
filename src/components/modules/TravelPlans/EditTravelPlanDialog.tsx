@@ -29,9 +29,12 @@ import BudgetInput from "./BudgetInput";
 import MultiImageUpload from "@/components/shared/MultiImageUpload";
 import { formatCharacterCount } from "@/lib/formatters";
 import InputFieldError from "@/components/shared/InputFieldError";
-import { updateTravelPlan } from "@/services/travelPlans/updateTravelPlan";
-import { updateAdminTravelPlan } from "@/services/admin/updateAdminTravelPlan";
-import { TravelPlan } from "@/types/travelPlan.interface";
+import {
+  getInputFieldError,
+  toInputErrorState,
+} from "@/lib/getInputFieldError";
+import { updateTravelPlan } from "@/lib/actions/travelPlan.action";
+import { updateAdminTravelPlan } from "@/lib/actions/admin.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { uploadMultipleToImgBB } from "@/lib/imgbb";
@@ -57,6 +60,7 @@ const EditTravelPlanDialog = ({
     ? updateAdminTravelPlan.bind(null, plan.id)
     : updateTravelPlan.bind(null, plan.id);
   const [state, formAction, isPending] = useActionState(updateAction, null);
+  const inputErrorState = toInputErrorState(state);
   const [isTransitioning, startTransition] = useTransition();
 
   const [title, setTitle] = useState(plan.title || "");
@@ -179,18 +183,10 @@ const EditTravelPlanDialog = ({
                 required
                 minLength={3}
                 maxLength={200}
-                aria-invalid={
-                  !!(
-                    state &&
-                    state.errors &&
-                    state.errors.find(
-                      (err: { field: string }) => err.field === "title"
-                    )
-                  )
-                }
+                aria-invalid={!!getInputFieldError("title", inputErrorState)}
               />
               <FieldDescription>Between 3 and 200 characters</FieldDescription>
-              <InputFieldError field="title" state={state} />
+              <InputFieldError field="title" state={inputErrorState} />
             </Field>
 
             <Field>
@@ -201,7 +197,7 @@ const EditTravelPlanDialog = ({
                 onChange={(e) => setDestination(e.target.value)}
                 required
               />
-              <InputFieldError field="destination" state={state} />
+              <InputFieldError field="destination" state={inputErrorState} />
             </Field>
           </FieldGroup>
 
@@ -213,7 +209,7 @@ const EditTravelPlanDialog = ({
                 value={origin}
                 onChange={(e) => setOrigin(e.target.value)}
               />
-              <InputFieldError field="origin" state={state} />
+              <InputFieldError field="origin" state={inputErrorState} />
             </Field>
             <Field>
               <FieldLabel>Travel Type</FieldLabel>
@@ -221,7 +217,7 @@ const EditTravelPlanDialog = ({
                 value={travelType}
                 onChange={(val) => setTravelType(val as typeof travelType)}
               />
-              <InputFieldError field="travelType" state={state} />
+              <InputFieldError field="travelType" state={inputErrorState} />
             </Field>
           </FieldGroup>
 
@@ -232,7 +228,7 @@ const EditTravelPlanDialog = ({
                 value={startDate}
                 onChange={setStartDate}
                 minDate={getMinDate()}
-                state={state}
+                state={inputErrorState}
                 fieldName="startDate"
               />
             </Field>
@@ -242,7 +238,7 @@ const EditTravelPlanDialog = ({
                 value={endDate}
                 onChange={setEndDate}
                 minDate={getEndDateMin()}
-                state={state}
+                state={inputErrorState}
                 fieldName="endDate"
               />
             </Field>
@@ -259,8 +255,8 @@ const EditTravelPlanDialog = ({
                 onMinChange={setBudgetMin}
                 onMaxChange={setBudgetMax}
               />
-              <InputFieldError field="budgetMin" state={state} />
-              <InputFieldError field="budgetMax" state={state} />
+              <InputFieldError field="budgetMin" state={inputErrorState} />
+              <InputFieldError field="budgetMax" state={inputErrorState} />
             </Field>
             <Field>
               <FieldLabel>Visibility</FieldLabel>
@@ -268,7 +264,7 @@ const EditTravelPlanDialog = ({
                 value={visibility}
                 onChange={(val) => setVisibility(val as typeof visibility)}
               />
-              <InputFieldError field="visibility" state={state} />
+              <InputFieldError field="visibility" state={inputErrorState} />
             </Field>
           </FieldGroup>
 
@@ -284,7 +280,7 @@ const EditTravelPlanDialog = ({
             <FieldDescription>
               {formatCharacterCount(description.length, 2000)}
             </FieldDescription>
-            <InputFieldError field="description" state={state} />
+            <InputFieldError field="description" state={inputErrorState} />
           </Field>
 
           <Field>
@@ -298,7 +294,7 @@ const EditTravelPlanDialog = ({
               Optional. Upload new images to replace or add to gallery (first
               will become cover).
             </FieldDescription>
-            <InputFieldError field="coverPhoto" state={state} />
+            <InputFieldError field="coverPhoto" state={inputErrorState} />
           </Field>
 
           <div className="flex justify-end gap-3 pt-2">

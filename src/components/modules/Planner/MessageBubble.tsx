@@ -1,4 +1,3 @@
-import { ChatMessage } from "@/types/planner.interface";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { format } from "date-fns";

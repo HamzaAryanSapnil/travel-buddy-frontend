@@ -1,11 +1,10 @@
-import { getNotifications } from "@/services/notifications/getNotifications";
+import { getNotifications } from "@/lib/actions/notification.action";
 import NotificationsList from "@/components/modules/Notifications/NotificationsList";
 import NotificationsFilters from "@/components/modules/Notifications/NotificationsFilters";
 import NotificationActions from "@/components/modules/Notifications/NotificationActions";
 import Pagination from "@/components/shared/Pagination";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card } from "@/components/ui/card";
 
 interface NotificationsPageProps {
   searchParams: Promise<{
@@ -40,8 +39,11 @@ export default async function NotificationsPage({
     if (!notificationsData.success) {
       error = notificationsData.message;
     }
-  } catch (err: any) {
-    error = err.message || "Failed to load notifications";
+  } catch (err: unknown) {
+    error =
+      err instanceof Error && err.message
+        ? err.message
+        : "Failed to load notifications";
     notificationsData = {
       success: false,
       message: error,

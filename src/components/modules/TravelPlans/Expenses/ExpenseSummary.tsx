@@ -1,5 +1,3 @@
-import { Expense } from "@/types/expense.interface";
-import { TripMember } from "@/types/tripMembers.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,7 +6,6 @@ import {
   formatCurrency,
   getCategoryLabel,
 } from "@/lib/expense-utils";
-import { ExpenseCategory } from "@/types/expense.interface";
 
 interface ExpenseSummaryProps {
   expenses: Expense[];

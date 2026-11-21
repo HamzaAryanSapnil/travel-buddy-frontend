@@ -1,5 +1,5 @@
-import PublicFooter from "@/components/shared/PublicFooter";
-import PublicNavbar from "@/components/shared/PublicNavbar";
+import PublicFooter from "@/components/navigation/PublicFooter";
+import PublicNavbar from "@/components/navigation/PublicNavbar";
 import { Suspense } from "react";
 
 

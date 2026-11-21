@@ -19,11 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { addMember } from "@/services/tripMembers/addMember";
+import { addMember } from "@/lib/actions/tripMember.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { TripRole } from "@/types/tripMembers.interface";
 import InputFieldError from "@/components/shared/InputFieldError";
+import {
+  getInputFieldError,
+  toInputErrorState,
+} from "@/lib/getInputFieldError";
 
 interface InviteMemberDialogProps {
   planId: string;
@@ -41,11 +44,20 @@ export default function InviteMemberDialog({
     addMember.bind(null, planId),
     null
   );
+  const inputErrorState = toInputErrorState(state);
   const [isTransiting, startTransition] = useTransition();
 
   // Form state
   const [email, setEmail] = React.useState("");
   const [role, setRole] = React.useState<TripRole>("VIEWER");
+  const [handledInviteState, setHandledInviteState] = React.useState(state);
+  if (state !== handledInviteState) {
+    setHandledInviteState(state);
+    if (state?.success) {
+      setEmail("");
+      setRole("VIEWER");
+    }
+  }
 
   // Handle success/error
   useEffect(() => {
@@ -53,9 +65,6 @@ export default function InviteMemberDialog({
       if (state.success) {
         toast.success(state.message || "Member invited successfully!");
         onOpenChange(false);
-        // Reset form
-        setEmail("");
-        setRole("VIEWER");
         router.refresh();
       } else if (state.message) {
         toast.error(state.message);
@@ -96,17 +105,9 @@ export default function InviteMemberDialog({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              aria-invalid={
-                !!(
-                  state &&
-                  state.errors &&
-                  state.errors.find(
-                    (err: { field: string }) => err.field === "email"
-                  )
-                )
-              }
+              aria-invalid={!!getInputFieldError("email", inputErrorState)}
             />
-            <InputFieldError field="email" state={state} />
+            <InputFieldError field="email" state={inputErrorState} />
           </Field>
 
           <Field>
@@ -124,7 +125,7 @@ export default function InviteMemberDialog({
                 <SelectItem value="ADMIN">Admin</SelectItem>
               </SelectContent>
             </Select>
-            <InputFieldError field="role" state={state} />
+            <InputFieldError field="role" state={inputErrorState} />
           </Field>
 
           <DialogFooter>

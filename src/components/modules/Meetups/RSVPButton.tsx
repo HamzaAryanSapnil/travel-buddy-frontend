@@ -3,8 +3,7 @@
 import { useState, useTransition, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { rsvpMeetup } from "@/services/meetups/rsvpMeetup";
-import { RSVP, RSVPStatus } from "@/types/meetup.interface";
+import { rsvpMeetup } from "@/lib/actions/meetup.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
@@ -54,18 +53,16 @@ export default function RSVPButton({
   const [selectedStatus, setSelectedStatus] = useState<RSVPStatus>(
     currentRSVP?.status || "PENDING"
   );
+  const [syncedRSVP, setSyncedRSVP] = useState(currentRSVP);
+  if (currentRSVP !== syncedRSVP) {
+    setSyncedRSVP(currentRSVP);
+    if (currentRSVP?.status) setSelectedStatus(currentRSVP.status);
+  }
 
   const [state, formAction] = useActionState(
     rsvpMeetup.bind(null, meetupId, planId),
     null
   );
-
-  // Update selected status when currentRSVP changes
-  useEffect(() => {
-    if (currentRSVP?.status) {
-      setSelectedStatus(currentRSVP.status);
-    }
-  }, [currentRSVP]);
 
   // Handle success/error with useEffect
   useEffect(() => {
@@ -107,8 +104,6 @@ export default function RSVPButton({
       formAction(formData);
     });
   };
-
-  const currentConfig = rsvpStatusConfig[selectedStatus];
 
   return (
     <div className="flex flex-wrap gap-2">

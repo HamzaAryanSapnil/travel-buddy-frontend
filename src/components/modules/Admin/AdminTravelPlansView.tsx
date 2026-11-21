@@ -1,4 +1,3 @@
-import { TravelPlan } from "@/types/travelPlan.interface";
 import PlansViewContainer from "@/components/modules/TravelPlans/PlansViewContainer";
 import { Card } from "@/components/ui/card";
 

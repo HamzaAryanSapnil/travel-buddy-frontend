@@ -2,9 +2,9 @@
 
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { createSubscription } from "@/services/subscriptions/createSubscription";
-import { cancelSubscription } from "@/services/subscriptions/cancelSubscription";
-import { updateSubscription } from "@/services/subscriptions/updateSubscription";
+import { createSubscription } from "@/lib/actions/subscription.action";
+import { cancelSubscription } from "@/lib/actions/subscription.action";
+import { updateSubscription } from "@/lib/actions/subscription.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Subscription } from "@/types/subscription.interface";
 import { SubscriptionStatusBadge } from "./StatusBadge";
 import SubscriptionActions from "./SubscriptionActions";
 import { format, differenceInDays } from "date-fns";
@@ -13,7 +12,6 @@ interface SubscriptionPanelProps {
 export default function SubscriptionPanel({
   subscription,
   onSubscribe,
-  isPending,
 }: SubscriptionPanelProps) {
   // Only show subscription details if we have a valid subscription with an ID
   const hasActive = !!subscription && !!subscription.id;

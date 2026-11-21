@@ -1,4 +1,3 @@
-import { TripMember } from "@/types/tripMembers.interface";
 import MemberCard from "./MemberCard";
 import { Card } from "@/components/ui/card";
 import { Users } from "lucide-react";

@@ -1,5 +1,6 @@
 "use client";
 
+import { ROUTES } from "@/constants/routes";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -10,7 +11,6 @@ import { Bell } from "lucide-react";
 import NotificationsDropdown from "./NotificationsDropdown";
 import Link from "next/link";
 
-import { Notification } from "@/types/notification.interface";
 
 interface NotificationsBellProps {
   unreadCount: number;
@@ -38,7 +38,7 @@ const NotificationsBell = ({ unreadCount, notifications }: NotificationsBellProp
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Notifications</h3>
             <Link
-              href="/dashboard/notifications"
+              href={ROUTES.DASHBOARD_NOTIFICATIONS}
               className="text-xs text-primary hover:underline"
             >
               View All

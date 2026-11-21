@@ -24,7 +24,6 @@ interface PaginationProps {
 const Pagination = ({
   currentPage,
   totalPages,
-  totalItems,
   itemsPerPage = 10,
   showItemsPerPage = true,
   showPageInfo = true,

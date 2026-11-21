@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getUserInfo } from "@/services/auth/getUserInfo";
+import { getUserInfo } from "@/lib/actions/auth.action";
 import { redirect } from "next/navigation";
 
 const formatDate = (dateString?: string) => {

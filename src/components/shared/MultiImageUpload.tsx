@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
@@ -38,13 +39,9 @@ const MultiImageUpload = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  const cleanupPreviews = () => {
-    previews.forEach((url) => revokeImagePreview(url));
-  };
-
   const setFilesWithPreview = useCallback(
     (files: File[]) => {
-      cleanupPreviews();
+      previews.forEach((url) => revokeImagePreview(url));
       const previewUrls = files.map((file) => createImagePreview(file));
       setPreviews(previewUrls);
       onChange(files);
@@ -170,7 +167,15 @@ const MultiImageUpload = ({
           {value.map((file, idx) => (
             <div key={`${file.name}-${idx}`} className="relative rounded-lg border overflow-hidden">
               {previews[idx] ? (
-                <img src={previews[idx]} alt={file.name} className="h-32 w-full object-cover" />
+                <div className="relative h-32 w-full">
+                  <Image
+                    src={previews[idx]}
+                    alt={file.name}
+                    fill
+                    unoptimized
+                    className="object-cover"
+                  />
+                </div>
               ) : (
                 <div className="flex h-32 items-center justify-center bg-muted text-xs text-muted-foreground">Preview</div>
               )}

@@ -1,4 +1,4 @@
-import { AdminPayment } from "@/types/admin.interface";
+import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/ui/card";
 import { PaymentStatusBadge } from "./StatusBadge";
 import { format } from "date-fns";
@@ -86,7 +86,7 @@ export default function AdminPaymentsTable({
                         </div>
                         {subscription.id && (
                           <Link
-                            href={`/admin/dashboard/subscriptions`}
+                            href={ROUTES.ADMIN_SUBSCRIPTIONS}
                             className="text-primary hover:underline"
                           >
                             View

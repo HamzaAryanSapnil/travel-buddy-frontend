@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { sendJoinRequest } from "@/services/tripBookings/sendJoinRequest";
+import { sendJoinRequest } from "@/lib/actions/tripBooking.action";
 import { toast } from "sonner";
 
 interface JoinRequestModalProps {
@@ -47,7 +46,7 @@ export default function JoinRequestModal({
       } else {
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);

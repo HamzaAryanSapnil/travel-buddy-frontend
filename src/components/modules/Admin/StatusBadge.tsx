@@ -1,6 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { PaymentStatus } from "@/types/payment.interface";
-import { SubscriptionStatus } from "@/types/subscription.interface";
 
 type Variant = "default" | "secondary" | "destructive" | "outline";
 

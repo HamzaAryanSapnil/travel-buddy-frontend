@@ -6,11 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { updateProfile } from "@/services/profile/updateProfile";
-import { UserInfo } from "@/types/user.interface";
+import { updateProfile } from "@/lib/actions/profile.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { toInputErrorState } from "@/lib/getInputFieldError";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -22,6 +22,7 @@ interface ProfileFormProps {
 export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
   const router = useRouter();
   const [state, formAction] = useActionState(updateProfile, null);
+  const inputErrorState = toInputErrorState(state);
   const [, startTransition] = useTransition();
 
   // Form state
@@ -151,7 +152,7 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Enter your full name"
             />
-            {state && <InputFieldError field="fullName" state={state} />}
+            {state && <InputFieldError field="fullName" state={inputErrorState} />}
           </div>
 
           {/* Bio */}
@@ -169,7 +170,7 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
             <p className="text-xs text-muted-foreground">
               {bio.length}/500 characters
             </p>
-            {state && <InputFieldError field="bio" state={state} />}
+            {state && <InputFieldError field="bio" state={inputErrorState} />}
           </div>
 
           {/* Location */}
@@ -182,7 +183,7 @@ export default function ProfileForm({ userInfo, onSuccess }: ProfileFormProps) {
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Enter your location"
             />
-            {state && <InputFieldError field="location" state={state} />}
+            {state && <InputFieldError field="location" state={inputErrorState} />}
           </div>
         </CardContent>
       </Card>

@@ -1,8 +1,9 @@
-import { getReviews } from "@/services/reviews/getReviews";
-import { getReviewStatistics } from "@/services/reviews/getReviewStatistics";
+import { ROUTES } from "@/constants/routes";
+import { getReviews } from "@/lib/actions/review.action";
+import { getReviewStatistics } from "@/lib/actions/review.action";
 import ReviewCard from "./ReviewCard";
 import StarRating from "@/components/shared/StarRating";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MessageSquare } from "lucide-react";
@@ -38,7 +39,7 @@ export default async function ReviewsPreview({
         <h2 className="text-2xl font-bold">Reviews</h2>
         {isAuthenticated && (
           <Button asChild variant="outline" size="sm">
-            <Link href={`/dashboard/reviews?planId=${planId}`}>
+            <Link href={ROUTES.DASHBOARD_REVIEWS(planId)}>
               View All Reviews
             </Link>
           </Button>
@@ -84,7 +85,7 @@ export default async function ReviewsPreview({
       {!isAuthenticated && hasReviews && (
         <div className="text-center">
           <Button asChild variant="outline">
-            <Link href={`/login?redirect=/dashboard/reviews?planId=${planId}`}>
+            <Link href={ROUTES.LOGIN_REDIRECT_DASHBOARD_REVIEWS(planId)}>
               View All Reviews
             </Link>
           </Button>

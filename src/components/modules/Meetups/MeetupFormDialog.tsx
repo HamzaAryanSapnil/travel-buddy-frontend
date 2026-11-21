@@ -16,14 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { createMeetup } from "@/services/meetups/createMeetup";
-import { updateMeetup } from "@/services/meetups/updateMeetup";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { Meetup } from "@/types/meetup.interface";
+import { createMeetup } from "@/lib/actions/meetup.action";
+import { updateMeetup } from "@/lib/actions/meetup.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import DateTimeInput from "@/components/modules/TravelPlans/Itinerary/DateTimeInput";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { toInputErrorState } from "@/lib/getInputFieldError";
 
 interface MeetupFormDialogProps {
   plan: TravelPlan;
@@ -74,9 +73,9 @@ export default function MeetupFormDialog({
   const [endAt, setEndAt] = useState(
     mode === "edit" && meetup?.endAt ? formatDateTime(meetup.endAt) : ""
   );
-
-  // Reset form when dialog opens/closes or meetup changes
-  useEffect(() => {
+  const [formSync, setFormSync] = useState({ open, mode, meetup });
+  if (formSync.open !== open || formSync.mode !== mode || formSync.meetup !== meetup) {
+    setFormSync({ open, mode, meetup });
     if (open) {
       if (mode === "edit" && meetup) {
         setTitle(meetup.title);
@@ -94,7 +93,7 @@ export default function MeetupFormDialog({
         setEndAt("");
       }
     }
-  }, [open, mode, meetup]);
+  }
 
   const [state, formAction] = useActionState(
     mode === "create"
@@ -102,6 +101,7 @@ export default function MeetupFormDialog({
       : updateMeetup.bind(null, plan.id, meetup!.id),
     null
   );
+  const inputErrorState = toInputErrorState(state);
 
   // Handle success/error with useEffect
   useEffect(() => {
@@ -188,7 +188,7 @@ export default function MeetupFormDialog({
               onChange={(e) => setTitle(e.target.value)}
               required
             />
-            {state && <InputFieldError field="title" state={state} />}
+            {state && <InputFieldError field="title" state={inputErrorState} />}
           </div>
 
           {/* Description */}
@@ -203,7 +203,7 @@ export default function MeetupFormDialog({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            {state && <InputFieldError field="description" state={state} />}
+            {state && <InputFieldError field="description" state={inputErrorState} />}
           </div>
 
           {/* Location */}
@@ -220,7 +220,7 @@ export default function MeetupFormDialog({
               onChange={(e) => setLocation(e.target.value)}
               required
             />
-            {state && <InputFieldError field="location" state={state} />}
+            {state && <InputFieldError field="location" state={inputErrorState} />}
           </div>
 
           {/* Google Meet Link */}
@@ -237,7 +237,7 @@ export default function MeetupFormDialog({
             <p className="text-xs text-muted-foreground">
               Please manually add your Google Meet link here and save it. Join the meeting at the scheduled time.
             </p>
-            {state && <InputFieldError field="videoRoomLink" state={state} />}
+            {state && <InputFieldError field="videoRoomLink" state={inputErrorState} />}
           </div>
 
           {/* Scheduled Date/Time */}
@@ -250,7 +250,7 @@ export default function MeetupFormDialog({
             min={mode === "create" ? getMinDateTime() : undefined}
             max={maxDateTime}
             required
-            state={state}
+            state={inputErrorState}
             fieldName="scheduledAt"
             helperText="Select when the meetup will start"
           />
@@ -264,7 +264,7 @@ export default function MeetupFormDialog({
             onChange={setEndAt}
             min={scheduledAt || getMinDateTime()}
             max={maxDateTime}
-            state={state}
+            state={inputErrorState}
             fieldName="endAt"
             helperText="Select when the meetup will end (optional)"
           />

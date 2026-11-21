@@ -1,11 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RecentActivity as RecentActivityType } from "@/types/dashboard.interface";
 import { getActivityIcon } from "@/lib/activity-icon-mapper";
 import { formatRelativeTime } from "@/lib/formatters";
 import Link from "next/link";
 
 interface RecentActivityProps {
-  activities: RecentActivityType[];
+  activities: RecentActivity[];
 }
 
 const RecentActivity = ({ activities }: RecentActivityProps) => {

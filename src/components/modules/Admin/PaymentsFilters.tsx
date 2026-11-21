@@ -21,12 +21,21 @@ export default function PaymentsFilters() {
   const [isPending, startTransition] = useTransition();
 
   const status = searchParams.get("status") || "all";
-  const [subscriptionId, setSubscriptionId] = useState(
-    searchParams.get("subscriptionId") || ""
-  );
-  const [currency, setCurrency] = useState(
-    searchParams.get("currency") || ""
-  );
+  const urlSubscriptionId = searchParams.get("subscriptionId") || "";
+  const urlCurrency = searchParams.get("currency") || "";
+  const [subscriptionId, setSubscriptionId] = useState(urlSubscriptionId);
+  const [currency, setCurrency] = useState(urlCurrency);
+  const [prevUrlSubscriptionId, setPrevUrlSubscriptionId] =
+    useState(urlSubscriptionId);
+  const [prevUrlCurrency, setPrevUrlCurrency] = useState(urlCurrency);
+  if (urlSubscriptionId !== prevUrlSubscriptionId) {
+    setPrevUrlSubscriptionId(urlSubscriptionId);
+    setSubscriptionId(urlSubscriptionId);
+  }
+  if (urlCurrency !== prevUrlCurrency) {
+    setPrevUrlCurrency(urlCurrency);
+    setCurrency(urlCurrency);
+  }
 
   // Debounce subscriptionId and currency inputs
   const debouncedSubscriptionId = useDebounce(subscriptionId, 500);
@@ -77,18 +86,6 @@ export default function PaymentsFilters() {
       });
     }
   }, [debouncedCurrency, searchParams, router]);
-
-  // Sync local state with URL params when they change externally
-  useEffect(() => {
-    const urlSubscriptionId = searchParams.get("subscriptionId") || "";
-    const urlCurrency = searchParams.get("currency") || "";
-    if (urlSubscriptionId !== subscriptionId) {
-      setSubscriptionId(urlSubscriptionId);
-    }
-    if (urlCurrency !== currency) {
-      setCurrency(urlCurrency);
-    }
-  }, [searchParams, subscriptionId, currency]);
 
   const clearFilters = () => {
     setSubscriptionId("");

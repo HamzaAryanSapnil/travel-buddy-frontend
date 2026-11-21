@@ -1,8 +1,9 @@
 
 
-import PlanCard from "@/components/modules/TravelPlans/PlanCard";
+import PlanCard from "@/components/cards/PlanCard";
 import { Button } from "@/components/ui/button";
-import { getPublicTravelPlans } from "@/services/travelPlans/getPublicTravelPlans";
+import { getPublicTravelPlans } from "@/lib/actions/travelPlan.action";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 
 export default async function FeaturedPlansSection() {
@@ -27,7 +28,7 @@ export default async function FeaturedPlansSection() {
             </p>
           </div>
           <Button asChild variant="outline">
-            <Link href="/plans?isFeatured=true">View All Plans</Link>
+            <Link href={ROUTES.FEATURED_PLANS}>View All Plans</Link>
           </Button>
         </div>
 

@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { UserPlus, Clock, Check, Loader2 } from "lucide-react";
+import { UserPlus, Clock, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import JoinRequestModal from "./JoinRequestModal";
-import { toast } from "sonner";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import { isPlanCompleted, isPlanOngoing } from "@/utils/planDateHelpers";
 
 interface JoinRequestButtonProps {

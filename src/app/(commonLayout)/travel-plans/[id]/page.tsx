@@ -1,11 +1,14 @@
+import type { Metadata } from "next";
+import { ROUTES } from "@/constants/routes";
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import AppImage from "@/components/shared/AppImage";
+import { ASSETS } from "@/constants/assets";
 import Link from "next/link";
 import { Calendar, DollarSign, MapPin, Users } from "lucide-react";
-import { getCookie } from "@/services/auth/tokenHandlers";
-import { getTravelPlan } from "@/services/travelPlans/getTravelPlan";
-import { getItinerary } from "@/services/itinerary/getItinerary";
-import { getPublicTravelPlans } from "@/services/travelPlans/getPublicTravelPlans";
+import { getCookie } from "@/lib/actions/auth.action";
+import { getTravelPlan } from "@/lib/actions/travelPlan.action";
+import { getItinerary } from "@/lib/actions/itinerary.action";
+import { getPublicTravelPlans } from "@/lib/actions/travelPlan.action";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -48,12 +51,27 @@ export async function generateStaticParams() {
 // ISR: Revalidate every 72 hours (259200 seconds) - tags are primary mechanism
 export const revalidate = 259200;
 
+export async function generateMetadata({
+  params,
+}: PlanDetailsPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const result = await getTravelPlan(id);
+  const plan = result.data;
+  if (!plan) {
+    return { title: "Travel Plan" };
+  }
+  return {
+    title: plan.title,
+    description: plan.description || plan.destination,
+  };
+}
+
 export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) {
   const { id } = await params;
   const accessToken = await getCookie("accessToken");
 
   // Fetch plan details
-  const { data: plan, error: planError, statusCode } = await getTravelPlan(id);
+  const { data: plan, statusCode } = await getTravelPlan(id);
 
   // Handle 404
   if (statusCode === 404 || !plan) {
@@ -71,13 +89,13 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
               Please log in to view this travel plan
             </p>
             <div className="flex gap-4 justify-center">
-              <Link href={`/login?redirect=/travel-plans/${id}`}>
+              <Link href={ROUTES.LOGIN_REDIRECT_TRAVEL_PLAN(id)}>
                 <Button>Login</Button>
               </Link>
-              <Link href="/register">
+              <Link href={ROUTES.REGISTER}>
                 <Button variant="outline">Register</Button>
               </Link>
-              <Link href="/travel-plans">
+              <Link href={ROUTES.TRAVEL_PLANS}>
                 <Button variant="ghost">Browse Public Plans</Button>
               </Link>
             </div>
@@ -97,7 +115,7 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
             <p className="text-muted-foreground mb-6">
               You don&apos;t have permission to view this travel plan
             </p>
-            <Link href="/travel-plans">
+            <Link href={ROUTES.TRAVEL_PLANS}>
               <Button>Back to All Plans</Button>
             </Link>
           </Card>
@@ -109,19 +127,31 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
   // Fetch itinerary
   const { data: itineraryDays } = await getItinerary(id);
 
+  const jsonLd: Record<string, string> = {
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    name: plan.title,
+  };
+  if (plan.description) jsonLd.description = plan.description;
+  if (plan.destination) jsonLd.touristType = plan.destination;
+
   return (
     <main className="min-h-screen py-8 md:py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cover Image */}
         {plan?.coverPhoto && (
           <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden mb-8">
-            <Image
+            <AppImage
               src={plan?.coverPhoto}
               alt={plan?.title || "Travel Plan"}
               fill
               className="object-cover"
               priority
-              unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
+              sizes={ASSETS.cover.sizes}
             />
           </div>
         )}
@@ -191,7 +221,7 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
                />
                
                {accessToken && (
-                 <Link href={`/dashboard/travel-plans/${id}`} className="w-full">
+                 <Link href={ROUTES.DASHBOARD_TRAVEL_PLAN(id)} className="w-full">
                     <Button variant="outline" className="w-full">
                       View in Dashboard
                     </Button>
@@ -242,13 +272,13 @@ export default async function PlanDetailsPage({ params }: PlanDetailsPageProps) 
 
         {/* Action Buttons - Moved logic up to header, kept consistent bottom nav */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center py-8">
-            <Link href="/travel-plans">
+            <Link href={ROUTES.TRAVEL_PLANS}>
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Browse All Plans
                 </Button>
             </Link>
             {!accessToken && (
-              <Link href="/login?redirect=/dashboard/travel-plans/create">
+              <Link href={ROUTES.LOGIN_CREATE_PLAN}>
                 <Button size="lg" className="gap-2">
                   <Users className="h-5 w-5" />
                   Create Your Plan

@@ -1,7 +1,7 @@
+import { ROUTES } from "@/constants/routes";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import PlanCard from "./PlanCard";
+import PlanCard from "@/components/cards/PlanCard";
 import EmptyState from "./EmptyState";
 import { Search } from "lucide-react";
 
@@ -71,7 +71,7 @@ const PlansGrid = ({
         description="Try adjusting your filters or create a new plan!"
         action={{
           label: "Create Your First Plan",
-          href: "/dashboard/travel-plans/create",
+          href: ROUTES.DASHBOARD_TRAVEL_PLANS_CREATE,
         }}
       />
     );

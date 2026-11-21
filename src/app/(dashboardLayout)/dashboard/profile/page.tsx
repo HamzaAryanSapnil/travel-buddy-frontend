@@ -1,4 +1,4 @@
-import { getUserInfo } from "@/services/auth/getUserInfo";
+import { getUserInfo } from "@/lib/actions/auth.action";
 import ProfilePageClient from "@/components/modules/Profile/ProfilePageClient";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";

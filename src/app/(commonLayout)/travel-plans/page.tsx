@@ -1,11 +1,17 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getPublicTravelPlans } from "@/services/travelPlans/getPublicTravelPlans";
+import { getPublicTravelPlans } from "@/lib/actions/travelPlan.action";
 import TravelPlansFilters from "@/components/modules/TravelPlans/TravelPlansFilters";
 import PlansGrid from "@/components/modules/TravelPlans/PlansGrid";
 import Pagination from "@/components/shared/Pagination";
 import { parseSortValue } from "@/lib/formatters";
 import { Skeleton } from "@/components/ui/skeleton";
 import CreatePlanFAB from "@/components/modules/TravelPlans/CreatePlanFAB";
+
+export const metadata: Metadata = {
+  title: "Travel Plans",
+  description: "Explore public travel plans on Travel Buddy.",
+};
 
 // ISR: Revalidate every 72 hours (259200 seconds) - tags are primary mechanism
 export const revalidate = 259200;
@@ -90,16 +96,25 @@ export default async function TravelPlansPage({
   return (
     <main className="min-h-screen py-8 md:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">
-            Explore Travel Plans
+        <header className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            Travel Plans
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Discover amazing travel plans created by our community or create
-            your own
+          <p className="mt-2 text-muted-foreground">
+            Browse public plans by destination, travel type, or featured picks.
           </p>
-        </div>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            <li className="rounded-full border bg-card px-3 py-1 text-sm text-foreground">
+              Destination
+            </li>
+            <li className="rounded-full border bg-card px-3 py-1 text-sm text-foreground">
+              Travel type
+            </li>
+            <li className="rounded-full border bg-card px-3 py-1 text-sm text-foreground">
+              Featured
+            </li>
+          </ul>
+        </header>
 
         {/* Filters */}
         <div className="mb-8">

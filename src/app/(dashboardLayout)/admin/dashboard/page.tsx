@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getAdminDashboardOverview } from "@/services/dashboard/getAdminDashboardOverview";
+import { getAdminDashboardOverview } from "@/lib/actions/dashboard.action";
 import AdminDashboardOverview from "@/components/modules/Dashboard/AdminDashboardOverview";
 import AdminDashboardSkeleton from "@/components/modules/Dashboard/AdminDashboardSkeleton";
 import { Card } from "@/components/ui/card";

@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants/routes";
 import {
   Card,
   CardContent,
@@ -151,7 +152,7 @@ export default function DeveloperSection({
 
             <div className="text-center">
               <Button asChild>
-                <Link href="/contact">Get In Touch</Link>
+                <Link href={ROUTES.CONTACT}>Get In Touch</Link>
               </Button>
             </div>
           </CardContent>

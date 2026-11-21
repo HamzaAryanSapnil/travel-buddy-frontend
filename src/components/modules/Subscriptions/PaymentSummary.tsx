@@ -1,10 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PaymentSummary as PaymentSummaryType } from "@/types/payment.interface";
 import { CheckCircle2, XCircle, Clock, DollarSign } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-
 interface PaymentSummaryProps {
-  summary: PaymentSummaryType | null;
+  summary: PaymentSummary | null;
   error?: string | null;
 }
 

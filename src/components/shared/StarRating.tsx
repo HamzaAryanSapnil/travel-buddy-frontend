@@ -42,7 +42,7 @@ export default function StarRating({
       {hasHalfStar && (
         <div className="relative inline-block">
           <Star
-            className={cn(starSize, "text-gray-300")}
+            className={cn(starSize, "text-muted-foreground")}
           />
           <div className="absolute top-0 left-0 overflow-hidden" style={{ width: "50%" }}>
             <Star
@@ -56,7 +56,7 @@ export default function StarRating({
       {Array.from({ length: emptyStars }).map((_, index) => (
         <Star
           key={`empty-${index}`}
-          className={cn(starSize, "text-gray-300")}
+          className={cn(starSize, "text-muted-foreground")}
         />
       ))}
 

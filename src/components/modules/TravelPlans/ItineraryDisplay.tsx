@@ -1,10 +1,9 @@
-import { ItineraryDay } from "@/services/itinerary/getItinerary";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 interface ItineraryDisplayProps {
-  days: ItineraryDay[];
+  days: PublicItineraryDay[];
   planStartDate: string;
 }
 

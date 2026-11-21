@@ -9,8 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MediaItem } from "@/types/media.interface";
-import { deleteMedia } from "@/services/media/deleteMedia";
+import { deleteMedia } from "@/lib/actions/media.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";

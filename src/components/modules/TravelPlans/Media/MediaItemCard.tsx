@@ -1,7 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import MediaImage from "../MediaImage";
-import { MediaItem } from "@/types/media.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import MediaItemActions from "./MediaItemActions";
 import { format } from "date-fns";
 

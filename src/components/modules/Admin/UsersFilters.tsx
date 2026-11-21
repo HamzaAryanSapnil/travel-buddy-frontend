@@ -1,19 +1,9 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useSearchParams } from "next/navigation";
 import SearchFilter from "@/components/shared/SearchFilter";
 import SelectFilter from "@/components/shared/SelectFilter";
 import ClearFiltersButton from "@/components/shared/ClearFiltersButton";
-import { X } from "lucide-react";
 
 const STATUS_OPTIONS = [
   { label: "All Status", value: "all" },
@@ -42,9 +32,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function UsersFilters() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
 
   const hasActiveFilters =
     (searchParams.get("status") && searchParams.get("status") !== "all") ||

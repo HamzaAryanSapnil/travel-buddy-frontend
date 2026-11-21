@@ -6,7 +6,6 @@
  * File Location: src/config/project.config.ts
  */
 
-import { ProjectConfig } from '@/types/project.interface';
 
 export const projectConfig: ProjectConfig = {
   // ============================================

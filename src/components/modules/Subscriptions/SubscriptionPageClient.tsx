@@ -3,9 +3,8 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { createSubscription } from "@/services/subscriptions/createSubscription";
+import { createSubscription } from "@/lib/actions/subscription.action";
 import PricingCards from "./PricingCards";
-import { Subscription } from "@/types/subscription.interface";
 
 interface SubscriptionPageClientProps {
   subscription?: Subscription;

@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Notification } from "@/types/notification.interface";
 import { formatRelativeTime } from "@/lib/formatters";
 import { Bell, ArrowRight } from "lucide-react";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 
 interface RecentNotificationsProps {
@@ -31,7 +31,7 @@ const RecentNotifications = ({ notifications }: RecentNotificationsProps) => {
         <div className="flex items-center justify-between">
           <CardTitle>Recent Notifications</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/notifications">
+            <Link href={ROUTES.DASHBOARD_NOTIFICATIONS}>
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

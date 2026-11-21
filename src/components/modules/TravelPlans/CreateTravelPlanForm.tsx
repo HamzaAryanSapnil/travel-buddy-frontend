@@ -19,7 +19,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Separator } from "@/components/ui/separator";
-import { createTravelPlan } from "@/services/travelPlans/createTravelPlan";
+import { createTravelPlan } from "@/lib/actions/travelPlan.action";
 import InputFieldError from "@/components/shared/InputFieldError";
 import DatePicker from "@/components/shared/DatePicker";
 import MultiImageUpload from "@/components/shared/MultiImageUpload";
@@ -28,13 +28,17 @@ import VisibilitySelector from "./VisibilitySelector";
 import BudgetInput from "./BudgetInput";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { formatCharacterCount } from "@/lib/formatters";
-import { IInputErrorState } from "@/lib/getInputFieldError";
+import {
+  getInputFieldError,
+  toInputErrorState,
+} from "@/lib/getInputFieldError";
 import { uploadMultipleToImgBB } from "@/lib/imgbb";
 
 const CreateTravelPlanForm = () => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, isPending] = useActionState(createTravelPlan, null);
+  const inputErrorState = toInputErrorState(state);
   const [isTransiting, startTransition] = useTransition();
 
   // Form state
@@ -189,10 +193,10 @@ const CreateTravelPlanForm = () => {
                 required
                 minLength={3}
                 maxLength={200}
-                aria-invalid={!!(state && getInputFieldError("title", state))}
+                aria-invalid={!!(state && getInputFieldError("title", inputErrorState))}
               />
               <FieldDescription>Between 3 and 200 characters</FieldDescription>
-              <InputFieldError field="title" state={state} />
+              <InputFieldError field="title" state={inputErrorState} />
             </Field>
 
             <Field>
@@ -208,10 +212,10 @@ const CreateTravelPlanForm = () => {
                 onChange={(e) => setDestination(e.target.value)}
                 required
                 aria-invalid={
-                  !!(state && getInputFieldError("destination", state))
+                  !!(state && getInputFieldError("destination", inputErrorState))
                 }
               />
-              <InputFieldError field="destination" state={state} />
+              <InputFieldError field="destination" state={inputErrorState} />
             </Field>
 
             <Field>
@@ -223,9 +227,9 @@ const CreateTravelPlanForm = () => {
                 placeholder="Where are you starting from?"
                 value={origin}
                 onChange={(e) => setOrigin(e.target.value)}
-                aria-invalid={!!(state && getInputFieldError("origin", state))}
+                aria-invalid={!!(state && getInputFieldError("origin", inputErrorState))}
               />
-              <InputFieldError field="origin" state={state} />
+              <InputFieldError field="origin" state={inputErrorState} />
             </Field>
           </FieldGroup>
         </div>
@@ -250,7 +254,7 @@ const CreateTravelPlanForm = () => {
                   onChange={setStartDate}
                   required
                   placeholder="Select start date"
-                  state={state}
+                  state={inputErrorState}
                   fieldName="startDate"
                 />
               </Field>
@@ -263,7 +267,7 @@ const CreateTravelPlanForm = () => {
                   minDate={getEndDateMin()}
                   required
                   placeholder="Select end date"
-                  state={state}
+                  state={inputErrorState}
                   fieldName="endDate"
                 />
               </Field>
@@ -273,7 +277,7 @@ const CreateTravelPlanForm = () => {
               <TravelTypeSelector
                 value={travelType}
                 onChange={setTravelType}
-                state={state}
+                state={inputErrorState}
                 fieldName="travelType"
               />
             </Field>
@@ -300,7 +304,7 @@ const CreateTravelPlanForm = () => {
                 onMaxChange={setBudgetMax}
                 currency={currency}
                 onCurrencyChange={setCurrency}
-                state={state}
+                state={inputErrorState}
               />
             </Field>
 
@@ -308,7 +312,7 @@ const CreateTravelPlanForm = () => {
               <VisibilitySelector
                 value={visibility}
                 onChange={setVisibility}
-                state={state}
+                state={inputErrorState}
                 fieldName="visibility"
               />
             </Field>
@@ -338,13 +342,13 @@ const CreateTravelPlanForm = () => {
                 maxLength={2000}
                 rows={6}
                 aria-invalid={
-                  !!(state && getInputFieldError("description", state))
+                  !!(state && getInputFieldError("description", inputErrorState))
                 }
               />
               <FieldDescription>
                 {formatCharacterCount(description.length, 2000)}
               </FieldDescription>
-              <InputFieldError field="description" state={state} />
+              <InputFieldError field="description" state={inputErrorState} />
             </Field>
 
             <Field>
@@ -358,7 +362,7 @@ const CreateTravelPlanForm = () => {
                 Optional. Upload up to 10 images (first becomes cover). Max 32MB
                 each.
               </FieldDescription>
-              <InputFieldError field="coverPhoto" state={state} />
+              <InputFieldError field="coverPhoto" state={inputErrorState} />
             </Field>
           </FieldGroup>
         </div>
@@ -398,17 +402,5 @@ const CreateTravelPlanForm = () => {
     </>
   );
 };
-
-// Helper function to get error from state
-function getInputFieldError(
-  fieldName: string,
-  state: IInputErrorState | null
-): string | null {
-  if (state && state.errors) {
-    const error = state.errors.find((err) => err.field === fieldName);
-    return error ? error.message : null;
-  }
-  return null;
-}
 
 export default CreateTravelPlanForm;

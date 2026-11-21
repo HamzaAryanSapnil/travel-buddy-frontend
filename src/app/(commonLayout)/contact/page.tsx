@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { developerInfo } from "@/config/developer.config";
 import ContactInfoCards from "@/components/modules/Contact/ContactInfoCards";
-import ContactForm from "@/components/modules/Contact/ContactForm";
+import ContactForm from "@/components/forms/ContactForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Have questions or feedback? I'd love to hear from you.",
+};
 
 // Force static rendering - contact page form is client-side, no server dependencies
 export const dynamic = 'force-static';
@@ -13,21 +18,40 @@ export default function ContactPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16 animate-in fade-in slide-in-from-bottom duration-700">
-          <div className="flex justify-center mb-6">
-            <Avatar className="w-24 h-24 animate-in fade-in zoom-in duration-700">
-              <AvatarImage src={developerInfo.profileImage} alt={developerInfo.name} />
-              <AvatarFallback className="text-3xl">
-                {developerInfo.avatarFallback}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-foreground">
             Get in Touch
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
             Have questions or feedback? I&apos;d love to hear from you. Send
             me a message and I&apos;ll respond as soon as possible.
           </p>
+        </div>
+
+        <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <Card className="bg-card">
+            <CardHeader>
+              <CardTitle className="text-foreground">Trip planning</CardTitle>
+              <CardDescription>
+                Questions about building an itinerary or picking a destination.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="bg-card">
+            <CardHeader>
+              <CardTitle className="text-foreground">Group collaboration</CardTitle>
+              <CardDescription>
+                Planning a trip with other people or sharing one plan.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="bg-card">
+            <CardHeader>
+              <CardTitle className="text-foreground">Feedback</CardTitle>
+              <CardDescription>
+                Tell us what is working and what should change.
+              </CardDescription>
+            </CardHeader>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -1,5 +1,4 @@
-import { Meetup } from "@/types/meetup.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
+import { ROUTES } from "@/constants/routes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -158,7 +157,7 @@ export default function MeetupDetail({
             <div className="pt-4 border-t">
               <p className="text-sm text-muted-foreground mb-1">Travel Plan</p>
               <Link
-                href={`/dashboard/travel-plans/${meetup.planId}`}
+                href={ROUTES.DASHBOARD_TRAVEL_PLAN(meetup.planId)}
                 className="text-primary hover:underline"
               >
                 {plan.title}

@@ -9,10 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Meetup } from "@/types/meetup.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { deleteMeetup } from "@/services/meetups/deleteMeetup";
-import { updateMeetupStatus } from "@/services/meetups/updateMeetupStatus";
+import { deleteMeetup } from "@/lib/actions/meetup.action";
+import { updateMeetupStatus } from "@/lib/actions/meetup.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
@@ -41,7 +39,6 @@ export default function MeetupActions({
   // Can edit and complete if status is UPCOMING, ONGOING, or PENDING
   const canEdit = meetup.status !== "COMPLETED" && meetup.status !== "CANCELLED";
   const canComplete = meetup.status === "UPCOMING" || meetup.status === "ONGOING" || meetup.status === "PENDING";
-  const isCompleted = meetup.status === "COMPLETED";
 
   const handleDelete = async () => {
     startTransition(async () => {

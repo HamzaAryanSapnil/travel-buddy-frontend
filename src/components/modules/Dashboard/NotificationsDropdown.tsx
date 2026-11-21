@@ -1,6 +1,6 @@
 "use client";
 
-import { Notification } from "@/types/notification.interface";
+import { ROUTES } from "@/constants/routes";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import NotificationItemClient from "./NotificationItemClient";
@@ -34,7 +34,7 @@ export default function NotificationsDropdown({
       {notifications.length > 10 && (
         <div className="border-t p-2">
           <Link
-            href="/dashboard/notifications"
+            href={ROUTES.DASHBOARD_NOTIFICATIONS}
             className="flex items-center justify-center gap-2 text-sm text-primary hover:underline"
           >
             View All

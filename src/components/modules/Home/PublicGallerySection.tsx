@@ -1,4 +1,4 @@
-import { getPublicGallery } from "@/services/media/getPublicGallery";
+import { getPublicGallery } from "@/lib/actions/media.action";
 import GalleryImageCard from "./PublicGalleryImageCard";
 
 export default async function PublicGallerySection() {

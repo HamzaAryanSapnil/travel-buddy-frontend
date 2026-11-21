@@ -2,12 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { logoutUser } from "@/services/auth/logoutUser";
+import { logoutUser } from "@/lib/actions/auth.action";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
-import { checkAuthStatus } from "@/services/auth/checkAuthStatus";
+import { checkAuthStatus } from "@/lib/actions/auth.action";
 
 export default function AuthButtons() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function AuthButtons() {
     } finally {
       setIsLoading(false);
     }
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     // Initial check
@@ -99,7 +100,7 @@ export default function AuthButtons() {
 
   // Logged out state
   return (
-    <Link href="/login">
+    <Link href={ROUTES.LOGIN}>
       <Button variant="outline">Login</Button>
     </Link>
   );

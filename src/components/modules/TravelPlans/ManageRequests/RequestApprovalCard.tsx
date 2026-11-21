@@ -5,9 +5,8 @@ import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { TripBooking } from "@/types/tripBooking.interface";
 import { Check, X, Loader2, User, MessageSquare } from "lucide-react";
-import { respondToRequest } from "@/services/tripBookings/respondToRequest";
+import { respondToRequest } from "@/lib/actions/tripBooking.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -33,7 +32,7 @@ export default function RequestApprovalCard({
       } else {
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setIsProcessing(false);
@@ -117,7 +116,7 @@ export default function RequestApprovalCard({
               <MessageSquare className="h-3 w-3" />
               Message:
             </div>
-            <p className="italic text-muted-foreground">"{booking.message}"</p>
+            <p className="italic text-muted-foreground">{`"${booking.message}"`}</p>
           </div>
         )}
       </CardContent>

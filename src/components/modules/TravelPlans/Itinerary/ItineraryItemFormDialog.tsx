@@ -17,16 +17,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { createItineraryItem } from "@/services/itinerary/createItineraryItem";
-import { updateItineraryItem } from "@/services/itinerary/updateItineraryItem";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { ItineraryItem } from "@/types/itinerary.interface";
+import { createItineraryItem } from "@/lib/actions/itinerary.action";
+import { updateItineraryItem } from "@/lib/actions/itinerary.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import DateTimeInput from "./DateTimeInput";
 import DaySelector from "./DaySelector";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { toInputErrorState } from "@/lib/getInputFieldError";
 import { isDayPast, getFirstEditableDayIndex } from "@/utils/planDateHelpers";
 
 interface ItineraryItemFormDialogProps {
@@ -118,6 +117,7 @@ export default function ItineraryItemFormDialog({
       : updateItineraryItem.bind(null, plan.id, item!.id),
     null
   );
+  const inputErrorState = toInputErrorState(state);
 
   // Compute min/max dates using useMemo
   const minMaxDates = useMemo(() => {
@@ -273,7 +273,7 @@ export default function ItineraryItemFormDialog({
             totalDays={totalDays}
             plan={plan}
             required
-            state={state}
+            state={inputErrorState}
             fieldName="dayIndex"
           />
 
@@ -291,7 +291,7 @@ export default function ItineraryItemFormDialog({
               onChange={(e) => setTitle(e.target.value)}
               required
             />
-            {state && <InputFieldError field="title" state={state} />}
+            {state && <InputFieldError field="title" state={inputErrorState} />}
           </div>
 
           {/* Description */}
@@ -306,7 +306,7 @@ export default function ItineraryItemFormDialog({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            {state && <InputFieldError field="description" state={state} />}
+            {state && <InputFieldError field="description" state={inputErrorState} />}
           </div>
 
           {/* Start Time */}
@@ -319,7 +319,7 @@ export default function ItineraryItemFormDialog({
             min={minMaxDates?.min}
             max={minMaxDates?.max}
             helperText={minMaxDates?.validRangeText}
-            state={state}
+            state={inputErrorState}
             fieldName="startAt"
           />
 
@@ -333,7 +333,7 @@ export default function ItineraryItemFormDialog({
             min={minMaxDates?.min}
             max={minMaxDates?.max}
             helperText={minMaxDates?.validRangeText}
-            state={state}
+            state={inputErrorState}
             fieldName="endAt"
           />
 

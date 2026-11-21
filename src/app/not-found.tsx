@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowLeft, Home } from "lucide-react";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -40,7 +41,7 @@ export default function NotFound() {
             Go Back
           </Button>
           <Button size="lg" asChild className="gap-2">
-            <Link href="/">
+            <Link href={ROUTES.HOME}>
               <Home className="h-4 w-4" />
               Back to Home
             </Link>

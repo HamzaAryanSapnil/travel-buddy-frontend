@@ -1,6 +1,5 @@
 "use client";
 
-import { TravelPlan } from "@/types/travelPlan.interface";
 import PlansGrid from "./PlansGrid";
 import PlansList from "./PlansList";
 

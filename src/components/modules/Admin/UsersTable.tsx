@@ -1,4 +1,4 @@
-import { UserInfo } from "@/types/user.interface";
+import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { UserStatusBadge } from "./StatusBadge";
@@ -78,7 +78,7 @@ export default function UsersTable({
                       </Avatar>
                       <div>
                         <Link
-                          href={`/dashboard/profile`}
+                          href={ROUTES.DASHBOARD_PROFILE}
                           className="font-medium hover:underline"
                         >
                           {displayName}

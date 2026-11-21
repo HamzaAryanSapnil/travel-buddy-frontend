@@ -2,8 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { markAsRead } from "@/services/notifications/markAsRead";
-import { Notification } from "@/types/notification.interface";
+import { markAsRead } from "@/lib/actions/notification.action";
 import { formatRelativeTime } from "@/lib/formatters";
 import { Bell, ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -63,7 +62,7 @@ export default function NotificationItemClient({
   variant = "page",
 }: NotificationItemClientProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -71,8 +70,7 @@ export default function NotificationItemClient({
     // Mark as read if unread
     if (!notification.isRead) {
       startTransition(async () => {
-        const formData = new FormData();
-        const result = await markAsRead(notification.id, null, formData);
+        const result = await markAsRead(notification.id);
         if (result.success) {
           router.refresh();
         } else {

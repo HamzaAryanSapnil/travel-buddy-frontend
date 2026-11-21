@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import UploadMediaDialog from "./UploadMediaDialog";
 
 interface MediaTabActionsProps {

@@ -1,4 +1,3 @@
-import { TripBooking } from "@/types/tripBooking.interface";
 import RequestApprovalCard from "./RequestApprovalCard";
 import { Card } from "@/components/ui/card";
 import { Users } from "lucide-react";

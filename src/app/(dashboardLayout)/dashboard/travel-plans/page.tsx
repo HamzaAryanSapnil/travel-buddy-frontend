@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ROUTES } from "@/constants/routes";
 import { Suspense } from "react";
-import { getTravelPlans } from "@/services/travelPlans/getTravelPlans";
+import { getTravelPlans } from "@/lib/actions/travelPlan.action";
 import DashboardTravelPlansFilters from "@/components/modules/TravelPlans/DashboardTravelPlansFilters";
 import PlansViewContainer from "@/components/modules/TravelPlans/PlansViewContainer";
 import ViewToggle from "@/components/shared/ViewToggle";
@@ -124,7 +125,7 @@ export default async function MyTravelPlansPage({
           </p>
         </div>
         <Button asChild size="default">
-          <Link href="/dashboard/travel-plans/create">
+          <Link href={ROUTES.DASHBOARD_TRAVEL_PLANS_CREATE}>
             <Plus className="h-4 w-4 mr-2" />
             Create New Plan
           </Link>

@@ -1,6 +1,3 @@
-import { Meetup } from "@/types/meetup.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { TripMember } from "@/types/tripMembers.interface";
 import MeetupsTabActions from "./MeetupsTabActions";
 import MeetupsList from "@/components/modules/Meetups/MeetupsList";
 import { Separator } from "@/components/ui/separator";
@@ -18,7 +15,6 @@ interface PlanMeetupsTabProps {
 export default function PlanMeetupsTab({
   plan,
   meetups,
-  members,
   meetupsError,
   currentUserRole,
   currentUserId,

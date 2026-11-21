@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select";
 import InputFieldError from "@/components/shared/InputFieldError";
 import { IInputErrorState } from "@/lib/getInputFieldError";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import { isDayPast } from "@/utils/planDateHelpers";
 
 interface DaySelectorProps {
@@ -38,7 +37,6 @@ export default function DaySelector({
   disabledDays = [],
   disabled = false,
   required = false,
-  error,
   state,
   fieldName,
 }: DaySelectorProps) {

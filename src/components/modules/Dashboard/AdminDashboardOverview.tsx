@@ -1,6 +1,6 @@
+import { ROUTES } from "@/constants/routes";
 import { Suspense } from "react";
-import { AdminDashboardOverviewData } from "@/types/dashboard.interface";
-import StatCard from "./StatCard";
+import StatCard from "@/components/cards/StatCard";
 import RevenueOverTimeChart from "./RevenueOverTimeChart";
 import PlansByTravelTypeChart from "./PlansByTravelTypeChart";
 import UserGrowthChart from "./UserGrowthChart";
@@ -59,56 +59,56 @@ const AdminDashboardOverview = ({ overview }: AdminDashboardOverviewProps) => {
           value={overview.stats.totalUsers}
           label="Total Users"
           icon={Users}
-          href="/admin/dashboard/users"
+          href={ROUTES.ADMIN_USERS}
           color="blue"
         />
         <StatCard
           value={overview.stats.activeUsers}
           label="Active Users"
           icon={UserCheck}
-          href="/admin/dashboard/users?active=true"
+          href={ROUTES.ADMIN_USERS_ACTIVE}
           color="green"
         />
         <StatCard
           value={overview.stats.totalPlans}
           label="Total Plans"
           icon={Map}
-          href="/admin/dashboard/travel-plans"
+          href={ROUTES.ADMIN_TRAVEL_PLANS}
           color="purple"
         />
         <StatCard
           value={overview.stats.publicPlans}
           label="Public Plans"
           icon={Globe}
-          href="/admin/dashboard/travel-plans?visibility=PUBLIC"
+          href={ROUTES.ADMIN_TRAVEL_PLANS_PUBLIC}
           color="teal"
         />
         <StatCard
           value={formatCurrency(overview.stats.totalRevenue)}
           label="Total Revenue"
           icon={DollarSign}
-          href="/admin/dashboard/payments"
+          href={ROUTES.ADMIN_PAYMENTS}
           color="green"
         />
         <StatCard
           value={overview.stats.activeSubscriptions}
           label="Active Subscriptions"
           icon={CreditCard}
-          href="/admin/dashboard/subscriptions"
+          href={ROUTES.ADMIN_SUBSCRIPTIONS}
           color="orange"
         />
         <StatCard
           value={overview.stats.totalMeetups}
           label="Total Meetups"
           icon={Calendar}
-          href="/admin/dashboard/meetups"
+          href={ROUTES.ADMIN_MEETUPS}
           color="pink"
         />
         <StatCard
           value={formatCurrency(overview.stats.totalExpenses)}
           label="Total Expenses"
           icon={Receipt}
-          href="/admin/dashboard/expenses"
+          href={ROUTES.ADMIN_EXPENSES}
           color="red"
         />
       </div>

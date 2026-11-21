@@ -1,6 +1,6 @@
+import { ROUTES } from "@/constants/routes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import EmptyState from "./EmptyState";
 import PlanListItem from "./PlanListItem";
 import { Search } from "lucide-react";
@@ -80,7 +80,7 @@ const PlansList = ({
         description="Try adjusting your filters or create a new plan!"
         action={{
           label: "Create Your First Plan",
-          href: "/dashboard/travel-plans/create",
+          href: ROUTES.DASHBOARD_TRAVEL_PLANS_CREATE,
         }}
       />
     );

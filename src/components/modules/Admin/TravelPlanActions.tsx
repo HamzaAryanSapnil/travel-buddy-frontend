@@ -10,11 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteAdminTravelPlan } from "@/services/admin/deleteAdminTravelPlan";
+import { deleteAdminTravelPlan } from "@/lib/actions/admin.action";
 import { toast } from "sonner";
 import ConfirmActionDialog from "./ConfirmActionDialog";
 import EditTravelPlanDialog from "@/components/modules/TravelPlans/EditTravelPlanDialog";
-import { TravelPlan } from "@/types/travelPlan.interface";
 
 interface TravelPlanActionsProps {
   plan: TravelPlan;

@@ -1,9 +1,5 @@
-import { PlanSuggestion } from "@/types/planner.interface";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { formatCurrency } from "@/lib/expense-utils";
 import PlanSuggestionCard from "./PlanSuggestionCard";
 
 interface PlanPreviewProps {
@@ -12,14 +8,6 @@ interface PlanPreviewProps {
   onEdit: () => void;
   onDiscard: () => void;
 }
-
-const travelTypeLabels: Record<PlanSuggestion["travelType"], string> = {
-  SOLO: "Solo",
-  COUPLE: "Couple",
-  FAMILY: "Family",
-  FRIENDS: "Friends",
-  GROUP: "Group",
-};
 
 export default function PlanPreview({
   suggestion,

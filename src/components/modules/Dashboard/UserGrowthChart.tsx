@@ -10,7 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { UserGrowthData } from "@/types/dashboard.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface UserGrowthChartProps {

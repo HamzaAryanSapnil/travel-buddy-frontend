@@ -1,9 +1,7 @@
-import { ItineraryItem } from "@/types/itinerary.interface";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import ItineraryItemActions from "./ItineraryItemActions";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import { isDayPast } from "@/utils/planDateHelpers";
 
 interface ItineraryItemCardProps {

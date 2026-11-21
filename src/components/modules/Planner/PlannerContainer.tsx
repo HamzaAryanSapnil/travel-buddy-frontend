@@ -2,8 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlanSuggestion } from "@/types/planner.interface";
-import { saveGeneratedPlan } from "@/services/planner/saveGeneratedPlan";
+import { saveGeneratedPlan } from "@/lib/actions/planner.action";
 import ChatInterface from "./ChatInterface";
 import PlanPreview from "./PlanPreview";
 import { toast } from "sonner";
@@ -13,7 +12,7 @@ interface PlannerContainerProps {
   currentUserId: string;
 }
 
-export default function PlannerContainer({ currentUserId }: PlannerContainerProps) {
+export default function PlannerContainer({}: PlannerContainerProps) {
   const [currentSuggestion, setCurrentSuggestion] = useState<PlanSuggestion | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const router = useRouter();

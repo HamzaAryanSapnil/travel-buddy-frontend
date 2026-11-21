@@ -3,7 +3,6 @@
 import { Input } from "@/components/ui/input";
 import { FieldLabel, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
-import InputFieldError from "./InputFieldError";
 import { IInputErrorState } from "@/lib/getInputFieldError";
 
 interface DatePickerProps {
@@ -33,9 +32,6 @@ const DatePicker = ({
   state,
   fieldName,
 }: DatePickerProps) => {
-  // Get today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split("T")[0];
-  
   // Calculate min date (tomorrow if no minDate provided)
   const getMinDate = () => {
     if (minDate) return minDate;

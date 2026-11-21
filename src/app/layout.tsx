@@ -14,7 +14,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Travel Buddy - Plan Your Perfect Trip",
+  metadataBase: new URL("http://localhost:3000"),
+  title: {
+    default: "Travel Buddy - Plan Your Perfect Trip",
+    template: "%s | Travel Buddy",
+  },
   description:
     "Travel planning and collaboration platform for solo travelers, couples, families, and groups",
 };

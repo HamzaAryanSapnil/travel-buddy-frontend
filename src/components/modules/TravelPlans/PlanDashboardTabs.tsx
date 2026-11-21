@@ -1,13 +1,6 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { TripMember } from "@/types/tripMembers.interface";
-import { TripBooking } from "@/types/tripBooking.interface";
-import { ItineraryDay } from "@/types/itinerary.interface";
-import { MediaItem } from "@/types/media.interface";
-import { Expense } from "@/types/expense.interface";
-import { Meetup } from "@/types/meetup.interface";
 import MembersTab from "./Members/MembersTab";
 import ItineraryTab from "./Itinerary/ItineraryTab";
 import MediaTab from "./Media/MediaTab";

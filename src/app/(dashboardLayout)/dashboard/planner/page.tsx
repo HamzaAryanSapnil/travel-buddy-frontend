@@ -1,4 +1,4 @@
-import { getUserInfo } from "@/services/auth/getUserInfo";
+import { getUserInfo } from "@/lib/actions/auth.action";
 import PlannerContainer from "@/components/modules/Planner/PlannerContainer";
 import { redirect } from "next/navigation";
 

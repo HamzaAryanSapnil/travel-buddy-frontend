@@ -1,3 +1,5 @@
+import YoutubeFacade from "@/components/modules/Home/YoutubeFacade";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -52,7 +54,7 @@ export default function VideoSection() {
             {/* CTA Button */}
             <div className="pt-4">
               <Button asChild size="lg">
-                <Link href="/travel-plans">See All Travel Plans</Link>
+                <Link href={ROUTES.TRAVEL_PLANS}>See All Travel Plans</Link>
               </Button>
             </div>
           </div>
@@ -62,14 +64,7 @@ export default function VideoSection() {
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 <div className="relative w-full aspect-video">
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/xcCCAqhuMcc?si=Wvd4G8p2wRCpXZd0"
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
+                  <YoutubeFacade />
                 </div>
               </CardContent>
             </Card>

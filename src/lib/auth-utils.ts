@@ -1,3 +1,5 @@
+import { ROUTES } from "@/constants/routes";
+
 export type UserRole = "USER" | "ADMIN";
 
 // Route configuration for matching routes
@@ -71,9 +73,9 @@ export const getRouteOwner = (
  */
 export const getDefaultDashboardRoute = (role: UserRole): string => {
   if (role === "ADMIN") {
-    return "/admin/dashboard";
+    return ROUTES.ADMIN_DASHBOARD;
   }
-  return "/dashboard";
+  return ROUTES.DASHBOARD;
 };
 
 /**

@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TopPlan } from "@/types/dashboard.interface";
 import { Users, DollarSign, ArrowRight, Star } from "lucide-react";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 
 interface TopPlansProps {
@@ -31,7 +31,7 @@ const TopPlans = ({ plans }: TopPlansProps) => {
         <div className="flex items-center justify-between">
           <CardTitle>Top Performing Plans</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/admin/dashboard/travel-plans">
+            <Link href={ROUTES.ADMIN_TRAVEL_PLANS}>
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -43,7 +43,7 @@ const TopPlans = ({ plans }: TopPlansProps) => {
           {plans.slice(0, 5).map((plan) => (
             <Link
               key={plan.id}
-              href={`/dashboard/travel-plans/${plan.id}`}
+              href={ROUTES.DASHBOARD_TRAVEL_PLAN(plan.id)}
               className="block p-4 rounded-lg border hover:bg-muted/50 transition-colors"
             >
               <div className="flex items-start justify-between gap-4">

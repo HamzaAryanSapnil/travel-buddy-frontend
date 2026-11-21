@@ -17,12 +17,11 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { deleteAdminTravelPlan } from "@/services/admin/deleteAdminTravelPlan";
-import { toggleTravelPlanFeatured } from "@/services/admin/toggleTravelPlanFeatured";
+import { deleteAdminTravelPlan } from "@/lib/actions/admin.action";
+import { toggleTravelPlanFeatured } from "@/lib/actions/admin.action";
 import { toast } from "sonner";
 import ConfirmActionDialog from "./ConfirmActionDialog";
 import EditTravelPlanDialog from "@/components/modules/TravelPlans/EditTravelPlanDialog";
-import { TravelPlan } from "@/types/travelPlan.interface";
 
 interface TravelPlanTableActionsProps {
   plan: TravelPlan;

@@ -14,15 +14,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "i.ibb.co", // imgBB image hosting
+        hostname: "i.ibb.co",
       },
       {
         protocol: "https",
-        hostname: "**", // Accept all other HTTPS domains
-      },
-      {
-        protocol: "http",
-        hostname: "**", // Accept all HTTP domains (for development)
+        hostname: "placehold.co",
       },
     ],
   },

@@ -85,7 +85,7 @@ function getInputFieldError(
   }
 
   const fieldError = state.errors.find(
-    (err: any) => err.field === fieldName
+    (err) => err.field === fieldName
   );
 
   return fieldError?.message || null;

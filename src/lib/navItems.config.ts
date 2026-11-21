@@ -1,4 +1,4 @@
-import { NavSection } from "@/types/dashboard.interface";
+import { ROUTES } from "@/constants/routes";
 import { getDefaultDashboardRoute, UserRole } from "./auth-utils";
 
 /**
@@ -7,7 +7,7 @@ import { getDefaultDashboardRoute, UserRole } from "./auth-utils";
 export const getCommonNavItems = (role: UserRole): NavSection[] => {
   const defaultDashboard = getDefaultDashboardRoute(role);
   const profileHref =
-    role === "ADMIN" ? "/admin/dashboard/profile" : "/dashboard/profile";
+    role === "ADMIN" ? ROUTES.ADMIN_PROFILE : ROUTES.DASHBOARD_PROFILE;
 
   return [
     {
@@ -38,25 +38,25 @@ export const userNavItems: NavSection[] = [
     items: [
       {
         title: "My Travel Plans",
-        href: "/dashboard/travel-plans",
+        href: ROUTES.DASHBOARD_TRAVEL_PLANS,
         icon: "Map",
         roles: ["USER"],
       },
       {
         title: "Create Travel Plan",
-        href: "/dashboard/travel-plans/create",
+        href: ROUTES.DASHBOARD_TRAVEL_PLANS_CREATE,
         icon: "PlusCircle",
         roles: ["USER"],
       },
       {
         title: "My Requests",
-        href: "/dashboard/my-requests",
+        href: ROUTES.DASHBOARD_MY_REQUESTS,
         icon: "UserPlus", // Or Ticket
         roles: ["USER"],
       },
       {
         title: "AI Planner",
-        href: "/dashboard/planner",
+        href: ROUTES.DASHBOARD_PLANNER,
         icon: "Sparkles",
         roles: ["USER"],
       },
@@ -67,13 +67,13 @@ export const userNavItems: NavSection[] = [
     items: [
       {
         title: "Meetups",
-        href: "/dashboard/meetups",
+        href: ROUTES.DASHBOARD_MEETUPS,
         icon: "Users",
         roles: ["USER"],
       },
       {
         title: "Media Gallery",
-        href: "/dashboard/media",
+        href: ROUTES.DASHBOARD_MEDIA,
         icon: "Image",
         roles: ["USER"],
       },
@@ -84,13 +84,13 @@ export const userNavItems: NavSection[] = [
     items: [
       {
         title: "Subscriptions",
-        href: "/dashboard/subscriptions",
+        href: ROUTES.DASHBOARD_SUBSCRIPTIONS,
         icon: "CreditCard",
         roles: ["USER"],
       },
       {
         title: "Payments",
-        href: "/dashboard/payments",
+        href: ROUTES.DASHBOARD_PAYMENTS,
         icon: "Receipt",
         roles: ["USER"],
       },
@@ -101,7 +101,7 @@ export const userNavItems: NavSection[] = [
     items: [
       {
         title: "Notifications",
-        href: "/dashboard/notifications",
+        href: ROUTES.DASHBOARD_NOTIFICATIONS,
         icon: "Bell",
         badge: "unread", // Will be replaced with actual count
         roles: ["USER"],
@@ -119,7 +119,7 @@ export const adminNavItems: NavSection[] = [
     items: [
       {
         title: "All Users",
-        href: "/admin/dashboard/users",
+        href: ROUTES.ADMIN_USERS,
         icon: "Users",
         roles: ["ADMIN"],
       },
@@ -130,25 +130,25 @@ export const adminNavItems: NavSection[] = [
     items: [
       {
         title: "All Travel Plans",
-        href: "/admin/dashboard/travel-plans",
+        href: ROUTES.ADMIN_TRAVEL_PLANS,
         icon: "Map",
         roles: ["ADMIN"],
       },
       {
         title: "Manage Travel Plans",
-        href: "/admin/dashboard/travel-plans/manage",
+        href: ROUTES.ADMIN_TRAVEL_PLANS_MANAGE,
         icon: "Table",
         roles: ["ADMIN"],
       },
       {
         title: "All Subscriptions",
-        href: "/admin/dashboard/subscriptions",
+        href: ROUTES.ADMIN_SUBSCRIPTIONS,
         icon: "CreditCard",
         roles: ["ADMIN"],
       },
       {
         title: "Payment Statistics",
-        href: "/admin/dashboard/payments",
+        href: ROUTES.ADMIN_PAYMENTS,
         icon: "BarChart",
         roles: ["ADMIN"],
       },

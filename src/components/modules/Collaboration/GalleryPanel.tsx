@@ -1,5 +1,3 @@
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { MediaItem } from "@/types/media.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MediaGrid from "@/components/modules/TravelPlans/MediaGrid";
 import { Separator } from "@/components/ui/separator";

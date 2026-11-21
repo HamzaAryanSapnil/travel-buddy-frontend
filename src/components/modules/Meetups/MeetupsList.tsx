@@ -1,6 +1,4 @@
-import { Meetup } from "@/types/meetup.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import MeetupCard from "./MeetupCard";
+import MeetupCard from "@/components/cards/MeetupCard";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 

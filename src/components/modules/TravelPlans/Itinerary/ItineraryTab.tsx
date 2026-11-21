@@ -1,5 +1,3 @@
-import { ItineraryDay, ItineraryItem } from "@/types/itinerary.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import DayByDayView from "./DayByDayView";
 import ItineraryTabActions from "./ItineraryTabActions";
 import { Separator } from "@/components/ui/separator";

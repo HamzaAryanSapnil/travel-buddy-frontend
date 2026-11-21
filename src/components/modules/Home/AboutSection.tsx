@@ -1,10 +1,11 @@
+import { ASSETS } from "@/constants/assets";
+import { ROUTES } from "@/constants/routes";
 import { projectConfig } from "@/config/project.config";
-import Image from "next/image";
+import AppImage from "@/components/shared/AppImage";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check } from "lucide-react";
-import aboutImage from "@/assets/images/travel-buddy-about.webp";
 
 export default function AboutSection() {
   const { homepageAbout } = projectConfig;
@@ -15,11 +16,12 @@ export default function AboutSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image Section */}
           <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-primary/10 animate-in fade-in slide-in-from-left duration-700">
-            <Image
-              src={aboutImage}
-              alt={homepageAbout.aboutImage}
+            <AppImage
+              src={ASSETS.about.image}
+              alt={ASSETS.about.alt}
               fill
               className="object-cover"
+              sizes={ASSETS.about.sizes}
             />
           </div>
 
@@ -75,7 +77,7 @@ export default function AboutSection() {
             {/* Learn More Button */}
             <div className="animate-in fade-in slide-in-from-bottom duration-700">
               <Button asChild size="lg">
-                <Link href={homepageAbout.learnMoreLink}>Learn More</Link>
+                <Link href={ROUTES.ABOUT}>Learn More</Link>
               </Button>
             </div>
           </div>

@@ -1,4 +1,5 @@
-import { getMedia } from "@/services/media/getMedia";
+import { ROUTES } from "@/constants/routes";
+import { getMedia } from "@/lib/actions/media.action";
 import MediaGrid from "./MediaGrid";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,8 +30,8 @@ export default async function MediaGalleryPreview({
           <Link
             href={
               isAuthenticated
-                ? `/dashboard/travel-plans/${planId}`
-                : `/login?redirect=/dashboard/travel-plans/${planId}`
+                ? ROUTES.DASHBOARD_TRAVEL_PLAN(planId)
+                : ROUTES.LOGIN_REDIRECT_DASHBOARD_TRAVEL_PLAN(planId)
             }
           >
             View All Photos

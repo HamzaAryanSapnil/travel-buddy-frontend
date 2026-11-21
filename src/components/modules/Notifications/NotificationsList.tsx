@@ -1,4 +1,3 @@
-import { Notification } from "@/types/notification.interface";
 import { Card } from "@/components/ui/card";
 import NotificationItemClient from "@/components/modules/Dashboard/NotificationItemClient";
 

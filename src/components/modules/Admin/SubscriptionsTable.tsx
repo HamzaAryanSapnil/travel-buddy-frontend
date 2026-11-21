@@ -1,8 +1,6 @@
-import { AdminSubscription } from "@/types/admin.interface";
 import { Card } from "@/components/ui/card";
 import { SubscriptionStatusBadge } from "./StatusBadge";
 import { format } from "date-fns";
-import Link from "next/link";
 
 interface SubscriptionsTableProps {
   subscriptions: AdminSubscription[];

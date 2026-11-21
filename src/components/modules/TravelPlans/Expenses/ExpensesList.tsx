@@ -1,6 +1,3 @@
-import { Expense } from "@/types/expense.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import { TripMember } from "@/types/tripMembers.interface";
 import ExpenseCard from "./ExpenseCard";
 import { Card } from "@/components/ui/card";
 import { Receipt } from "lucide-react";

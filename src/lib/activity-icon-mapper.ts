@@ -11,7 +11,6 @@ import {
   CheckCircle,
   Activity,
 } from "lucide-react";
-import { ActivityType } from "@/types/dashboard.interface";
 
 /**
  * Map activity types to Lucide icons

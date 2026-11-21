@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Edit2, X } from "lucide-react";
 import ProfileDisplay from "./ProfileDisplay";
 import ProfileForm from "./ProfileForm";
-import { UserInfo } from "@/types/user.interface";
 
 interface ProfilePageClientProps {
   userInfo: UserInfo;

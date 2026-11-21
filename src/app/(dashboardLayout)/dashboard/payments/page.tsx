@@ -1,5 +1,5 @@
-import { getPayments } from "@/services/payments/getPayments";
-import { getPaymentSummary } from "@/services/payments/getPaymentSummary";
+import { getPayments } from "@/lib/actions/payment.action";
+import { getPaymentSummary } from "@/lib/actions/payment.action";
 import PaymentsTable from "@/components/modules/Subscriptions/PaymentsTable";
 import PaymentSummary from "@/components/modules/Subscriptions/PaymentSummary";
 import { Suspense } from "react";

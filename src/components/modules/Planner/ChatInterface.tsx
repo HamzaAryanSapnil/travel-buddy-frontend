@@ -7,8 +7,7 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { sendMessage } from "@/services/planner/sendMessage";
-import { ChatMessage, PlanSuggestion, UIStep } from "@/types/planner.interface";
+import { sendMessage } from "@/lib/actions/planner.action";
 import { toast } from "sonner";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
@@ -42,6 +41,55 @@ const getNextStep = (current?: UIStep | null) => {
   return STEP_ORDER[Math.min(idx + 1, STEP_ORDER.length - 1)];
 };
 
+function readPlannerSessionId(data: unknown): string | null {
+  if (!data || typeof data !== "object") return null;
+  const d = data as {
+    session?: { id?: string };
+    sessionId?: string;
+    id?: string;
+  };
+  const candidates = [d.session?.id, d.sessionId, d.id];
+  for (const value of candidates) {
+    if (typeof value === "string" && value.length > 0) {
+      return value;
+    }
+  }
+  return null;
+}
+
+function isUIStep(value: unknown): value is UIStep {
+  return (
+    typeof value === "string" &&
+    (STEP_ORDER as readonly string[]).includes(value)
+  );
+}
+
+function readPlannerResponseData(data: unknown): {
+  id?: string;
+  uiStep?: UIStep;
+  question?: string;
+  response?: string;
+  suggestion?: PlanSuggestion;
+} | null {
+  if (!data || typeof data !== "object") return null;
+  const d = data as Record<string, unknown>;
+  const result: {
+    id?: string;
+    uiStep?: UIStep;
+    question?: string;
+    response?: string;
+    suggestion?: PlanSuggestion;
+  } = {};
+  if (typeof d.id === "string") result.id = d.id;
+  if (isUIStep(d.uiStep)) result.uiStep = d.uiStep;
+  if (typeof d.question === "string") result.question = d.question;
+  if (typeof d.response === "string") result.response = d.response;
+  if (d.suggestion && typeof d.suggestion === "object") {
+    result.suggestion = d.suggestion as PlanSuggestion;
+  }
+  return result;
+}
+
 interface ChatInterfaceProps {
   onSuggestionReceived?: (
     suggestion: PlanSuggestion,
@@ -71,41 +119,41 @@ export default function ChatInterface({
   useEffect(() => {
     if (state?.success) {
       startTransition(() => {
-        // Update session ID if we got a new one
-        if (state.data?.id && !sessionId) {
-          setSessionId(state.data.id);
+        const responseData = readPlannerResponseData(state.data);
+        const resolvedSessionId = readPlannerSessionId(state.data);
+        if (resolvedSessionId && !sessionId) {
+          setSessionId(resolvedSessionId);
         }
 
-        // Advance current step based on server uiStep; fallback to the step we just sent
-        const serverStep = state.data?.uiStep;
-        const nextStep = getNextStep(
-          serverStep ?? (currentStep || "destination")
-        );
+        const serverStep = responseData?.uiStep;
+        const nextStep = serverStep
+          ? serverStep
+          : getNextStep(currentStep || "destination");
         setCurrentStep(nextStep);
 
         // Update current question (next prompt from server or fallback)
         const nextQuestion =
-          state.data?.question ||
+          responseData?.question ||
           STEP_PROMPTS[nextStep] ||
           STEP_PROMPTS.destination;
         setCurrentQuestion(nextQuestion);
 
         // If we have a response, add AI message
-        if (state.data?.response) {
+        if (responseData?.response) {
           const aiMessage: ChatMessage = {
             id: `ai-${Date.now()}`,
             role: "assistant",
-            content: state.data.response,
+            content: responseData.response,
             timestamp: new Date().toISOString(),
-            uiStep: state.data.uiStep,
+            uiStep: responseData.uiStep,
           };
 
           // If we have a suggestion, add it to the message
-          if (state.data?.suggestion) {
-            aiMessage.planData = state.data.suggestion;
+          if (responseData.suggestion) {
+            aiMessage.planData = responseData.suggestion;
             onSuggestionReceived?.(
-              state.data.suggestion,
-              sessionId || state.data.id
+              responseData.suggestion,
+              sessionId || readPlannerSessionId(state.data) || undefined
             );
           }
 
@@ -131,7 +179,8 @@ export default function ChatInterface({
     if (!input.trim() || isPending) return;
 
     // Use latest session id from state to avoid recreating session
-    const effectiveSessionId = sessionId || state?.data?.id || null;
+    const effectiveSessionId =
+      sessionId || readPlannerSessionId(state?.data) || null;
     const stepToSend = currentStep || "destination";
 
     const userMessage: ChatMessage = {

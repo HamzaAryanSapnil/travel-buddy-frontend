@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants/routes";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
@@ -24,7 +25,7 @@ export default function CreateTravelPlanPage() {
       {/* Header */}
       <div className="flex items-center justify-center gap-4 w-full ">
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/dashboard/travel-plans">
+          <Link href={ROUTES.DASHBOARD_TRAVEL_PLANS}>
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>

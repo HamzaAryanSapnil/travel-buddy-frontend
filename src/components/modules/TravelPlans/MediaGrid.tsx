@@ -1,5 +1,3 @@
-import { MediaItem } from "@/types/media.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import MediaItemCard from "./Media/MediaItemCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageIcon } from "lucide-react";

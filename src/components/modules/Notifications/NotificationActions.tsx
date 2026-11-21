@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useTransition } from "react";
+import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { markAllAsRead } from "@/services/notifications/markAllAsRead";
+import { markAllAsRead } from "@/lib/actions/notification.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
@@ -10,12 +10,10 @@ import { Check } from "lucide-react";
 export default function NotificationActions() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [state, formAction] = useActionState(markAllAsRead, null);
 
   const handleMarkAllAsRead = () => {
     startTransition(async () => {
-      const formData = new FormData();
-      const result = await markAllAsRead(null, formData);
+      const result = await markAllAsRead();
       if (result.success) {
         toast.success(result.message || "All notifications marked as read");
         router.refresh();

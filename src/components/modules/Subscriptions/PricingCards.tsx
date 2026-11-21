@@ -1,5 +1,4 @@
-import PricingCard, { PricingPlan } from "./PricingCard";
-import { Subscription } from "@/types/subscription.interface";
+import PricingCard, { PricingPlan } from "@/components/cards/PricingCard";
 
 interface PricingCardsProps {
   currentSubscription?: Subscription;

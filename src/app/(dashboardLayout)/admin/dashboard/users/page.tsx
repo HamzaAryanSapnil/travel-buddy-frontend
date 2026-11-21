@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getAllUsers } from "@/services/admin/getAllUsers";
-import { getUserInfo } from "@/services/auth/getUserInfo";
+import { getAllUsers } from "@/lib/actions/admin.action";
+import { getUserInfo } from "@/lib/actions/auth.action";
 import UsersTable from "@/components/modules/Admin/UsersTable";
 import UsersFilters from "@/components/modules/Admin/UsersFilters";
 import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
 import Pagination from "@/components/shared/Pagination";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AdminUserFilters } from "@/types/admin.interface";
 import { parseSortValue } from "@/lib/formatters";
 
 interface AdminUsersPageProps {

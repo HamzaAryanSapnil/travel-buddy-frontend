@@ -1,4 +1,4 @@
-import { getAllSubscriptions } from "@/services/admin/getAllSubscriptions";
+import { getAllSubscriptions } from "@/lib/actions/admin.action";
 import SubscriptionsTable from "@/components/modules/Admin/SubscriptionsTable";
 import SubscriptionsFilters from "@/components/modules/Admin/SubscriptionsFilters";
 import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
@@ -54,8 +54,11 @@ export default async function AdminSubscriptionsPage({
     if (!subscriptionsData.success) {
       error = subscriptionsData.message;
     }
-  } catch (err: any) {
-    error = err.message || "Failed to load subscriptions";
+  } catch (err: unknown) {
+    error =
+      err instanceof Error && err.message
+        ? err.message
+        : "Failed to load subscriptions";
     subscriptionsData = {
       success: false,
       message: error,

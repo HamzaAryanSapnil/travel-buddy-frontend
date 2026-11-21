@@ -1,5 +1,3 @@
-import { ItineraryDay, ItineraryItem } from "@/types/itinerary.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import DaySection from "./DaySection";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
@@ -14,7 +12,6 @@ interface DayByDayViewProps {
 export default function DayByDayView({
   plan,
   itineraryDays,
-  itineraryTotalDays,
   isEditor,
 }: DayByDayViewProps) {
   // Calculate total days

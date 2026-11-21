@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { UserInfo } from "@/types/user.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";

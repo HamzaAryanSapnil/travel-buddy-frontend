@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UpcomingMeetup } from "@/types/dashboard.interface";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { format } from "date-fns";
 
@@ -38,7 +38,7 @@ const UpcomingMeetups = ({ meetups }: UpcomingMeetupsProps) => {
         <div className="flex items-center justify-between">
           <CardTitle>Upcoming Meetups</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/meetups">
+            <Link href={ROUTES.DASHBOARD_MEETUPS}>
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -50,7 +50,7 @@ const UpcomingMeetups = ({ meetups }: UpcomingMeetupsProps) => {
           {meetups.slice(0, 5).map((meetup) => (
             <Link
               key={meetup.id}
-              href={`/dashboard/meetups/${meetup.id}`}
+              href={ROUTES.MEETUP(meetup.id)}
               className="block p-4 rounded-lg border hover:bg-muted/50 transition-colors"
             >
               <div className="flex items-start justify-between gap-4">

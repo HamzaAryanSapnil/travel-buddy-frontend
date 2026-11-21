@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { TripMember, TripRole } from "@/types/tripMembers.interface";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,8 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent } from "@/components/ui/card";
 import { MoreVertical, Shield, ShieldAlert, Trash2, User } from "lucide-react";
-import { updateMemberRole } from "@/services/tripMembers/updateMemberRole";
-import { removeMember } from "@/services/tripMembers/removeMember";
+import { updateMemberRole } from "@/lib/actions/tripMember.action";
+import { removeMember } from "@/lib/actions/tripMember.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";

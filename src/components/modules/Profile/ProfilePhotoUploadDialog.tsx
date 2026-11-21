@@ -13,11 +13,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { updateProfilePhoto } from "@/services/profile/updateProfilePhoto";
+import { updateProfilePhoto } from "@/lib/actions/profile.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/shared/ImageUpload";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { toInputErrorState } from "@/lib/getInputFieldError";
 import { uploadToImgBB } from "@/lib/imgbb";
 
 interface ProfilePhotoUploadDialogProps {
@@ -35,6 +36,7 @@ export default function ProfilePhotoUploadDialog({
   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const [state, formAction] = useActionState(updateProfilePhoto, null);
+  const inputErrorState = toInputErrorState(state);
 
   // Handle success/error with useEffect
   useEffect(() => {
@@ -114,7 +116,7 @@ export default function ProfilePhotoUploadDialog({
               maxSize={32 * 1024 * 1024} // 32MB
               label="Profile Photo"
             />
-            {state && <InputFieldError field="profileImage" state={state} />}
+            {state && <InputFieldError field="profileImage" state={inputErrorState} />}
           </div>
 
           {/* Form Actions */}

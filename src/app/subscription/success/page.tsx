@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import SubscriptionSuccessClient from "@/components/modules/Subscriptions/SubscriptionSuccessClient";
@@ -49,12 +50,12 @@ export default async function SubscriptionSuccessPage({
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Button asChild>
-                <Link href="/dashboard/subscriptions">
+                <Link href={ROUTES.DASHBOARD_SUBSCRIPTIONS}>
                   View Subscription
                 </Link>
               </Button>
               <Button variant="outline" asChild>
-                <Link href="/dashboard/travel-plans">
+                <Link href={ROUTES.DASHBOARD_TRAVEL_PLANS}>
                   Go to Travel Plans
                 </Link>
               </Button>

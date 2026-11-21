@@ -1,6 +1,6 @@
+import { ROUTES } from "@/constants/routes";
 import { Suspense } from "react";
-import { UserDashboardOverviewData } from "@/types/dashboard.interface";
-import StatCard from "./StatCard";
+import StatCard from "@/components/cards/StatCard";
 import ExpenseCategoryChart from "./ExpenseCategoryChart";
 import PlansTimelineChart from "./PlansTimelineChart";
 import RecentActivity from "./RecentActivity";
@@ -49,28 +49,28 @@ const UserDashboardOverview = ({ overview }: UserDashboardOverviewProps) => {
           value={overview.stats.totalPlans}
           label="Travel Plans"
           icon={Map}
-          href="/dashboard/travel-plans"
+          href={ROUTES.DASHBOARD_TRAVEL_PLANS}
           color="blue"
         />
         <StatCard
           value={overview.stats.upcomingTrips}
           label="Upcoming Trips"
           icon={Calendar}
-          href="/dashboard/travel-plans?type=future"
+          href={ROUTES.DASHBOARD_TRAVEL_PLANS_FUTURE}
           color="green"
         />
         <StatCard
           value={formatCurrency(overview.stats.totalExpenses)}
           label="Total Expenses"
           icon={DollarSign}
-          href="/dashboard/expenses"
+          href={ROUTES.DASHBOARD_EXPENSES}
           color="orange"
         />
         <StatCard
           value={overview.stats.activeSubscription ? "Active" : "Inactive"}
           label="Subscription"
           icon={CreditCard}
-          href="/dashboard/subscriptions"
+          href={ROUTES.DASHBOARD_SUBSCRIPTIONS}
           color="purple"
           badge={overview.stats.activeSubscription ? "Active" : "Inactive"}
         />

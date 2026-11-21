@@ -9,11 +9,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logoutUser } from "@/services/auth/logoutUser";
-import { UserInfo } from "@/types/user.interface";
+import { logoutUser } from "@/lib/actions/auth.action";
 import { LogOut, Settings, User } from "lucide-react";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AppImage from "@/components/shared/AppImage";
 
 interface UserDropdownProps {
   userInfo: UserInfo;
@@ -35,9 +36,11 @@ const UserDropdown = ({ userInfo }: UserDropdownProps) => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-full">
           {userInfo?.profileImage ? (
-            <img
+            <AppImage
               src={userInfo?.profileImage}
               alt={userInfo?.name || "User"}
+              width={40}
+              height={40}
               className="h-full w-full rounded-full object-cover"
             />
           ) : (
@@ -59,13 +62,13 @@ const UserDropdown = ({ userInfo }: UserDropdownProps) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/profile" className="cursor-pointer">
+          <Link href={ROUTES.DASHBOARD_PROFILE} className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
             Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/settings" className="cursor-pointer">
+          <Link href={ROUTES.DASHBOARD_SETTINGS} className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Link>

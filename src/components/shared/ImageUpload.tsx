@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FieldLabel, FieldDescription } from "@/components/ui/field";
+import { FieldDescription } from "@/components/ui/field";
 import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
 import { validateImageFile, createImagePreview, revokeImagePreview, formatFileSize } from "@/lib/file-upload";
 import { uploadToImgBB } from "@/lib/imgbb";
@@ -24,9 +24,7 @@ interface ImageUploadProps {
 const ImageUpload = ({
   value,
   onChange,
-  maxSize = 32 * 1024 * 1024, // 32MB default (imgBB free tier)
   accept = "image/jpeg,image/jpg,image/png,image/webp,image/gif,image/bmp,image/svg+xml,.jpg,.jpeg,.png,.webp,.gif,.bmp,.svg",
-  label = "Cover Photo",
   error,
   autoUpload = false,
   onUpload,
@@ -122,10 +120,12 @@ const ImageUpload = ({
       {preview ? (
         <div className="relative w-full">
           <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-            <img
+            <Image
               src={preview}
               alt="Preview"
-              className="h-full w-full object-cover"
+              fill
+              unoptimized
+              className="object-cover"
             />
             <Button
               type="button"

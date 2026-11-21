@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Plane, Search, Inbox } from "lucide-react";
+import { Plane } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 

@@ -3,9 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatBudgetRange, formatDateRange } from "@/lib/formatters";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import { Calendar, DollarSign, Eye, EyeOff, MapPin, Users } from "lucide-react";
-import Image from "next/image";
+import AppImage from "@/components/shared/AppImage";
 import PlanDetailsDialog from "./PlanDetailsDialog";
 import TravelPlanActions from "@/components/modules/Admin/TravelPlanActions";
 
@@ -67,13 +66,12 @@ const PlanListItem = ({ plan, isAdminView = false }: PlanListItemProps) => {
           {/* Image */}
           <div className="relative w-full md:w-48 h-48 md:h-auto md:aspect-square overflow-hidden bg-muted rounded-lg flex-shrink-0">
             {plan?.coverPhoto ? (
-              <Image
+              <AppImage
                 src={plan?.coverPhoto}
                 alt={plan?.title}
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, 192px"
-                unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
                 onError={(e) => {
                   console.error("Image load error:", plan?.coverPhoto);
                   e.currentTarget.style.display = "none";

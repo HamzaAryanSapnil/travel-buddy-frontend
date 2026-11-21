@@ -7,9 +7,12 @@ import {
   isAuthRoute,
   UserRole,
 } from "./lib/auth-utils";
-import { getUserInfo } from "./services/auth/getUserInfo";
-import { deleteCookie, getCookie } from "./services/auth/tokenHandlers";
-import { getNewAccessToken } from "./services/auth/auth.service";
+import {
+  deleteCookie,
+  getCookie,
+  getNewAccessToken,
+  getUserInfo,
+} from "./lib/actions/auth.action";
 
 // This function can be marked `async` if using `await` inside
 export async function proxy(request: NextRequest) {
@@ -60,9 +63,11 @@ export async function proxy(request: NextRequest) {
       }
 
       userRole = verifiedToken.role;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Handle JWT verification errors (invalid signature, expired, etc.)
-      console.error("JWT verification error:", error.message);
+      const message =
+        error instanceof Error ? error.message : "JWT verification failed";
+      console.error("JWT verification error:", message);
       // Clear invalid tokens and redirect to login
       await deleteCookie("accessToken");
       await deleteCookie("refreshToken");

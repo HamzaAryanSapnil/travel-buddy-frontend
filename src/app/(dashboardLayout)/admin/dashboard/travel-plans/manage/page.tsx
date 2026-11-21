@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getAdminTravelPlans } from "@/services/admin/getAdminTravelPlans";
+import { getAdminTravelPlans } from "@/lib/actions/admin.action";
 import TravelPlansTable from "@/components/modules/Admin/TravelPlansTable";
 import TravelPlansTableFilters from "@/components/modules/Admin/TravelPlansTableFilters";
 import AdminPageHeader from "@/components/modules/Admin/AdminPageHeader";
 import Pagination from "@/components/shared/Pagination";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AdminTravelPlansFilters } from "@/types/admin.interface";
 import { parseSortValue } from "@/lib/formatters";
 
 interface AdminTravelPlansManagePageProps {

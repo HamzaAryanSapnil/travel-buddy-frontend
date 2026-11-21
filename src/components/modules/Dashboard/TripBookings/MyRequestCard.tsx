@@ -5,13 +5,13 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { TripBooking } from "@/types/tripBooking.interface";
 import { Calendar, MapPin, XCircle } from "lucide-react";
-import { cancelRequest } from "@/services/tripBookings/cancelRequest";
+import { cancelRequest } from "@/lib/actions/tripBooking.action";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import AppImage from "@/components/shared/AppImage";
+import { ASSETS } from "@/constants/assets";
 
 interface MyRequestCardProps {
   booking: TripBooking;
@@ -32,7 +32,7 @@ export default function MyRequestCard({ booking }: MyRequestCardProps) {
       } else {
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to cancel request");
     } finally {
       setIsCancelling(false);
@@ -59,12 +59,12 @@ export default function MyRequestCard({ booking }: MyRequestCardProps) {
             {/* Image Section */}
             <div className="relative w-full sm:w-48 h-32 sm:h-auto bg-muted">
               {booking?.plan?.coverPhoto ? (
-                <Image
+                <AppImage
                   src={booking?.plan?.coverPhoto}
                   alt={booking?.plan?.title || "Travel Plan"}
                   fill
                   className="object-cover"
-                  unoptimized={booking?.plan?.coverPhoto?.includes("i.ibb.co")}
+                  sizes={ASSETS.cover.sizes}
                   onError={(e) => {
                     console.error("Image load error:", booking?.plan?.coverPhoto);
                     e.currentTarget.style.display = "none";
@@ -107,7 +107,7 @@ export default function MyRequestCard({ booking }: MyRequestCardProps) {
 
                 {booking.message && (
                   <div className="mt-4 bg-muted/50 p-3 rounded-md text-sm italic">
-                    "{booking.message}"
+                    {`"${booking.message}"`}
                   </div>
                 )}
               </div>

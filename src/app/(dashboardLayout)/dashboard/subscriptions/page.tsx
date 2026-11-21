@@ -1,6 +1,6 @@
-import { getSubscriptionStatus } from "@/services/subscriptions/getSubscriptionStatus";
-import { getPayments } from "@/services/payments/getPayments";
-import { getPaymentSummary } from "@/services/payments/getPaymentSummary";
+import { getSubscriptionStatus } from "@/lib/actions/subscription.action";
+import { getPayments } from "@/lib/actions/payment.action";
+import { getPaymentSummary } from "@/lib/actions/payment.action";
 import SubscriptionPanel from "@/components/modules/Subscriptions/SubscriptionPanel";
 import PaymentsTable from "@/components/modules/Subscriptions/PaymentsTable";
 import PaymentSummary from "@/components/modules/Subscriptions/PaymentSummary";

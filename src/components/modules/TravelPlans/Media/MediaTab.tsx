@@ -1,5 +1,3 @@
-import { MediaItem } from "@/types/media.interface";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import MediaGrid from "../MediaGrid";
 import MediaTabActions from "./MediaTabActions";
 import { Separator } from "@/components/ui/separator";

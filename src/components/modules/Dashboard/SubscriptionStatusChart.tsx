@@ -1,7 +1,6 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import { SubscriptionStatusData } from "@/types/dashboard.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface SubscriptionStatusChartProps {
@@ -59,7 +58,7 @@ const SubscriptionStatusChart = ({ data }: SubscriptionStatusChartProps) => {
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={(entry: any) => {
+              label={(entry) => {
                 const percentage = total > 0 ? ((entry.value / total) * 100).toFixed(1) : "0.0";
                 return `${entry.name}: ${percentage}%`;
               }}

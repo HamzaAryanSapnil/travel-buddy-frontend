@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import ItineraryItemFormDialog from "./ItineraryItemFormDialog";
 
 interface ItineraryTabActionsProps {

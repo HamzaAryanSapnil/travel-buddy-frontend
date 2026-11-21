@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { getUserInfo } from "@/services/auth/getUserInfo";
-import { getDashboardOverview } from "@/services/dashboard/getDashboardOverview";
-import { getAdminDashboardOverview } from "@/services/dashboard/getAdminDashboardOverview";
+import { getUserInfo } from "@/lib/actions/auth.action";
+import { getDashboardOverview } from "@/lib/actions/dashboard.action";
+import { getAdminDashboardOverview } from "@/lib/actions/dashboard.action";
 import UserDashboardOverview from "@/components/modules/Dashboard/UserDashboardOverview";
 import AdminDashboardOverview from "@/components/modules/Dashboard/AdminDashboardOverview";
 import UserDashboardSkeleton from "@/components/modules/Dashboard/UserDashboardSkeleton";

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Suspense } from "react";
-import { getTravelPlan } from "@/services/travelPlans/getTravelPlan";
-import { getUserInfo } from "@/services/auth/getUserInfo";
-import { getTripMembers } from "@/services/tripMembers/getTripMembers";
-import { getIncomingRequests } from "@/services/tripBookings/getIncomingRequests";
-import { getItineraryItems } from "@/services/itinerary/getItineraryItems";
-import { getMedia } from "@/services/media/getMedia";
-import { getExpenses } from "@/services/expenses/getExpenses";
-import { getPlanMeetups } from "@/services/meetups/getPlanMeetups";
+import { getTravelPlan } from "@/lib/actions/travelPlan.action";
+import { getUserInfo } from "@/lib/actions/auth.action";
+import { getTripMembers } from "@/lib/actions/tripMember.action";
+import { getIncomingRequests } from "@/lib/actions/tripBooking.action";
+import { getItineraryItems } from "@/lib/actions/itinerary.action";
+import { getMedia } from "@/lib/actions/media.action";
+import { getExpenses } from "@/lib/actions/expense.action";
+import { getPlanMeetups } from "@/lib/actions/meetup.action";
 import PlanDashboardTabs from "@/components/modules/TravelPlans/PlanDashboardTabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";

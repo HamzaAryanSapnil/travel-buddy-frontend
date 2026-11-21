@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { checkAuthStatus } from "@/services/auth/checkAuthStatus";
+import { checkAuthStatus } from "@/lib/actions/auth.action";
 
 export default function CreatePlanFAB() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -33,7 +34,7 @@ export default function CreatePlanFAB() {
 
   return (
     <Link
-      href="/dashboard/travel-plans/create"
+      href={ROUTES.DASHBOARD_TRAVEL_PLANS_CREATE}
       className="fixed bottom-8 right-8 z-50"
     >
       <Button

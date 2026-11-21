@@ -1,5 +1,5 @@
-import { getTravelPlans } from "@/services/travelPlans/getTravelPlans";
-import { getMedia } from "@/services/media/getMedia";
+import { getTravelPlans } from "@/lib/actions/travelPlan.action";
+import { getMedia } from "@/lib/actions/media.action";
 import GalleryPanel from "@/components/modules/Collaboration/GalleryPanel";
 import GalleryPlanSelect from "@/components/modules/Collaboration/GalleryPlanSelect";
 import { Card } from "@/components/ui/card";

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import AppImage from "@/components/shared/AppImage";
 import { cn } from "@/lib/utils";
 
 interface MediaImageProps {
@@ -19,14 +19,12 @@ const MediaImage = ({
   const safeSrc = src || fallbackSrc;
 
   return (
-    <Image
+    <AppImage
       src={safeSrc}
       alt={alt}
       fill
       className={cn("object-cover", className)}
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      priority={false}
-      unoptimized={safeSrc?.includes("i.ibb.co")}
       onError={(e) => {
         console.error("Image load error:", safeSrc);
         e.currentTarget.style.display = "none";

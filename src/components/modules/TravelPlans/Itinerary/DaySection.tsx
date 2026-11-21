@@ -1,9 +1,7 @@
-import { ItineraryItem } from "@/types/itinerary.interface";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import ItineraryItemCard from "./ItineraryItemCard";
 import AddItemButton from "./AddItemButton";
-import { TravelPlan } from "@/types/travelPlan.interface";
 import { isDayPast } from "@/utils/planDateHelpers";
 
 interface DaySectionProps {

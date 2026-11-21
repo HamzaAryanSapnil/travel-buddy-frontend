@@ -1,6 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import { TripMember } from "@/types/tripMembers.interface";
-import { TripBooking } from "@/types/tripBooking.interface";
 import MembersList from "./MembersList";
 import MembersTabActions from "./MembersTabActions";
 import PendingRequestsList from "../ManageRequests/PendingRequestsList";

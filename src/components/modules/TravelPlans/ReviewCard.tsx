@@ -1,9 +1,8 @@
-import { Review } from "@/types/review.interface";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import StarRating from "@/components/shared/StarRating";
 import { format } from "date-fns";
-import Image from "next/image";
+import AppImage from "@/components/shared/AppImage";
 import { User } from "lucide-react";
 
 interface ReviewCardProps {
@@ -20,13 +19,12 @@ export default function ReviewCard({ review }: ReviewCardProps) {
         <div className="flex items-start gap-3 mb-4">
           <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted flex items-center justify-center flex-shrink-0">
             {review?.reviewer?.avatar ? (
-              <Image
+              <AppImage
                 src={review?.reviewer?.avatar}
                 alt={review?.reviewer?.fullName || "Reviewer"}
                 fill
                 className="object-cover"
                 sizes="40px"
-                unoptimized={review?.reviewer?.avatar?.includes("i.ibb.co")}
                 onError={(e) => {
                   console.error("Image load error:", review?.reviewer?.avatar);
                   e.currentTarget.style.display = "none";

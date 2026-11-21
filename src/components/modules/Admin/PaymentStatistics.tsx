@@ -1,4 +1,3 @@
-import { AdminPaymentStatistics } from "@/types/admin.interface";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DollarSign,

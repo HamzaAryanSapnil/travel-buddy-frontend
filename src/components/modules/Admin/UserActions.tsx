@@ -8,7 +8,6 @@ import {
   Ban,
   CheckCircle,
   Trash2,
-  Shield,
   ShieldCheck,
   ShieldX,
 } from "lucide-react";
@@ -26,10 +25,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateUserStatus } from "@/services/admin/updateUserStatus";
-import { verifyUser } from "@/services/admin/verifyUser";
-import { updateUserRole } from "@/services/admin/updateUserRole";
-import { deleteUser } from "@/services/admin/deleteUser";
+import { updateUserStatus } from "@/lib/actions/admin.action";
+import { verifyUser } from "@/lib/actions/admin.action";
+import { updateUserRole } from "@/lib/actions/admin.action";
+import { deleteUser } from "@/lib/actions/admin.action";
 import { toast } from "sonner";
 import ConfirmActionDialog from "./ConfirmActionDialog";
 import { UserRole } from "@/lib/auth-utils";
@@ -121,8 +120,7 @@ export default function UserActions({
         case "activate": {
           const status =
             confirmDialog.action === "suspend" ? "SUSPENDED" : "ACTIVE";
-          const formData = new FormData();
-          result = await updateUserStatus(userId, status, null, formData);
+          result = await updateUserStatus(userId, status);
           break;
         }
         case "delete": {

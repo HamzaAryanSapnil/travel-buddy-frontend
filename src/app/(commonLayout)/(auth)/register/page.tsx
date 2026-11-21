@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import RegisterForm from "@/components/RegisterForm";
+import RegisterForm from "@/components/forms/RegisterForm";
 
 export const dynamic = "force-dynamic";
 

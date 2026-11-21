@@ -13,12 +13,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { uploadMedia } from "@/services/media/uploadMedia";
-import { TravelPlan } from "@/types/travelPlan.interface";
+import { uploadMedia } from "@/lib/actions/media.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import MultiImageUpload from "@/components/shared/MultiImageUpload";
 import InputFieldError from "@/components/shared/InputFieldError";
+import { toInputErrorState } from "@/lib/getInputFieldError";
 import { uploadMultipleToImgBB } from "@/lib/imgbb";
 
 interface UploadMediaDialogProps {
@@ -41,6 +41,7 @@ export default function UploadMediaDialog({
     uploadMedia.bind(null, plan.id),
     null
   );
+  const inputErrorState = toInputErrorState(state);
 
   // Handle success/error with useEffect (simplified like EditTravelPlanDialog)
   useEffect(() => {
@@ -122,7 +123,7 @@ export default function UploadMediaDialog({
               maxSize={32 * 1024 * 1024} // 32MB
               label="Select Photos"
             />
-            {state && <InputFieldError field="files" state={state} />}
+            {state && <InputFieldError field="files" state={inputErrorState} />}
           </div>
 
           {/* Form Actions */}

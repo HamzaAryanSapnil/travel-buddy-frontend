@@ -1,9 +1,8 @@
-import { developerInfo } from "@/config/developer.config";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Mail, Phone, ExternalLink, Globe } from "lucide-react";
+import { Mail, Phone, Globe } from "lucide-react";
 import { FaLinkedin, FaGithub, FaWhatsapp } from "react-icons/fa";
 
 interface DeveloperInfo {

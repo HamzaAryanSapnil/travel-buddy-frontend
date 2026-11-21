@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { getMyRequests } from "@/services/tripBookings/getMyRequests";
+import { getMyRequests } from "@/lib/actions/tripBooking.action";
 import MyRequestCard from "@/components/modules/Dashboard/TripBookings/MyRequestCard";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Ticket } from "lucide-react";
 

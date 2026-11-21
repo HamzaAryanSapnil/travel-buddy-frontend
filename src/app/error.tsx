@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Home, RefreshCcw } from "lucide-react";
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 
 export default function Error({
@@ -43,7 +44,7 @@ export default function Error({
             Try Again
           </Button>
           <Button variant="outline" size="lg" asChild className="gap-2">
-            <Link href="/">
+            <Link href={ROUTES.HOME}>
               <Home className="h-4 w-4" />
               Back to Home
             </Link>

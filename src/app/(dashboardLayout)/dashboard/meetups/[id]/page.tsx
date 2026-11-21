@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { getUserInfo } from "@/services/auth/getUserInfo";
-import { getMeetup } from "@/services/meetups/getMeetup";
-import { getTravelPlan } from "@/services/travelPlans/getTravelPlan";
+import { getUserInfo } from "@/lib/actions/auth.action";
+import { getMeetup } from "@/lib/actions/meetup.action";
+import { getTravelPlan } from "@/lib/actions/travelPlan.action";
 import MeetupDetail from "@/components/modules/Meetups/MeetupDetail";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
@@ -17,12 +17,7 @@ export default async function MeetupDetailPage({
   const { id } = await params;
   const userInfo = await getUserInfo();
 
-  // Fetch meetup and plan data in parallel
-  const [meetupResult, planResult] = await Promise.all([
-    getMeetup(id),
-    // We'll fetch plan after we get meetup data
-    Promise.resolve({ data: undefined, error: null }),
-  ]);
+  const meetupResult = await getMeetup(id);
 
   if (!meetupResult.data) {
     if (meetupResult.error === "Meetup not found") {

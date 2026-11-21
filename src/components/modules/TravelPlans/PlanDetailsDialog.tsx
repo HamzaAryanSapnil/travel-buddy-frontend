@@ -1,5 +1,6 @@
 "use client";
 
+import { ROUTES } from "@/constants/routes";
 import { useState, useTransition } from "react";
 import {
   Dialog,
@@ -21,8 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TravelPlan } from "@/types/travelPlan.interface";
-import Image from "next/image";
+import AppImage from "@/components/shared/AppImage";
 import { formatBudgetRange, formatDateRange } from "@/lib/formatters";
 import {
   Eye,
@@ -37,7 +37,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import EditTravelPlanDialog from "./EditTravelPlanDialog";
-import { deleteTravelPlan } from "@/services/travelPlans/deleteTravelPlan";
+import { deleteTravelPlan } from "@/lib/actions/travelPlan.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { isPlanCompleted } from "@/utils/planDateHelpers";
@@ -63,7 +63,7 @@ const PlanDetailsDialog = ({
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isTransitioning, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const visibilityLabels: Record<string, string> = {
     PUBLIC: "Public",
@@ -144,7 +144,7 @@ const PlanDetailsDialog = ({
               </div>
               <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto sm:mr-12">
                 <Button variant="default" size="sm" asChild>
-                  <Link href={`/dashboard/travel-plans/${plan.id}`}>
+                  <Link href={ROUTES.DASHBOARD_TRAVEL_PLAN(plan.id)}>
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Open Dashboard
                   </Link>
@@ -193,13 +193,12 @@ const PlanDetailsDialog = ({
           <div className="space-y-6">
             <div className="relative w-full aspect-[21/9] overflow-hidden rounded-lg bg-muted shadow-sm">
               {plan?.coverPhoto ? (
-                <Image
+                <AppImage
                   src={plan?.coverPhoto}
                   alt={plan?.title || "Travel Plan"}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
-                  unoptimized={plan?.coverPhoto?.includes("i.ibb.co")}
                   onError={(e) => {
                     console.error("Image load error:", plan?.coverPhoto);
                     e.currentTarget.style.display = "none";
