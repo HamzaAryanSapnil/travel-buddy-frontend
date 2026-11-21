@@ -21,13 +21,25 @@ type DimensionAppImageProps = SharedProps & {
 
 export type AppImageProps = FillAppImageProps | DimensionAppImageProps;
 
+function isImgBB(src: AppImageProps["src"]) {
+  if (typeof src !== "string") return false;
+  try {
+    return new URL(src).hostname === "i.ibb.co";
+  } catch {
+    return src.includes("i.ibb.co");
+  }
+}
+
 export default function AppImage({
   priority,
+  src,
   ...rest
 }: AppImageProps) {
   return (
     <NextImage
       {...rest}
+      src={src}
+      unoptimized={isImgBB(src)}
       {...(priority !== undefined ? { priority } : {})}
     />
   );
