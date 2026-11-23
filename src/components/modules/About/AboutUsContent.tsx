@@ -27,10 +27,10 @@ export default function AboutUsContent() {
   return (
     <div className="space-y-16">
       {/* Hero Section */}
-      <section className="text-center py-8 animate-in fade-in slide-in-from-bottom duration-700">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+      <section className="text-center py-8">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
           {projectConfig.projectName}
-        </h1>
+        </h2>
         <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
           {projectConfig.projectTagline}
         </p>
@@ -40,7 +40,7 @@ export default function AboutUsContent() {
       </section>
 
       {/* Mission Section */}
-      <section className="animate-in fade-in slide-in-from-bottom duration-700">
+      <section>
         <div className="text-center mb-8">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
             {mission.title}
@@ -54,8 +54,7 @@ export default function AboutUsContent() {
           {mission.problemsSolved.map((problem, index) => (
             <Card
               key={index}
-              className="hover:shadow-lg transition-shadow animate-in fade-in slide-in-from-bottom duration-700"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="hover:shadow-lg transition-shadow"
             >
               <CardHeader>
                 <CardTitle className="text-xl">{problem.title}</CardTitle>
@@ -71,17 +70,13 @@ export default function AboutUsContent() {
       </section>
 
       {/* Overview Section */}
-      <section className="animate-in fade-in slide-in-from-bottom duration-700">
+      <section>
         <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-center">
           Overview
         </h2>
         <div className="space-y-4 text-muted-foreground leading-relaxed">
           {overview.paragraphs.map((paragraph, index) => (
-            <p
-              key={index}
-              className="text-base animate-in fade-in slide-in-from-bottom duration-700"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
+            <p key={index} className="text-base">
               {paragraph}
             </p>
           ))}
@@ -89,7 +84,7 @@ export default function AboutUsContent() {
       </section>
 
       {/* Features Section - Role-based */}
-      <section className="animate-in fade-in slide-in-from-bottom duration-700">
+      <section>
         <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
           Features
         </h2>
@@ -104,8 +99,7 @@ export default function AboutUsContent() {
                   return (
                     <Card
                       key={index}
-                      className="hover:shadow-lg transition-shadow h-full animate-in fade-in slide-in-from-bottom duration-700"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="hover:shadow-lg transition-shadow h-full"
                     >
                       <CardHeader>
                         <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
@@ -137,8 +131,7 @@ export default function AboutUsContent() {
                   return (
                     <Card
                       key={index}
-                      className="hover:shadow-lg transition-shadow h-full animate-in fade-in slide-in-from-bottom duration-700"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="hover:shadow-lg transition-shadow h-full"
                     >
                       <CardHeader>
                         <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
@@ -163,51 +156,36 @@ export default function AboutUsContent() {
       </section>
 
       {/* Technology Stack Section */}
-      <section className="animate-in fade-in slide-in-from-bottom duration-700">
+      <section>
         <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
           Technology Stack
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="animate-in fade-in slide-in-from-left duration-700">
+          <div>
             <h3 className="text-xl font-semibold mb-4">Frontend</h3>
             <div className="flex flex-wrap gap-2">
               {techStack.frontend.map((tech, index) => (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="animate-in fade-in duration-500"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
+                <Badge key={index} variant="secondary">
                   {tech}
                 </Badge>
               ))}
             </div>
           </div>
-          <div className="animate-in fade-in slide-in-from-bottom duration-700">
+          <div>
             <h3 className="text-xl font-semibold mb-4">Backend</h3>
             <div className="flex flex-wrap gap-2">
               {techStack.backend.map((tech, index) => (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="animate-in fade-in duration-500"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
+                <Badge key={index} variant="secondary">
                   {tech}
                 </Badge>
               ))}
             </div>
           </div>
-          <div className="animate-in fade-in slide-in-from-right duration-700">
+          <div>
             <h3 className="text-xl font-semibold mb-4">Services</h3>
             <div className="flex flex-wrap gap-2">
               {techStack.services.map((tech, index) => (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="animate-in fade-in duration-500"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
+                <Badge key={index} variant="secondary">
                   {tech}
                 </Badge>
               ))}
@@ -218,13 +196,13 @@ export default function AboutUsContent() {
 
       {/* GitHub Repositories Section */}
       {(repositories.frontend || repositories.backend) && (
-        <section className="animate-in fade-in slide-in-from-bottom duration-700">
+        <section>
           <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
             GitHub Repositories
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {repositories.frontend && (
-              <Card className="hover:shadow-lg transition-shadow animate-in fade-in slide-in-from-left duration-700">
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FaGithub className="w-5 h-5" />
@@ -249,7 +227,7 @@ export default function AboutUsContent() {
               </Card>
             )}
             {repositories.backend && (
-              <Card className="hover:shadow-lg transition-shadow animate-in fade-in slide-in-from-right duration-700">
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FaGithub className="w-5 h-5" />

@@ -66,6 +66,10 @@ function MarqueeStyles() {
         .home-review-marquee:hover .home-review-marquee-track--animate {
           animation-play-state: paused;
         }
+
+        .home-review-marquee-track--paused {
+          animation-play-state: paused;
+        }
       }
     `}</style>
   );
@@ -143,6 +147,7 @@ function ReviewCardView({
 export default function TestimonialSlider() {
   const [cards, setCards] = useState<ReviewCard[]>(curatedToCards);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -206,12 +211,24 @@ export default function TestimonialSlider() {
   const displayCards = useMemo(() => cards.slice(0, 10), [cards]);
 
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-20 md:py-28 bg-muted">
       <MarqueeStyles />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-          What travelers say
-        </h2>
+        <div className="flex items-end justify-between gap-4">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            What travelers say
+          </h2>
+          {!reducedMotion ? (
+            <button
+              type="button"
+              className="shrink-0 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground"
+              aria-pressed={paused}
+              onClick={() => setPaused((p) => !p)}
+            >
+              {paused ? "Play" : "Pause"}
+            </button>
+          ) : null}
+        </div>
 
         {reducedMotion ? (
           <div className="mt-8 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2">
@@ -225,7 +242,13 @@ export default function TestimonialSlider() {
           </div>
         ) : (
           <div className="home-review-marquee mt-8 overflow-hidden">
-            <div className="home-review-marquee-track home-review-marquee-track--animate">
+            <div
+              className={
+                paused
+                  ? "home-review-marquee-track home-review-marquee-track--animate home-review-marquee-track--paused"
+                  : "home-review-marquee-track home-review-marquee-track--animate"
+              }
+            >
               {displayCards.map((card, index) => (
                 <ReviewCardView
                   key={`a-${card.kind}-${index}`}

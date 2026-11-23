@@ -7,11 +7,10 @@ import { Check } from "lucide-react";
 
 export default function VideoSection() {
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="bg-muted py-20 md:py-28">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Content Section */}
-          <div className="space-y-6 animate-in fade-in slide-in-from-left duration-700">
+          <div className="space-y-6">
             <div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
                 A Simple Perfect Place to Get Lost
@@ -23,7 +22,6 @@ export default function VideoSection() {
               </p>
             </div>
 
-            {/* Bullet Points */}
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <div className="mt-1 flex-shrink-0">
@@ -51,7 +49,6 @@ export default function VideoSection() {
               </li>
             </ul>
 
-            {/* CTA Button */}
             <div className="pt-4">
               <Button asChild size="lg">
                 <Link href={ROUTES.TRAVEL_PLANS}>See All Travel Plans</Link>
@@ -59,8 +56,7 @@ export default function VideoSection() {
             </div>
           </div>
 
-          {/* Video Section */}
-          <div className="animate-in fade-in slide-in-from-right duration-700">
+          <div>
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 <div className="relative w-full aspect-video">
@@ -74,4 +70,3 @@ export default function VideoSection() {
     </section>
   );
 }
-

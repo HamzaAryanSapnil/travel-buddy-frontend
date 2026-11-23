@@ -30,6 +30,7 @@ interface PlanCardProps {
   isMember?: boolean;
   isDashboard?: boolean; // If true, use dashboard routes and show actions
   isAdminView?: boolean; // If true, show admin actions
+  presentation?: "public";
 }
 
 const PlanCard = ({
@@ -37,6 +38,7 @@ const PlanCard = ({
   isMember = false,
   isDashboard = false,
   isAdminView = false,
+  presentation,
 }: PlanCardProps) => {
   const visibilityLabels: Record<string, string> = {
     PUBLIC: "Public",
@@ -82,6 +84,49 @@ const PlanCard = ({
     ONGOING: "bg-green-500 hover:bg-green-600",
     PAST: "bg-gray-500 hover:bg-gray-600",
   };
+
+  if (presentation === "public") {
+    return (
+      <article className="@container group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card text-card-foreground">
+        <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+          {plan.coverPhoto ? (
+            <AppImage
+              src={plan?.coverPhoto}
+              alt={plan?.title}
+              fill
+              className="object-cover motion-safe:transition-transform motion-safe:duration-200 [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03]"
+              sizes={ASSETS.cover.sizes}
+              onError={(e) => {
+                console.error("Image load error:", plan?.coverPhoto);
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-muted">
+              <MapPin className="h-16 w-16 text-primary/30" />
+            </div>
+          )}
+          <div className="pointer-events-none absolute inset-0 ring-1 ring-black/10 dark:ring-white/10" />
+          <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/75 via-black/40 to-transparent p-4">
+            <h3 className="line-clamp-2 text-xl font-semibold text-white">
+              {plan?.title}
+            </h3>
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          <p className="flex min-w-0 flex-row gap-2 text-sm text-muted-foreground line-clamp-1">
+            <span className="min-w-0 truncate">{plan?.destination}</span>
+            <span className="shrink-0">
+              {formatDateRange(plan?.startDate, plan?.endDate)}
+            </span>
+          </p>
+          <Button asChild className="w-full mt-auto" size="default">
+            <Link href={ROUTES.TRAVEL_PLAN(plan?.id)}>View Details</Link>
+          </Button>
+        </div>
+      </article>
+    );
+  }
 
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] flex flex-col h-full">

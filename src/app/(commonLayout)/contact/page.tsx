@@ -14,10 +14,10 @@ export const dynamic = 'force-static';
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen py-16 md:py-24">
+    <main className="min-h-screen py-20 md:py-28">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16 animate-in fade-in slide-in-from-bottom duration-700">
+        <div className="text-center mb-12 md:mb-16">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-foreground">
             Get in Touch
           </h1>
@@ -27,36 +27,24 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-foreground">Trip planning</CardTitle>
-              <CardDescription>
-                Questions about building an itinerary or picking a destination.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-foreground">Group collaboration</CardTitle>
-              <CardDescription>
-                Planning a trip with other people or sharing one plan.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-foreground">Feedback</CardTitle>
-              <CardDescription>
-                Tell us what is working and what should change.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
+        <ul className="mx-auto mb-12 max-w-2xl space-y-3 text-left text-sm text-muted-foreground">
+          <li>
+            <span className="font-medium text-foreground">Trip planning.</span>{" "}
+            Questions about building an itinerary or picking a destination.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Group collaboration.</span>{" "}
+            Planning a trip with other people or sharing one plan.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Feedback.</span>{" "}
+            Tell us what is working and what should change.
+          </li>
+        </ul>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Form */}
-          <div className="lg:col-span-2 animate-in fade-in slide-in-from-left duration-700">
+          <div className="lg:col-span-2">
             <Card>
               <CardHeader>
                 <CardTitle>Send Me a Message</CardTitle>
@@ -71,7 +59,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Information */}
-          <div className="animate-in fade-in slide-in-from-right duration-700">
+          <div>
             <ContactInfoCards developerInfo={developerInfo} />
           </div>
         </div>

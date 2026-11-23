@@ -1,7 +1,6 @@
 "use client";
 
 import { Star } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import AnimatedNumber from "@/components/shared/AnimatedNumber";
 
 const stats = [
@@ -31,43 +30,39 @@ const stats = [
 
 export default function Statistics() {
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="bg-muted py-20 md:py-28">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
             Join Thousands of Happy Travelers
           </h2>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y divide-border rounded-lg border border-border bg-card text-card-foreground overflow-hidden">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <Card
+              <div
                 key={stat.label}
-                className="text-center hover:shadow-lg transition-shadow duration-300"
+                className="flex flex-col items-center justify-center p-6 md:p-8 text-center"
               >
-                <CardContent className="pt-6 pb-6">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <span className="text-4xl sm:text-5xl font-bold text-primary">
-                      <AnimatedNumber
-                        value={stat.value}
-                        suffix={stat.suffix}
-                        decimals={stat.decimals || 0}
-                        duration={2.5}
-                      />
-                    </span>
-                    {Icon && (
-                      <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 fill-yellow-500" />
-                    )}
-                  </div>
-                  <p className="text-base sm:text-lg text-muted-foreground">
-                    {stat.label}
-                  </p>
-                </CardContent>
-              </Card>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <span className="text-4xl sm:text-5xl font-bold text-primary tabular-nums">
+                    <AnimatedNumber
+                      value={stat.value}
+                      suffix={stat.suffix}
+                      decimals={stat.decimals || 0}
+                      duration={2.5}
+                    />
+                  </span>
+                  {Icon && (
+                    <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 fill-yellow-500" />
+                  )}
+                </div>
+                <p className="text-base sm:text-lg text-muted-foreground">
+                  {stat.label}
+                </p>
+              </div>
             );
           })}
         </div>

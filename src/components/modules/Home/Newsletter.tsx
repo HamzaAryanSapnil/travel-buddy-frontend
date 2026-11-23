@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Newsletter() {
   return (
-    <section className="py-16 md:py-24 bg-primary text-primary-foreground">
+    <section className="py-20 md:py-28 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
           Plan the next trip with us

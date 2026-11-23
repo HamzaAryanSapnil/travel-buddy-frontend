@@ -94,26 +94,15 @@ export default async function TravelPlansPage({
   const currentPage = plansData?.meta?.page || 1;
 
   return (
-    <main className="min-h-screen py-8 md:py-12">
+    <main className="min-h-screen py-20 md:py-28">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tight text-foreground">
             Travel Plans
           </h1>
           <p className="mt-2 text-muted-foreground">
             Browse public plans by destination, travel type, or featured picks.
           </p>
-          <ul className="mt-4 flex flex-wrap gap-2">
-            <li className="rounded-full border bg-card px-3 py-1 text-sm text-foreground">
-              Destination
-            </li>
-            <li className="rounded-full border bg-card px-3 py-1 text-sm text-foreground">
-              Travel type
-            </li>
-            <li className="rounded-full border bg-card px-3 py-1 text-sm text-foreground">
-              Featured
-            </li>
-          </ul>
         </header>
 
         {/* Filters */}

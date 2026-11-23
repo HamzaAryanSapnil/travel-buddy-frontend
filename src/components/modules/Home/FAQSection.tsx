@@ -57,10 +57,10 @@ const faqs: FAQItem[] = [
 
 export default function FAQSection() {
   return (
-    <section className="py-16 md:py-24 bg-muted/50">
+    <section className="bg-muted py-20 md:py-28">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom duration-700">
+          <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Frequently Asked Questions
             </h2>
@@ -74,8 +74,7 @@ export default function FAQSection() {
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="border rounded-lg px-4 bg-background animate-in fade-in slide-in-from-bottom duration-700"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="border rounded-lg px-4 bg-background"
               >
                 <AccordionTrigger className="text-left font-semibold hover:no-underline">
                   {faq.question}
@@ -91,4 +90,3 @@ export default function FAQSection() {
     </section>
   );
 }
-

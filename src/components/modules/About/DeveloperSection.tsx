@@ -33,7 +33,7 @@ export default function DeveloperSection({
   developerInfo,
 }: DeveloperSectionProps) {
   return (
-    <section className="border-t pt-16 animate-in fade-in slide-in-from-bottom duration-700">
+    <section className="border-t pt-16">
       <div className="text-center mb-8">
         <h2 className="text-3xl sm:text-4xl font-bold mb-4">Developer</h2>
         <p className="text-muted-foreground">
@@ -42,7 +42,7 @@ export default function DeveloperSection({
       </div>
 
       <div className="max-w-4xl mx-auto">
-        <Card className="hover:shadow-lg transition-shadow animate-in fade-in slide-in-from-bottom duration-700">
+        <Card className="hover:shadow-lg transition-shadow">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <Avatar className="w-24 h-24">

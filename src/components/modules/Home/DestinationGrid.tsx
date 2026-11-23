@@ -51,7 +51,7 @@ export default async function DestinationGrid() {
   const destinations = buildDestinations(plans);
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-24 bg-background">
+    <section className="relative overflow-hidden py-20 md:py-28 bg-background">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0"
@@ -64,10 +64,12 @@ export default async function DestinationGrid() {
 .plane-drift {
   offset-path: path("M -32 460 C 180 390, 460 250, 1280 24");
   offset-rotate: auto 90deg;
-  animation: plane-climb 18s linear infinite;
+  offset-distance: 35%;
 }
-@media (prefers-reduced-motion: reduce) {
-  .plane-drift { animation: none; offset-distance: 35%; }
+@media (prefers-reduced-motion: no-preference) {
+  .plane-drift {
+    animation: plane-climb 18s linear infinite;
+  }
 }
 `}</style>
         <svg
@@ -144,19 +146,20 @@ export default async function DestinationGrid() {
                 <Link
                   key={`${name}-${index}`}
                   href={href}
-                  className={`group relative block overflow-hidden rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring${spanClass}`}
+                  className={`group relative block overflow-hidden rounded-2xl transition-transform duration-200 [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring${spanClass}`}
                 >
                   {coverPhoto ? (
                     <AppImage
                       src={coverPhoto}
                       alt={name}
                       fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="object-cover motion-safe:transition-transform motion-safe:duration-200 [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03]"
                       sizes={ASSETS.cover.sizes}
                     />
                   ) : (
                     <div className="absolute inset-0 bg-secondary" />
                   )}
+                  <div className="pointer-events-none absolute inset-0 ring-1 ring-black/10 dark:ring-white/10" />
                   <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-4">
                     <span className="text-white font-semibold text-lg">
                       {name}

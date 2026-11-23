@@ -1,6 +1,7 @@
 import Hero from "@/components/modules/Home/Hero";
 import Statistics from "@/components/modules/Home/Statistics";
 import DestinationGrid from "@/components/modules/Home/DestinationGrid";
+import WhoYouTravelWith from "@/components/modules/Home/WhoYouTravelWith";
 import FeaturedPlansSection from "@/components/modules/Home/FeaturedPlansSection";
 import HowItWorks from "@/components/modules/Home/HowItWorks";
 import KeyFeatures from "@/components/modules/Home/KeyFeatures";
@@ -19,6 +20,7 @@ export default function Home() {
       <Hero />
       <Statistics />
       <DestinationGrid />
+      <WhoYouTravelWith />
       <FeaturedPlansSection />
       <HowItWorks />
       <KeyFeatures />

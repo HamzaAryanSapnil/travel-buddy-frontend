@@ -87,6 +87,7 @@ const PlansGrid = ({
           isMember={isMemberMap[plan.id] || false}
           isDashboard={isDashboard}
           isAdminView={isAdminView}
+          presentation={isDashboard || isAdminView ? undefined : "public"}
         />
       ))}
     </div>

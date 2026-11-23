@@ -26,10 +26,10 @@ export default function ContactInfoCards({ developerInfo }: ContactInfoCardsProp
   return (
     <div className="space-y-6">
       {/* Developer Profile Card */}
-      <Card className="animate-in fade-in slide-in-from-bottom duration-700">
+      <Card>
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <Avatar className="w-20 h-20 animate-in fade-in zoom-in duration-700">
+            <Avatar className="w-20 h-20">
               <AvatarImage src={developerInfo.profileImage} alt={developerInfo.name} />
               <AvatarFallback className="text-xl">
                 {developerInfo.avatarFallback}
@@ -71,7 +71,7 @@ export default function ContactInfoCards({ developerInfo }: ContactInfoCardsProp
       </Card>
 
       {/* Social Links Card */}
-      <Card className="animate-in fade-in slide-in-from-bottom duration-700" style={{ animationDelay: "200ms" }}>
+      <Card>
         <CardHeader>
           <CardTitle className="text-lg">Connect With Me</CardTitle>
           <CardDescription>Follow me on social media</CardDescription>

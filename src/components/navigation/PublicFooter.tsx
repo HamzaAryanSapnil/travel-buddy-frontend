@@ -7,11 +7,13 @@ import { FaLinkedin, FaGithub, FaWhatsapp } from "react-icons/fa";
 function PublicFooter() {
   return (
     <footer className="border-t bg-background w-full">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 py-14 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 md:gap-12">
           {/* Company Column */}
           <div>
-            <h3 className="font-bold mb-2">{projectConfig.projectName}</h3>
+            <h3 className="text-sm font-semibold tracking-[-0.01em] mb-3">
+              {projectConfig.projectName}
+            </h3>
             <p className="text-sm text-muted-foreground mb-4">
               {projectConfig.projectTagline}
             </p>
@@ -19,8 +21,10 @@ function PublicFooter() {
 
           {/* Links Column */}
           <div className="lg:justify-self-center">
-            <h3 className="font-semibold mb-2">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="text-sm font-semibold tracking-[-0.01em] mb-3">
+              Quick Links
+            </h3>
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link
                   href={ROUTES.HOME}
@@ -58,8 +62,10 @@ function PublicFooter() {
 
           {/* Support Column */}
           <div className="lg:justify-self-center">
-            <h3 className="font-semibold mb-2">Support</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="text-sm font-semibold tracking-[-0.01em] mb-3">
+              Support
+            </h3>
+            <ul className="space-y-3 text-sm">
               <li>
                 <Link
                   href={ROUTES.CONTACT}
@@ -81,7 +87,9 @@ function PublicFooter() {
 
           {/* Developer Info Column */}
           <div className="lg:justify-self-end">
-            <h3 className="font-semibold mb-2">Developer</h3>
+            <h3 className="text-sm font-semibold tracking-[-0.01em] mb-3">
+              Developer
+            </h3>
             <div className="space-y-3 mb-4">
               <div>
                 <p className="text-sm font-medium mb-1">{developerInfo.name}</p>
@@ -120,7 +128,9 @@ function PublicFooter() {
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">Contact</h3>
+              <h3 className="text-sm font-semibold tracking-[-0.01em] mb-3">
+                Contact
+              </h3>
               <p className="text-sm text-muted-foreground">
                 <a
                   href={`mailto:${developerInfo.email}`}
@@ -132,7 +142,7 @@ function PublicFooter() {
             </div>
           </div>
         </div>
-        <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
+        <div className="mt-12 border-t pt-6 text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} {projectConfig.projectName}. All Rights
           Reserved.
         </div>

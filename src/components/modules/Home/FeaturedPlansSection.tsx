@@ -18,7 +18,7 @@ export default async function FeaturedPlansSection() {
   const hasPlans = plans.length > 0;
 
   return (
-    <section className="py-16 bg-background">
+    <section className="bg-background py-20 md:py-28">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
@@ -39,7 +39,7 @@ export default async function FeaturedPlansSection() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {plans.map((plan) => (
-              <PlanCard key={plan.id} plan={plan} />
+              <PlanCard key={plan.id} plan={plan} presentation="public" />
             ))}
           </div>
         )}

@@ -114,6 +114,13 @@ function MotionStyles() {
   .hero-image-layer {
     transition: opacity 0.6s ease;
   }
+  .hero-text-block {
+    animation: hero-enter 0.7s ease both;
+  }
+  @keyframes hero-enter {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
 }
 `}</style>
   );
